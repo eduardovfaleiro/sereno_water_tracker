@@ -1,23 +1,22 @@
-import 'package:sereno_clean_architecture_solid/core/hive/open_hive_box/open_hive_box.dart';
-
-import '../init_flutter_hive/init_flutter_hive_usecase.dart';
-import 'init_hive_usecase.dart';
+import '../../../repositories/init_hive_repository.dart';
+import '../../init_hive/init_hive/init_hive_usecase.dart';
+import '../open_hive_box/open_hive_box_usecase.dart';
 
 class InitHiveUseCaseImp implements InitHiveUseCase {
-  final InitFlutterHiveUseCase _initFlutterHiveImp;
-  final List<OpenHiveBox> _openHiveBoxImpList;
+  final InitHiveRepository _initHiveRepositoryImp;
+  final List<OpenHiveBoxUseCase> _openHiveBoxImpList;
 
   InitHiveUseCaseImp({
-    required InitFlutterHiveUseCase initFlutterHive,
-    required List<OpenHiveBox> openHiveBoxList,
+    required List<OpenHiveBoxUseCase> openHiveBoxList,
+    required InitHiveRepository initHiveRepository,
   })  : _openHiveBoxImpList = openHiveBoxList,
-        _initFlutterHiveImp = initFlutterHive;
+        _initHiveRepositoryImp = initHiveRepository;
 
   @override
   Future<void> call() async {
-    await _initFlutterHiveImp();
+    await _initHiveRepositoryImp();
 
-    for (OpenHiveBox openHiveBoxImp in _openHiveBoxImpList) {
+    for (OpenHiveBoxUseCase openHiveBoxImp in _openHiveBoxImpList) {
       await openHiveBoxImp();
     }
   }

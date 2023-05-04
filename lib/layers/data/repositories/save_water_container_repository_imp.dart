@@ -4,12 +4,12 @@ import 'package:sereno_clean_architecture_solid/layers/domain/repositories/save_
 import '../datasources/save_water_container/save_water_container_datasource.dart';
 
 class SaveWaterContainerRepositoryImp implements SaveWaterContainerRepository {
-  final SaveWaterContainerDataSource _saveWaterContainerDataSourceImp;
+  final SaveWaterContainerDataSource _saveWaterContainerDataSource;
 
-  SaveWaterContainerRepositoryImp(this._saveWaterContainerDataSourceImp);
+  SaveWaterContainerRepositoryImp(this._saveWaterContainerDataSource);
 
   @override
   Future<int> call(WaterContainerEntity waterContainerEntity) async {
-    return await _saveWaterContainerDataSourceImp(waterContainerEntity);
+    return await _saveWaterContainerDataSource(waterContainerEntity);
   }
 }
