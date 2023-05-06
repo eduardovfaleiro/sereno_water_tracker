@@ -1,6 +1,5 @@
-import 'package:sereno_clean_architecture_solid/layers/domain/entities/water_container_entity.dart';
-import 'package:sereno_clean_architecture_solid/layers/domain/repositories/save_water_container_repository.dart';
-
+import '../../entities/water_container_entity.dart';
+import '../../repositories/save_water_container_repository.dart';
 import 'save_water_container_usecase.dart';
 
 class SaveWaterContainerUseCaseImp implements SaveWaterContaineUseCase {

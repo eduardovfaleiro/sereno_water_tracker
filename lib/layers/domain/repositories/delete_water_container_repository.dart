@@ -1,3 +1,3 @@
 abstract class DeleteWaterContainerRepository {
-  void call();
+  void call(int waterContainerEntityIndex);
 }

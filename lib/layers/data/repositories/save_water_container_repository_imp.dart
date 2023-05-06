@@ -1,15 +1,11 @@
-import 'package:sereno_clean_architecture_solid/layers/domain/entities/water_container_entity.dart';
-import 'package:sereno_clean_architecture_solid/layers/domain/repositories/save_water_container_repository.dart';
+import 'package:hive/hive.dart';
 
-import '../datasources/save_water_container/save_water_container_datasource.dart';
+import '../../domain/entities/water_container_entity.dart';
+import '../../domain/repositories/save_water_container_repository.dart';
 
 class SaveWaterContainerRepositoryImp implements SaveWaterContainerRepository {
-  final SaveWaterContainerDataSource _saveWaterContainerDataSource;
-
-  SaveWaterContainerRepositoryImp(this._saveWaterContainerDataSource);
-
   @override
   Future<int> call(WaterContainerEntity waterContainerEntity) async {
-    return await _saveWaterContainerDataSource(waterContainerEntity);
+    return await Hive.box('waterContainers').add(waterContainerEntity);
   }
 }

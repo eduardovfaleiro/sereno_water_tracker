@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
-import 'package:sereno_clean_architecture_solid/layers/domain/usecases/hive/open_hive_box/open_hive_box_usecase.dart';
 
 import '../../../repositories/open_hive_box_repository.dart';
+import 'open_hive_box_usecase.dart';
 
 class OpenHiveBoxUseCaseImp implements OpenHiveBoxUseCase {
   final OpenHiveBoxRepository _openHiveBoxRepository;

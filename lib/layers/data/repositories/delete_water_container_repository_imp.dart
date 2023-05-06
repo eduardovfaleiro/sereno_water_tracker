@@ -1,8 +1,10 @@
+import 'package:hive/hive.dart';
+
 import '../../domain/repositories/delete_water_container_repository.dart';
 
 class DeleteWaterContainerRepositoryImp implements DeleteWaterContainerRepository {
   @override
-  void call() {
-    print('Saving...');
+  Future<void> call(int waterContainerEntityIndex) async {
+    await Hive.box('waterContainers').delete(waterContainerEntityIndex);
   }
 }
