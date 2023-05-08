@@ -7,7 +7,7 @@ import 'layers/presentation/ui/pages/display/water/water_display_page.dart';
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  InitHiveUseCaseImp(InitHiveRepositoryImp());
+  await InitHiveUseCaseImp(InitHiveRepositoryImp())();
 
   runApp(
     const MaterialApp(
