@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
-import 'layers/data/repositories/init_hive_repository_imp.dart';
-import 'layers/domain/usecases/hive/init_hive/init_hive_usecase_imp.dart';
+import 'core/inject/inject.dart';
+import 'core/my_hive/my_hive.dart';
+import 'core/theme/themes.dart';
 import 'layers/presentation/ui/pages/display/water/water_display_page.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await InitHiveUseCaseImp(InitHiveRepositoryImp())();
+  Inject.init();
+  MyHive.init();
 
   runApp(
-    const MaterialApp(
-      home: WaterDisplayPage(),
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const WaterDisplayPage(),
+      theme: Themes.dark,
     ),
   );
 }
