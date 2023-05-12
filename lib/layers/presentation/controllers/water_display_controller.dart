@@ -1,5 +1,5 @@
-import '../../domain/usecases/create_water_container/create_water_container_usecase.dart';
-import '../../domain/usecases/delete_water_container/delete_water_container_usecase.dart';
+import '../../domain/usecases/water_container/create_water_container/create_water_container_usecase.dart';
+import '../../domain/usecases/water_container/delete_water_container/delete_water_container_usecase.dart';
 
 class WaterDisplayController {
   final CreateWaterContainerUseCase _createWaterContainerUseCase;

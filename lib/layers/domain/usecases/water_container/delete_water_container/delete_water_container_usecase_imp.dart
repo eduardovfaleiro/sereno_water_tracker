@@ -1,4 +1,4 @@
-import '../../repositories/delete_water_container_repository.dart';
+import '../../../repositories/water_container/delete_water_container_repository.dart';
 import 'delete_water_container_usecase.dart';
 
 class DeleteWaterContainerUseCaseImp implements DeleteWaterContainerUseCase {
