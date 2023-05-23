@@ -1,18 +1,20 @@
-import 'dart:io';
-
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'open_hive_box/open_hive_box.dart';
-
 class MyHive {
-  static Future<void> init(List<OpenHiveBox> openHiveBoxList) async {
-    Directory directory = await getApplicationDocumentsDirectory();
+  final HiveInterface _hiveInterface;
 
-    await Hive.initFlutter(directory.path);
+  const MyHive(this._hiveInterface);
 
-    for (OpenHiveBox openHiveBox in openHiveBoxList) {
-      openHiveBox();
+  Future<void> initFlutter() async {
+    var directory = await getApplicationDocumentsDirectory();
+
+    await _hiveInterface.initFlutter(directory.path);
+  }
+
+  Future<void> openBoxes(List<String> boxesNamesToOpen) async {
+    for (String boxName in boxesNamesToOpen) {
+      await _hiveInterface.openBox(boxName);
     }
   }
 }

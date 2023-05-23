@@ -1,18 +1,16 @@
-import '../../domain/usecases/water_container/create_water_container/create_water_container_usecase.dart';
-import '../../domain/usecases/water_container/delete_water_container/delete_water_container_usecase.dart';
+import '../../domain/entities/water_container_entity.dart';
+import '../../domain/repositories/water_container_repository.dart';
 
 class WaterDisplayController {
-  final CreateWaterContainerUseCase _createWaterContainerUseCase;
-  final DeleteWaterContainerUseCase _deleteWaterContainerUseCase;
+  final WaterContainerRepository _waterContainerRepository;
 
-  WaterDisplayController(
-    this._createWaterContainerUseCase,
-    this._deleteWaterContainerUseCase,
-  );
+  WaterDisplayController(this._waterContainerRepository);
 
-  Future<void> createWaterContainer() async => await _createWaterContainerUseCase();
+  Future<int> createWaterContainer(WaterContainerEntity waterContainerEntity) {
+    return _waterContainerRepository.create(waterContainerEntity);
+  }
 
-  void deleteWaterContainer(int waterContainerEntityIndex) {
-    _deleteWaterContainerUseCase(waterContainerEntityIndex);
+  Future<void> deleteWaterContainer(int id) {
+    return _waterContainerRepository.delete(id);
   }
 }
