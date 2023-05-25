@@ -23,6 +23,16 @@ class Spacing {
   static const double huge4 = 72;
   static const double huge5 = 76;
   static const double huge6 = 80;
+  static const double huge7 = 84;
+  static const double huge8 = 88;
+  static const double huge9 = 92;
+  static const double huge10 = 96;
+  static const double huge11 = 100;
+  static const double huge12 = 104;
+  static const double huge13 = 108;
+  static const double huge14 = 112;
+  static const double huge15 = 116;
+  static const double huge16 = 120;
 }
 
 class Sizes {
@@ -56,6 +66,8 @@ class FontSize {
 }
 
 class CustomColors {
+  static const Color darkBlue = Color(0xFF080F26);
+
   static const MaterialColor blue = MaterialColor(
     0xFF447BAE,
     <int, Color>{

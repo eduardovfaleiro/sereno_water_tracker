@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:sereno_clean_architecture_solid/core/constants/constants.dart';
+import 'package:sereno_clean_architecture_solid/core/utils/constants/constants.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/local/water_container/hive_water_container_datasource_imp.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/local/water_container/water_container_local_datasource.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/dtos/water_container_dto.dart';

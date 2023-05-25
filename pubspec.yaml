@@ -19,6 +19,8 @@ dependencies:
   mockito: ^5.4.0
   get_it: ^7.6.0
   dartz: ^0.10.1
+  community_material_icon: ^5.9.55
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:
@@ -30,5 +32,7 @@ dev_dependencies:
   lint: ^2.0.1
 
 flutter:
+  assets:
+    - assets/images/
 
   uses-material-design: true

@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
+
 import '../../domain/entities/water_container_entity.dart';
 import '../../domain/repositories/water_container_repository.dart';
 
-class WaterDisplayController {
+class WaterDisplayController extends ChangeNotifier {
   final WaterContainerRepository _waterContainerRepository;
 
   WaterDisplayController(this._waterContainerRepository);
