@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'core/theme/themes.dart';
 import 'core/utils/injection/inject.dart';
@@ -11,6 +12,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   Inject.init();
+
+  var directory = await getApplicationDocumentsDirectory();
 
   // var myHive = MyHive(Hive);
 
