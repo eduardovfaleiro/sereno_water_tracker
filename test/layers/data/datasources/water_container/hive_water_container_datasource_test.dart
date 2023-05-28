@@ -12,10 +12,12 @@ import 'hive_water_container_datasource_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<HiveInterface>(), MockSpec<Box>()])
 void main() {
+  late MockBox mockBox;
   late MockHiveInterface mockHiveInterface;
   late WaterContainerDataSource dataSource;
 
   setUp(() {
+    mockBox = MockBox();
     mockHiveInterface = MockHiveInterface();
     dataSource = HiveWaterContainerDataSourceImp(mockHiveInterface);
   });
@@ -25,7 +27,6 @@ void main() {
       var waterContainerEntity = WaterContainerEntity(200, 'cup');
 
       int number = 1;
-      var mockBox = MockBox();
 
       when(mockHiveInterface.box(any)).thenReturn(mockBox);
       when(mockBox.add(any)).thenAnswer((_) async => number);
@@ -44,7 +45,6 @@ void main() {
   group('delete', () {
     test('Should forward the call to HiveInterface', () async {
       int id = 1;
-      var mockBox = MockBox();
 
       when(mockHiveInterface.box(any)).thenReturn(mockBox);
 
@@ -52,6 +52,25 @@ void main() {
 
       verify(mockHiveInterface.box(WATER_CONTAINER));
       verify(mockBox.delete(id));
+    });
+  });
+
+  group('getAllContainers', () {
+    var allWaterContainers = <WaterContainerDto>[
+      WaterContainerDto(100, 'tea cup', 0),
+      WaterContainerDto(200, 'normal cup', 1),
+      WaterContainerDto(500, 'bottle', 2),
+    ];
+
+    test('Should return all water containers if call to datasource is succesful', () async {
+      when(mockHiveInterface.box(any)).thenReturn(mockBox);
+      when(mockBox.values).thenReturn(allWaterContainers);
+
+      var result = await dataSource.getAllContainers();
+
+      verifyInOrder([mockHiveInterface.box(WATER_CONTAINER), mockBox.values]);
+
+      expect(result, allWaterContainers);
     });
   });
 

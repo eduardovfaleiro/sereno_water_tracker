@@ -82,4 +82,17 @@ class MockWaterContainerDataSource extends _i1.Mock
         returnValue: _i4.Future<void>.value(),
         returnValueForMissingStub: _i4.Future<void>.value(),
       ) as _i4.Future<void>);
+  @override
+  _i4.Future<List<_i2.WaterContainerDto>> getAllContainers() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllContainers,
+          [],
+        ),
+        returnValue: _i4.Future<List<_i2.WaterContainerDto>>.value(
+            <_i2.WaterContainerDto>[]),
+        returnValueForMissingStub:
+            _i4.Future<List<_i2.WaterContainerDto>>.value(
+                <_i2.WaterContainerDto>[]),
+      ) as _i4.Future<List<_i2.WaterContainerDto>>);
 }

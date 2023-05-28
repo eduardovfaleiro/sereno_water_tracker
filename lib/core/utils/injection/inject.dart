@@ -11,6 +11,9 @@ class Inject {
   static void init() {
     var getIt = GetIt.instance;
 
+    // Hive
+    getIt.registerLazySingleton<HiveInterface>(() => Hive);
+
     // Datasources
     getIt.registerLazySingleton<WaterContainerDataSource>(
       () => HiveWaterContainerDataSourceImp(Hive),

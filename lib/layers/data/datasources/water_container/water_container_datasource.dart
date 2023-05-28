@@ -5,4 +5,5 @@ abstract interface class WaterContainerDataSource {
   Future<WaterContainerDto> get(int id);
   Future<int> create(WaterContainerEntity waterContainerEntity);
   Future<void> delete(int id);
+  Future<List<WaterContainerDto>> getAllContainers();
 }

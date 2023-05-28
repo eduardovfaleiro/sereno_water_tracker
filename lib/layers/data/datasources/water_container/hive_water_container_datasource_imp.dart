@@ -24,4 +24,9 @@ class HiveWaterContainerDataSourceImp implements WaterContainerDataSource {
   Future<WaterContainerDto> get(int id) {
     return _hiveInterface.box(WATER_CONTAINER).getAt(id);
   }
+
+  @override
+  Future<List<WaterContainerDto>> getAllContainers() async {
+    return _hiveInterface.box(WATER_CONTAINER).values.toList() as List<WaterContainerDto>;
+  }
 }

@@ -48,6 +48,33 @@ void main() {
     });
   });
 
+  group('getAllContainers', () {
+    var allWaterContainers = <WaterContainerDto>[
+      WaterContainerDto(100, 'tea cup', 0),
+      WaterContainerDto(200, 'normal cup', 1),
+      WaterContainerDto(500, 'bottle', 2),
+    ];
+
+    test('Should return all water containers if call to datasource is succesful', () async {
+      when(mockWaterContainerDataSource.getAllContainers()).thenAnswer((_) async => allWaterContainers);
+
+      var result = await repository.getAllContainers();
+
+      verify(mockWaterContainerDataSource.getAllContainers());
+      expect(result, Right(allWaterContainers));
+    });
+
+    test('Should return CacheFailure if call to datasource fails', () async {
+      when(mockWaterContainerDataSource.getAllContainers()).thenThrow((_) => CacheException());
+
+      var result = await repository.getAllContainers();
+      var expectedResult = result.fold((l) => l, (r) => null);
+
+      verify(mockWaterContainerDataSource.getAllContainers());
+      expect(expectedResult, isA<CacheFailure>());
+    });
+  });
+
   group('create', () {
     int id = 1;
     var waterContainerEntity = WaterContainerEntity(200, 'cup');

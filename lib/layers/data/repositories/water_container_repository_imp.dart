@@ -35,4 +35,13 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
       return Left(CacheFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<WaterContainerEntity>>> getAllContainers() async {
+    try {
+      return Right(await _waterContainerDataSource.getAllContainers());
+    } catch (e) {
+      return Left(CacheFailure());
+    }
+  }
 }

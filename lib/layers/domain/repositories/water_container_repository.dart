@@ -7,4 +7,5 @@ abstract interface class WaterContainerRepository {
   Future<Either<Failure, WaterContainerEntity>> get(int id);
   Future<int> create(WaterContainerEntity waterContainerEntity);
   Future<Either<Failure, void>> delete(int id);
+  Future<Either<Failure, List<WaterContainerEntity>>> getAllContainers();
 }
