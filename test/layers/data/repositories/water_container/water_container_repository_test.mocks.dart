@@ -8,7 +8,7 @@ import 'dart:async' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/water_container/water_container_datasource.dart'
     as _i3;
-import 'package:sereno_clean_architecture_solid/layers/data/dtos/water_container_dto.dart'
+import 'package:sereno_clean_architecture_solid/layers/data/dtos/water_container/water_container_dto.dart'
     as _i2;
 import 'package:sereno_clean_architecture_solid/layers/domain/entities/water_container_entity.dart'
     as _i5;

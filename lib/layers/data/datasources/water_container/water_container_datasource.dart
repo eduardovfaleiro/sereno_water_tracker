@@ -1,5 +1,5 @@
 import '../../../domain/entities/water_container_entity.dart';
-import '../../dtos/water_container_dto.dart';
+import '../../dtos/water_container/water_container_dto.dart';
 
 abstract interface class WaterContainerDataSource {
   Future<WaterContainerDto> get(int id);

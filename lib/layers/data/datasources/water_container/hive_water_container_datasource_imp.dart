@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 import '../../../../core/utils/constants/constants.dart';
 import '../../../domain/entities/water_container_entity.dart';
-import '../../dtos/water_container_dto.dart';
+import '../../dtos/water_container/water_container_dto.dart';
 import 'water_container_datasource.dart';
 
 class HiveWaterContainerDataSourceImp implements WaterContainerDataSource {

@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:sereno_clean_architecture_solid/core/error/exceptions.dart';
 import 'package:sereno_clean_architecture_solid/core/error/failures.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/water_container/water_container_datasource.dart';
-import 'package:sereno_clean_architecture_solid/layers/data/dtos/water_container_dto.dart';
+import 'package:sereno_clean_architecture_solid/layers/data/dtos/water_container/water_container_dto.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/repositories/water_container_repository_imp.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/entities/water_container_entity.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/repositories/water_container_repository.dart';
@@ -24,7 +24,7 @@ void main() {
 
   group('get', () {
     int id = 1;
-    var waterContainerDto = WaterContainerDto(200, 'cup', id);
+    var waterContainerDto = WaterContainerDto(amount: 200, description: 'cup', iconName: 'test');
 
     test('Should return a water container when call to datasource is sucessful', () async {
       when(mockWaterContainerDataSource.get(any)).thenAnswer((_) async => waterContainerDto);
@@ -50,9 +50,9 @@ void main() {
 
   group('getAllContainers', () {
     var allWaterContainers = <WaterContainerDto>[
-      WaterContainerDto(100, 'tea cup', 0),
-      WaterContainerDto(200, 'normal cup', 1),
-      WaterContainerDto(500, 'bottle', 2),
+      WaterContainerDto(amount: 100, description: 'tea cup', iconName: 'test'),
+      WaterContainerDto(amount: 200, description: 'normal cup', iconName: 'test'),
+      WaterContainerDto(amount: 500, description: 'bottle', iconName: 'test'),
     ];
 
     test('Should return all water containers if call to datasource is succesful', () async {
@@ -77,7 +77,7 @@ void main() {
 
   group('create', () {
     int id = 1;
-    var waterContainerEntity = WaterContainerEntity(200, 'cup');
+    var waterContainerEntity = WaterContainerEntity(amount: 200, description: 'cup', iconName: 'test');
 
     test('Should return an int when call to datasource is sucessful', () async {
       when(mockWaterContainerDataSource.create(any)).thenAnswer((_) async => id);

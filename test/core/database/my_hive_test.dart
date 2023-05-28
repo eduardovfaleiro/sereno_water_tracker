@@ -4,7 +4,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sereno_clean_architecture_solid/core/database/my_hive.dart';
 
-import 'my_hive_test.mocks.dart';
+import '../../layers/data/datasources/amount_of_water_drank_today/hive_amount_of_water_drank_today_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<HiveInterface>()])
 void main() {

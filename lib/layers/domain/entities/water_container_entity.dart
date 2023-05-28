@@ -1,6 +1,11 @@
 class WaterContainerEntity {
   final String description;
-  final int ml;
+  final String iconName;
+  final int amount;
 
-  WaterContainerEntity(this.ml, this.description);
+  WaterContainerEntity({
+    required this.description,
+    required this.iconName,
+    required this.amount,
+  });
 }

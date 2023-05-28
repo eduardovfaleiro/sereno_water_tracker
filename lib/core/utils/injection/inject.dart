@@ -26,7 +26,7 @@ class Inject {
 
     // Controllers
     getIt.registerFactory<WaterDisplayController>(
-      () => WaterDisplayController(getIt()),
+      () => WaterDisplayController(getIt(), getIt()),
     );
   }
 }

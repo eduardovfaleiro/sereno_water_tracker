@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:sereno_clean_architecture_solid/core/utils/constants/constants.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/water_container/hive_water_container_datasource_imp.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/water_container/water_container_datasource.dart';
-import 'package:sereno_clean_architecture_solid/layers/data/dtos/water_container_dto.dart';
+import 'package:sereno_clean_architecture_solid/layers/data/dtos/water_container/water_container_dto.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/entities/water_container_entity.dart';
 
 import 'hive_water_container_datasource_test.mocks.dart';
@@ -24,7 +24,7 @@ void main() {
 
   group('create', () {
     test("Should return the water container index if it's sucessfully added to the box", () async {
-      var waterContainerEntity = WaterContainerEntity(200, 'cup');
+      var waterContainerEntity = WaterContainerEntity(amount: 200, description: 'cup', iconName: 'test');
 
       int number = 1;
 
@@ -57,9 +57,9 @@ void main() {
 
   group('getAllContainers', () {
     var allWaterContainers = <WaterContainerDto>[
-      WaterContainerDto(100, 'tea cup', 0),
-      WaterContainerDto(200, 'normal cup', 1),
-      WaterContainerDto(500, 'bottle', 2),
+      WaterContainerDto(amount: 100, description: 'tea cup', iconName: 'test'),
+      WaterContainerDto(amount: 200, description: 'normal cup', iconName: 'test'),
+      WaterContainerDto(amount: 500, description: 'bottle', iconName: 'test'),
     ];
 
     test('Should return all water containers if call to datasource is succesful', () async {
@@ -76,7 +76,7 @@ void main() {
 
   group('get', () {
     test('Should return a water container', () async {
-      var waterContainerDto = WaterContainerDto(200, 'cup', 1);
+      var waterContainerDto = WaterContainerDto(amount: 200, description: 'cup', iconName: 'test');
 
       int id = 1;
       var mockBox = MockBox();

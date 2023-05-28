@@ -10,8 +10,15 @@ class MyHive {
   }
 
   Future<void> openBoxes(List<String> boxesNamesToOpen) async {
-    for (String boxName in boxesNamesToOpen) {
+    for (var boxName in boxesNamesToOpen) {
       await _hiveInterface.openBox(boxName);
+    }
+  }
+
+  void registerAdapters(List<TypeAdapter> adapters) {
+    // TODO: create test
+    for (var adapter in adapters) {
+      _hiveInterface.registerAdapter(adapter);
     }
   }
 }
