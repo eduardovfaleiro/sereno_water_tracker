@@ -1,16 +1,13 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../../core/theme/themes_wrap.dart';
+import '../../../../../../core/theme/themes.dart';
 import '../../../../controllers/water_display_controller.dart';
 import '../../../widgets/buttons/circular_button.dart';
 
 class WaterDisplayPage extends StatelessWidget {
-  WaterDisplayPage({super.key});
-
-  final WaterDisplayController _waterDisplayController = GetIt.I.get<WaterDisplayController>();
+  const WaterDisplayPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +35,7 @@ class WaterDisplayPage extends StatelessWidget {
         Scaffold(
           appBar: AppBar(title: const Text('Water')),
           body: Consumer<WaterDisplayController>(
-            builder: (context, WaterDisplayController, _) {
+            builder: (context, waterDisplayController, _) {
               return Padding(
                 padding: const EdgeInsets.only(
                   left: Spacing.small3,
@@ -84,7 +81,7 @@ class WaterDisplayPage extends StatelessWidget {
                         itemCount: 1,
                         itemBuilder: (context, index) {
                           return const CircularButton(
-                            color: CustomColors.darkBlue,
+                            color: MyColors.darkBlue,
                             label: Text('250 ml', style: TextStyle(color: Colors.white)),
                             child: Icon(CommunityMaterialIcons.cup),
                           );

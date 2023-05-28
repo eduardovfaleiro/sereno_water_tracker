@@ -1,6 +1,11 @@
+library theme;
+
 import 'package:flutter/material.dart';
 
-import 'themes_wrap.dart';
+part 'constants/font_sizes.dart';
+part 'constants/my_colors.dart';
+part 'constants/sizes.dart';
+part 'constants/spacing.dart';
 
 class Themes {
   static const TextTheme _textTheme = TextTheme(
@@ -24,12 +29,12 @@ class Themes {
   );
 
   static const PopupMenuThemeData _popupMenuButtonThemeData = PopupMenuThemeData(
-    color: CustomColors.black,
+    color: MyColors.black,
     position: PopupMenuPosition.under,
     shape: RoundedRectangleBorder(),
-    textStyle: TextStyle(color: CustomColors.grey),
+    textStyle: TextStyle(color: MyColors.grey),
     surfaceTintColor: Colors.transparent,
-    labelTextStyle: MaterialStatePropertyAll(TextStyle(color: CustomColors.grey)),
+    labelTextStyle: MaterialStatePropertyAll(TextStyle(color: MyColors.grey)),
   );
 
   static final TextButtonThemeData _textButtonThemeData = TextButtonThemeData(
@@ -51,10 +56,10 @@ class Themes {
       borderRadius: BorderRadius.circular(Sizes.borderRadius),
       borderSide: const BorderSide(width: 0),
     ),
-    suffixIconColor: CustomColors.blue,
+    suffixIconColor: MyColors.blue,
   );
 
-  static const DialogTheme _dialogTheme = DialogTheme(backgroundColor: CustomColors.black);
+  static const DialogTheme _dialogTheme = DialogTheme(backgroundColor: MyColors.black);
 
   static const bool _useMaterial3 = true;
 
@@ -63,12 +68,12 @@ class Themes {
     backgroundColor: Colors.transparent,
     titleTextStyle: TextStyle(
       fontSize: FontSize.small2,
-      color: CustomColors.grey,
+      color: MyColors.grey,
       fontWeight: FontWeight.w500,
     ),
   );
 
-  static const IconThemeData _iconTheme = IconThemeData(color: CustomColors.blue, size: 30);
+  static const IconThemeData _iconTheme = IconThemeData(color: MyColors.blue, size: 30);
 
   static final ColorScheme _darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
@@ -89,10 +94,10 @@ class Themes {
     onError: const Color(0xFF690005),
     onErrorContainer: const Color(0xFFFFDAD6),
     background: Colors.transparent,
-    onBackground: CustomColors.black,
-    surface: CustomColors.blue[100] as Color,
+    onBackground: MyColors.black,
+    surface: MyColors.blue[100] as Color,
     onSurface: const Color(0xFFC6C6CA),
-    surfaceVariant: CustomColors.grey[50],
+    surfaceVariant: MyColors.grey[50],
     onSurfaceVariant: const Color(0xFFC2C7CF),
     outline: const Color(0xFF8C9199),
     onInverseSurface: const Color.fromARGB(255, 39, 133, 228),

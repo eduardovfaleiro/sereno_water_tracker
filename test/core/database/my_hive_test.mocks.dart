@@ -3,12 +3,13 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
-import 'dart:io' as _i2;
+import 'dart:async' as _i3;
+import 'dart:typed_data' as _i6;
 
+import 'package:hive/hive.dart' as _i2;
+import 'package:hive/src/box/default_compaction_strategy.dart' as _i5;
+import 'package:hive/src/box/default_key_comparator.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
-
-import 'my_hive_test.dart' as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -21,8 +22,8 @@ import 'my_hive_test.dart' as _i3;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeDirectory_0 extends _i1.SmartFake implements _i2.Directory {
-  _FakeDirectory_0(
+class _FakeBox_0<E> extends _i1.SmartFake implements _i2.Box<E> {
+  _FakeBox_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -31,31 +32,301 @@ class _FakeDirectory_0 extends _i1.SmartFake implements _i2.Directory {
         );
 }
 
-/// A class which mocks [GetApplicationDocumentsDirectory].
+class _FakeLazyBox_1<E> extends _i1.SmartFake implements _i2.LazyBox<E> {
+  _FakeLazyBox_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+/// A class which mocks [HiveInterface].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetApplicationDocumentsDirectory extends _i1.Mock
-    implements _i3.GetApplicationDocumentsDirectory {
+class MockHiveInterface extends _i1.Mock implements _i2.HiveInterface {
   @override
-  _i4.Future<_i2.Directory> call() => (super.noSuchMethod(
+  void init(
+    String? path, {
+    _i2.HiveStorageBackendPreference? backendPreference =
+        _i2.HiveStorageBackendPreference.native,
+  }) =>
+      super.noSuchMethod(
         Invocation.method(
-          #call,
-          [],
+          #init,
+          [path],
+          {#backendPreference: backendPreference},
         ),
-        returnValue: _i4.Future<_i2.Directory>.value(_FakeDirectory_0(
+        returnValueForMissingStub: null,
+      );
+  @override
+  _i3.Future<_i2.Box<E>> openBox<E>(
+    String? name, {
+    _i2.HiveCipher? encryptionCipher,
+    _i2.KeyComparator? keyComparator = _i4.defaultKeyComparator,
+    _i2.CompactionStrategy? compactionStrategy = _i5.defaultCompactionStrategy,
+    bool? crashRecovery = true,
+    String? path,
+    _i6.Uint8List? bytes,
+    String? collection,
+    List<int>? encryptionKey,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #openBox,
+          [name],
+          {
+            #encryptionCipher: encryptionCipher,
+            #keyComparator: keyComparator,
+            #compactionStrategy: compactionStrategy,
+            #crashRecovery: crashRecovery,
+            #path: path,
+            #bytes: bytes,
+            #collection: collection,
+            #encryptionKey: encryptionKey,
+          },
+        ),
+        returnValue: _i3.Future<_i2.Box<E>>.value(_FakeBox_0<E>(
           this,
           Invocation.method(
-            #call,
-            [],
+            #openBox,
+            [name],
+            {
+              #encryptionCipher: encryptionCipher,
+              #keyComparator: keyComparator,
+              #compactionStrategy: compactionStrategy,
+              #crashRecovery: crashRecovery,
+              #path: path,
+              #bytes: bytes,
+              #collection: collection,
+              #encryptionKey: encryptionKey,
+            },
+          ),
+        )),
+        returnValueForMissingStub: _i3.Future<_i2.Box<E>>.value(_FakeBox_0<E>(
+          this,
+          Invocation.method(
+            #openBox,
+            [name],
+            {
+              #encryptionCipher: encryptionCipher,
+              #keyComparator: keyComparator,
+              #compactionStrategy: compactionStrategy,
+              #crashRecovery: crashRecovery,
+              #path: path,
+              #bytes: bytes,
+              #collection: collection,
+              #encryptionKey: encryptionKey,
+            },
+          ),
+        )),
+      ) as _i3.Future<_i2.Box<E>>);
+  @override
+  _i3.Future<_i2.LazyBox<E>> openLazyBox<E>(
+    String? name, {
+    _i2.HiveCipher? encryptionCipher,
+    _i2.KeyComparator? keyComparator = _i4.defaultKeyComparator,
+    _i2.CompactionStrategy? compactionStrategy = _i5.defaultCompactionStrategy,
+    bool? crashRecovery = true,
+    String? path,
+    String? collection,
+    List<int>? encryptionKey,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #openLazyBox,
+          [name],
+          {
+            #encryptionCipher: encryptionCipher,
+            #keyComparator: keyComparator,
+            #compactionStrategy: compactionStrategy,
+            #crashRecovery: crashRecovery,
+            #path: path,
+            #collection: collection,
+            #encryptionKey: encryptionKey,
+          },
+        ),
+        returnValue: _i3.Future<_i2.LazyBox<E>>.value(_FakeLazyBox_1<E>(
+          this,
+          Invocation.method(
+            #openLazyBox,
+            [name],
+            {
+              #encryptionCipher: encryptionCipher,
+              #keyComparator: keyComparator,
+              #compactionStrategy: compactionStrategy,
+              #crashRecovery: crashRecovery,
+              #path: path,
+              #collection: collection,
+              #encryptionKey: encryptionKey,
+            },
           ),
         )),
         returnValueForMissingStub:
-            _i4.Future<_i2.Directory>.value(_FakeDirectory_0(
+            _i3.Future<_i2.LazyBox<E>>.value(_FakeLazyBox_1<E>(
           this,
           Invocation.method(
-            #call,
-            [],
+            #openLazyBox,
+            [name],
+            {
+              #encryptionCipher: encryptionCipher,
+              #keyComparator: keyComparator,
+              #compactionStrategy: compactionStrategy,
+              #crashRecovery: crashRecovery,
+              #path: path,
+              #collection: collection,
+              #encryptionKey: encryptionKey,
+            },
           ),
         )),
-      ) as _i4.Future<_i2.Directory>);
+      ) as _i3.Future<_i2.LazyBox<E>>);
+  @override
+  _i2.Box<E> box<E>(String? name) => (super.noSuchMethod(
+        Invocation.method(
+          #box,
+          [name],
+        ),
+        returnValue: _FakeBox_0<E>(
+          this,
+          Invocation.method(
+            #box,
+            [name],
+          ),
+        ),
+        returnValueForMissingStub: _FakeBox_0<E>(
+          this,
+          Invocation.method(
+            #box,
+            [name],
+          ),
+        ),
+      ) as _i2.Box<E>);
+  @override
+  _i2.LazyBox<E> lazyBox<E>(String? name) => (super.noSuchMethod(
+        Invocation.method(
+          #lazyBox,
+          [name],
+        ),
+        returnValue: _FakeLazyBox_1<E>(
+          this,
+          Invocation.method(
+            #lazyBox,
+            [name],
+          ),
+        ),
+        returnValueForMissingStub: _FakeLazyBox_1<E>(
+          this,
+          Invocation.method(
+            #lazyBox,
+            [name],
+          ),
+        ),
+      ) as _i2.LazyBox<E>);
+  @override
+  bool isBoxOpen(String? name) => (super.noSuchMethod(
+        Invocation.method(
+          #isBoxOpen,
+          [name],
+        ),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  _i3.Future<void> close() => (super.noSuchMethod(
+        Invocation.method(
+          #close,
+          [],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
+  _i3.Future<void> deleteBoxFromDisk(
+    String? name, {
+    String? path,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #deleteBoxFromDisk,
+          [name],
+          {#path: path},
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
+  _i3.Future<void> deleteFromDisk() => (super.noSuchMethod(
+        Invocation.method(
+          #deleteFromDisk,
+          [],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
+  List<int> generateSecureKey() => (super.noSuchMethod(
+        Invocation.method(
+          #generateSecureKey,
+          [],
+        ),
+        returnValue: <int>[],
+        returnValueForMissingStub: <int>[],
+      ) as List<int>);
+  @override
+  _i3.Future<bool> boxExists(
+    String? name, {
+    String? path,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #boxExists,
+          [name],
+          {#path: path},
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+        returnValueForMissingStub: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
+  @override
+  void resetAdapters() => super.noSuchMethod(
+        Invocation.method(
+          #resetAdapters,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void registerAdapter<T>(
+    _i2.TypeAdapter<T>? adapter, {
+    bool? internal = false,
+    bool? override = false,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #registerAdapter,
+          [adapter],
+          {
+            #internal: internal,
+            #override: override,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  bool isAdapterRegistered(int? typeId) => (super.noSuchMethod(
+        Invocation.method(
+          #isAdapterRegistered,
+          [typeId],
+        ),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  void ignoreTypeId<T>(int? typeId) => super.noSuchMethod(
+        Invocation.method(
+          #ignoreTypeId,
+          [typeId],
+        ),
+        returnValueForMissingStub: null,
+      );
 }

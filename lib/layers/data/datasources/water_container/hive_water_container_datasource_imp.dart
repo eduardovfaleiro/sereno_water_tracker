@@ -1,11 +1,11 @@
 import 'package:hive/hive.dart';
 
-import '../../../../../core/utils/constants/constants.dart';
-import '../../../../domain/entities/water_container_entity.dart';
-import '../../../dtos/water_container_dto.dart';
-import 'water_container_local_datasource.dart';
+import '../../../../core/utils/constants/constants.dart';
+import '../../../domain/entities/water_container_entity.dart';
+import '../../dtos/water_container_dto.dart';
+import 'water_container_datasource.dart';
 
-class HiveWaterContainerDataSourceImp implements WaterContainerLocalDataSource {
+class HiveWaterContainerDataSourceImp implements WaterContainerDataSource {
   final HiveInterface _hiveInterface;
 
   HiveWaterContainerDataSourceImp(this._hiveInterface);

@@ -3,8 +3,8 @@ import 'package:hive/hive.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sereno_clean_architecture_solid/core/utils/constants/constants.dart';
-import 'package:sereno_clean_architecture_solid/layers/data/datasources/local/water_container/hive_water_container_datasource_imp.dart';
-import 'package:sereno_clean_architecture_solid/layers/data/datasources/local/water_container/water_container_local_datasource.dart';
+import 'package:sereno_clean_architecture_solid/layers/data/datasources/water_container/hive_water_container_datasource_imp.dart';
+import 'package:sereno_clean_architecture_solid/layers/data/datasources/water_container/water_container_datasource.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/dtos/water_container_dto.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/entities/water_container_entity.dart';
 
@@ -13,7 +13,7 @@ import 'hive_water_container_datasource_test.mocks.dart';
 @GenerateNiceMocks([MockSpec<HiveInterface>(), MockSpec<Box>()])
 void main() {
   late MockHiveInterface mockHiveInterface;
-  late WaterContainerLocalDataSource dataSource;
+  late WaterContainerDataSource dataSource;
 
   setUp(() {
     mockHiveInterface = MockHiveInterface();

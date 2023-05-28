@@ -1,5 +1,3 @@
 abstract interface class Failure {}
 
-class ServerFailure extends Failure {}
-
-class CacheFailure extends Failure {}
+class CacheFailure implements Failure {}
