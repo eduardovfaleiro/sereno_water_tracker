@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'core/theme/themes.dart';
 import 'core/utils/functions/init_app.dart';
 import 'layers/presentation/controllers/water_display_controller.dart';
-import 'layers/presentation/ui/pages/display/water/water_display_page.dart';
+import 'layers/presentation/ui/pages/water/water_display_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

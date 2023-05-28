@@ -2,9 +2,9 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../../core/theme/themes.dart';
-import '../../../../controllers/water_display_controller.dart';
-import '../../../widgets/buttons/circular_button.dart';
+import '../../../../../core/theme/themes.dart';
+import '../../../controllers/water_display_controller.dart';
+import '../../widgets/buttons/circular_button.dart';
 
 class WaterDisplayPage extends StatelessWidget {
   const WaterDisplayPage({super.key});

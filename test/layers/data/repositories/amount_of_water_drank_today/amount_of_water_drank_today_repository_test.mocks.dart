@@ -35,18 +35,9 @@ class MockAmountOfWaterDrankTodayDataSource extends _i1.Mock
         returnValueForMissingStub: _i3.Future<int>.value(0),
       ) as _i3.Future<int>);
   @override
-  _i3.Future<void> set(int? amount) => (super.noSuchMethod(
+  _i3.Future<int> update(int? amount) => (super.noSuchMethod(
         Invocation.method(
-          #set,
-          [amount],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-  @override
-  _i3.Future<int> addUp(int? amount) => (super.noSuchMethod(
-        Invocation.method(
-          #addUp,
+          #update,
           [amount],
         ),
         returnValue: _i3.Future<int>.value(0),
@@ -56,6 +47,15 @@ class MockAmountOfWaterDrankTodayDataSource extends _i1.Mock
   _i3.Future<int> subtract(int? amount) => (super.noSuchMethod(
         Invocation.method(
           #subtract,
+          [amount],
+        ),
+        returnValue: _i3.Future<int>.value(0),
+        returnValueForMissingStub: _i3.Future<int>.value(0),
+      ) as _i3.Future<int>);
+  @override
+  _i3.Future<int> addUp(int? amount) => (super.noSuchMethod(
+        Invocation.method(
+          #addUp,
           [amount],
         ),
         returnValue: _i3.Future<int>.value(0),
