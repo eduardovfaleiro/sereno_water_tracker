@@ -46,11 +46,16 @@ class WaterDisplayPage extends StatelessWidget {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Água bebida hoje'),
-                        Text('1500 ml (50%)'),
+                        const Text('Água bebida hoje'),
+                        FutureBuilder(
+                          future: waterDisplayController.getAmountOfWaterDrankToday(context),
+                          builder: (context, snapshot) => Text(
+                            snapshot.data as String? ?? '0',
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: Spacing.small2),

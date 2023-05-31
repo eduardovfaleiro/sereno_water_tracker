@@ -15,6 +15,7 @@ class MyHive {
     }
   }
 
+  // TODO: create tests
   void registerAdapters(List<TypeAdapter> adapters) {
     // TODO: create test
     for (var adapter in adapters) {
