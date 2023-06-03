@@ -1,11 +1,10 @@
-import 'package:dartz/dartz.dart';
-
-import '../../../core/error/failures.dart';
+import '../../../core/core.dart';
+import '../../data/dtos/water_container/water_container_dto.dart';
 import '../entities/water_container_entity.dart';
 
 abstract interface class WaterContainerRepository {
-  Future<Either<Failure, WaterContainerEntity>> get(int id);
-  Future<int> create(WaterContainerEntity waterContainerEntity);
-  Future<Either<Failure, void>> delete(int id);
-  Future<Either<Failure, List<WaterContainerEntity>>> getAllContainers();
+  Future<Result<WaterContainerDto>> get(int id);
+  Future<void> create(WaterContainerEntity waterContainerEntity);
+  Future<Result<void>> delete(int id);
+  Future<Result<List<WaterContainerEntity>>> getAllContainers();
 }

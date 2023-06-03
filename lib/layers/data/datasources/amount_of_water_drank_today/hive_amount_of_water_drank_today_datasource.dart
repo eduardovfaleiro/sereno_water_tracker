@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-import '../../../../core/utils/constants/constants.dart';
+import '../../../../core/core.dart';
 import 'amount_of_water_drank_today_datasource.dart';
 
 class HiveAmountOfWaterDrankTodayDataSourceImp implements AmountOfWaterDrankTodayDataSource {

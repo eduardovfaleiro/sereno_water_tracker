@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+part of core;
 
 class MyHive {
   final HiveInterface _hiveInterface;
@@ -15,9 +15,7 @@ class MyHive {
     }
   }
 
-  // TODO: create tests
   void registerAdapters(List<TypeAdapter> adapters) {
-    // TODO: create test
     for (var adapter in adapters) {
       _hiveInterface.registerAdapter(adapter);
     }

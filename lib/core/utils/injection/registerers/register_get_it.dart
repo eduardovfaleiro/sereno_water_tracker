@@ -1,7 +1,5 @@
-import 'package:dartz/dartz.dart';
-
-import '../../../error/failures.dart';
+import '../../../core.dart';
 
 abstract class RegisterGetIt {
-  Either<Failure, void> call();
+  Result<void> call();
 }

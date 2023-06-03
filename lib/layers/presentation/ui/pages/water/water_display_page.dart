@@ -2,6 +2,7 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../core/core.dart';
 import '../../../../../core/theme/themes.dart';
 import '../../../controllers/water_display_controller.dart';
 import '../../widgets/buttons/circular_button.dart';
@@ -46,18 +47,7 @@ class WaterDisplayPage extends StatelessWidget {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Água bebida hoje'),
-                        FutureBuilder(
-                          future: waterDisplayController.getAmountOfWaterDrankToday(context),
-                          builder: (context, snapshot) => Text(
-                            snapshot.data as String? ?? '0',
-                          ),
-                        ),
-                      ],
-                    ),
+                    AmountOfWaterDrankTodayWidget(waterDisplayController.getAmountOfWaterDrankToday(context)),
                     const SizedBox(height: Spacing.small2),
                     const LinearProgressIndicator(value: 0),
                     const SizedBox(height: Spacing.small2),
@@ -99,6 +89,38 @@ class WaterDisplayPage extends StatelessWidget {
               );
             },
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class AmountOfWaterDrankTodayWidget extends StatelessWidget {
+  final Future<Result<int>> amountOfWaterDrankToday;
+
+  const AmountOfWaterDrankTodayWidget(this.amountOfWaterDrankToday, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text('Água bebida hoje'),
+        FutureBuilder(
+          future: amountOfWaterDrankToday,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text('Carregando...');
+            }
+
+            var result = snapshot.data!.fold((l) => l, (r) => r);
+
+            if (result is Failure) {
+              return const Text('Indisponível');
+            }
+
+            return Text('${snapshot.data} ml');
+          },
         ),
       ],
     );

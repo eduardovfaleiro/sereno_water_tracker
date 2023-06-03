@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../core/error/failures.dart';
+import '../../../core/core.dart';
 import '../../domain/repositories/amount_of_water_drank_today_repository.dart';
 import '../datasources/amount_of_water_drank_today/amount_of_water_drank_today_datasource.dart';
 
@@ -10,16 +10,16 @@ class AmountOfWaterDrankTodayRepositoryImp implements AmountOfWaterDrankTodayRep
   AmountOfWaterDrankTodayRepositoryImp(this._amountOfWaterDrankTodayDataSource);
 
   @override
-  Future<Either<Failure, int>> get() async {
+  Future<Result<int>> get() async {
     try {
       return Right(await _amountOfWaterDrankTodayDataSource.get());
     } catch (e) {
-      return Left(CacheFailure());
+      return Left(CacheFailure("Call to datasource failed."));
     }
   }
 
   @override
-  Future<Either<Failure, int>> addUp(int amount) async {
+  Future<Result<int>> addUp(int amount) async {
     try {
       return Right(await _amountOfWaterDrankTodayDataSource.addUp(amount));
     } catch (e) {
@@ -28,7 +28,7 @@ class AmountOfWaterDrankTodayRepositoryImp implements AmountOfWaterDrankTodayRep
   }
 
   @override
-  Future<Either<Failure, int>> update(int amount) {
+  Future<Result<int>> update(int amount) {
     throw UnimplementedError();
   }
 }

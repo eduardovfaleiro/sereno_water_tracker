@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../error/failures.dart';
+import '../../../core.dart';
 import 'register_get_it.dart';
 
 class RegisterFactoryImp<T extends Object> implements RegisterGetIt {
@@ -10,7 +10,7 @@ class RegisterFactoryImp<T extends Object> implements RegisterGetIt {
   RegisterFactoryImp(this.factoryFunc);
 
   @override
-  Either<Failure, void> call() {
+  Result<void> call() {
     try {
       return Right(GetIt.I.registerFactory(factoryFunc));
     } catch (e) {

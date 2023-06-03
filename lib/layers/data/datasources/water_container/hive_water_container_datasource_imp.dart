@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-import '../../../../core/utils/constants/constants.dart';
+import '../../../../core/core.dart';
 import '../../../domain/entities/water_container_entity.dart';
 import '../../dtos/water_container/water_container_dto.dart';
 import 'water_container_datasource.dart';

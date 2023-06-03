@@ -12,8 +12,7 @@ import '../../../layers/data/repositories/water_container_repository_imp.dart';
 import '../../../layers/domain/repositories/amount_of_water_drank_today_repository.dart';
 import '../../../layers/domain/repositories/water_container_repository.dart';
 import '../../../layers/presentation/controllers/water_display_controller.dart';
-import '../../database/my_hive.dart';
-import '../constants/constants.dart';
+import '../../core.dart';
 import '../injection/registerers/register_lazy_singleton_imp.dart';
 import 'init_get_it.dart';
 
@@ -33,4 +32,6 @@ Future<void> initApp() async {
   myHive.init(await getApplicationDocumentsDirectory().then((directory) => directory.path));
   await myHive.openBoxes([WATER_CONTAINER, WATER_DATA]);
   myHive.registerAdapters([WaterContainerDtoAdapter()]);
+
+  Hive.box(WATER_DATA).put(DAILY_GOAL, 1000);
 }

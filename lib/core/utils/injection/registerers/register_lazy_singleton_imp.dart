@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../error/failures.dart';
+import '../../../core.dart';
 import 'register_get_it.dart';
 
 class RegisterLazySingletonImp<T extends Object> implements RegisterGetIt {
@@ -10,7 +10,7 @@ class RegisterLazySingletonImp<T extends Object> implements RegisterGetIt {
   RegisterLazySingletonImp(this.factoryFunc);
 
   @override
-  Either<Failure, void> call() {
+  Result<void> call() {
     try {
       return Right(GetIt.I.registerLazySingleton(factoryFunc));
     } catch (e) {

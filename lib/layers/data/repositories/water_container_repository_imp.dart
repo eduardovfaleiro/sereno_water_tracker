@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../core/error/failures.dart';
+import '../../../core/core.dart';
 import '../../domain/entities/water_container_entity.dart';
 import '../../domain/repositories/water_container_repository.dart';
 import '../datasources/water_container/water_container_datasource.dart';
@@ -17,7 +17,7 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
   }
 
   @override
-  Future<Either<Failure, void>> delete(int id) async {
+  Future<Result<void>> delete(int id) async {
     try {
       return Right(_waterContainerDataSource.delete(id));
     } catch (e) {
@@ -26,7 +26,7 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
   }
 
   @override
-  Future<Either<Failure, WaterContainerDto>> get(int id) async {
+  Future<Result<WaterContainerDto>> get(int id) async {
     try {
       var waterContainerDto = await _waterContainerDataSource.get(id);
 
@@ -37,7 +37,7 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
   }
 
   @override
-  Future<Either<Failure, List<WaterContainerEntity>>> getAllContainers() async {
+  Future<Result<List<WaterContainerEntity>>> getAllContainers() async {
     try {
       return Right(await _waterContainerDataSource.getAllContainers());
     } catch (e) {

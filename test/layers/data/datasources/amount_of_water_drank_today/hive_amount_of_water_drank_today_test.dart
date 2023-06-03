@@ -1,14 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive/hive.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:sereno_clean_architecture_solid/core/utils/constants/constants.dart';
+import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/amount_of_water_drank_today/amount_of_water_drank_today_datasource.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/amount_of_water_drank_today/hive_amount_of_water_drank_today_datasource.dart';
 
-import 'hive_amount_of_water_drank_today_test.mocks.dart';
+import '../../../../mocks/mock_box/mock_box.mocks.dart';
+import '../../../../mocks/mock_hive_interface/mock_hive_interface.mocks.dart';
 
-@GenerateNiceMocks([MockSpec<HiveInterface>(), MockSpec<Box>()])
 void main() {
   late MockBox mockBox;
   late MockHiveInterface mockHiveInterface;

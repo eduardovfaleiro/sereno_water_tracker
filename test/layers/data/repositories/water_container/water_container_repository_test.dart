@@ -2,8 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/core/error/exceptions.dart';
-import 'package:sereno_clean_architecture_solid/core/error/failures.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/water_container/water_container_datasource.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/dtos/water_container/water_container_dto.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/repositories/water_container_repository_imp.dart';
@@ -82,11 +82,9 @@ void main() {
     test('Should return an int when call to datasource is sucessful', () async {
       when(mockWaterContainerDataSource.create(any)).thenAnswer((_) async => id);
 
-      var result = await repository.create(waterContainerEntity);
+      await repository.create(waterContainerEntity);
 
       verify(mockWaterContainerDataSource.create(waterContainerEntity));
-
-      expect(result, id);
     });
   });
 

@@ -1,3 +1,5 @@
+part of core;
+
 abstract interface class Failure {
   final String? message;
 
