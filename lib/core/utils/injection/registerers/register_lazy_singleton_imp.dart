@@ -12,7 +12,7 @@ class RegisterLazySingletonImp<T extends Object> implements RegisterGetIt {
   @override
   Result<void> call() {
     try {
-      return Right(GetIt.I.registerLazySingleton(factoryFunc));
+      return Right(GetIt.I.registerLazySingleton<T>(factoryFunc));
     } catch (e) {
       return Left(GetItFailure('Error while registering lazy singleton.'));
     }

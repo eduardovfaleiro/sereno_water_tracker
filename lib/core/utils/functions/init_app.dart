@@ -32,6 +32,4 @@ Future<void> initApp() async {
   myHive.init(await getApplicationDocumentsDirectory().then((directory) => directory.path));
   await myHive.openBoxes([WATER_CONTAINER, WATER_DATA]);
   myHive.registerAdapters([WaterContainerDtoAdapter()]);
-
-  Hive.box(WATER_DATA).put(DAILY_GOAL, 1000);
 }

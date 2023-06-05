@@ -12,7 +12,7 @@ class RegisterFactoryImp<T extends Object> implements RegisterGetIt {
   @override
   Result<void> call() {
     try {
-      return Right(GetIt.I.registerFactory(factoryFunc));
+      return Right(GetIt.I.registerFactory<T>(factoryFunc));
     } catch (e) {
       return Left(GetItFailure('Error while registering factory.'));
     }
