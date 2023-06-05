@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/core/error/exceptions.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/water_container/water_container_datasource.dart';
@@ -10,9 +9,8 @@ import 'package:sereno_clean_architecture_solid/layers/data/repositories/water_c
 import 'package:sereno_clean_architecture_solid/layers/domain/entities/water_container_entity.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/repositories/water_container_repository.dart';
 
-import 'water_container_repository_test.mocks.dart';
+class MockWaterContainerDataSource extends Mock implements WaterContainerDataSource {}
 
-@GenerateNiceMocks([MockSpec<WaterContainerDataSource>()])
 void main() {
   late MockWaterContainerDataSource mockWaterContainerDataSource;
   late WaterContainerRepository repository;
@@ -22,27 +20,31 @@ void main() {
     repository = WaterContainerRepositoryImp(mockWaterContainerDataSource);
   });
 
+  setUpAll(() {
+    registerFallbackValue(WaterContainerEntity(amount: 200, description: 'cup', iconName: 'test'));
+  });
+
   group('get', () {
     int id = 1;
     var waterContainerDto = WaterContainerDto(amount: 200, description: 'cup', iconName: 'test');
 
     test('Should return a water container when call to datasource is sucessful', () async {
-      when(mockWaterContainerDataSource.get(any)).thenAnswer((_) async => waterContainerDto);
+      when(() => mockWaterContainerDataSource.get(any())).thenAnswer((_) async => waterContainerDto);
 
       var result = await repository.get(id);
 
-      verify(mockWaterContainerDataSource.get(id));
+      verify(() => mockWaterContainerDataSource.get(id));
 
       expect(result, Right(waterContainerDto));
     });
 
     test('Should return a CacheFailure when call to datasource fails', () async {
-      when(mockWaterContainerDataSource.get(any)).thenThrow(CacheException());
+      when(() => mockWaterContainerDataSource.get(any())).thenThrow(CacheException());
 
       var result = await repository.get(id);
       var expectedResult = result.fold((l) => l, (r) => null);
 
-      verify(mockWaterContainerDataSource.get(id));
+      verify(() => mockWaterContainerDataSource.get(id));
 
       expect(expectedResult, isA<CacheFailure>());
     });
@@ -56,21 +58,21 @@ void main() {
     ];
 
     test('Should return all water containers if call to datasource is succesful', () async {
-      when(mockWaterContainerDataSource.getAllContainers()).thenAnswer((_) async => allWaterContainers);
+      when(() => mockWaterContainerDataSource.getAllContainers()).thenAnswer((_) async => allWaterContainers);
 
       var result = await repository.getAllContainers();
 
-      verify(mockWaterContainerDataSource.getAllContainers());
+      verify(() => mockWaterContainerDataSource.getAllContainers());
       expect(result, Right(allWaterContainers));
     });
 
     test('Should return CacheFailure if call to datasource fails', () async {
-      when(mockWaterContainerDataSource.getAllContainers()).thenThrow((_) => CacheException());
+      when(() => mockWaterContainerDataSource.getAllContainers()).thenThrow((_) => CacheException());
 
       var result = await repository.getAllContainers();
       var expectedResult = result.fold((l) => l, (r) => null);
 
-      verify(mockWaterContainerDataSource.getAllContainers());
+      verify(() => mockWaterContainerDataSource.getAllContainers());
       expect(expectedResult, isA<CacheFailure>());
     });
   });
@@ -79,12 +81,12 @@ void main() {
     int id = 1;
     var waterContainerEntity = WaterContainerEntity(amount: 200, description: 'cup', iconName: 'test');
 
-    test('Should return an int when call to datasource is sucessful', () async {
-      when(mockWaterContainerDataSource.create(any)).thenAnswer((_) async => id);
+    test('Should return an int when call to datasource is successful', () async {
+      when(() => mockWaterContainerDataSource.create(any())).thenAnswer((_) async => id);
 
       await repository.create(waterContainerEntity);
 
-      verify(mockWaterContainerDataSource.create(waterContainerEntity));
+      verify(() => mockWaterContainerDataSource.create(waterContainerEntity));
     });
   });
 
@@ -92,12 +94,12 @@ void main() {
     int id = 1;
 
     test('Should return a CacheFailure when call to datasource fails', () async {
-      when(mockWaterContainerDataSource.delete(any)).thenThrow(CacheException());
+      when(() => mockWaterContainerDataSource.delete(any())).thenThrow(CacheException());
 
       var result = await repository.delete(id);
       var expectedResult = result.fold((l) => l, (r) => null);
 
-      verify(mockWaterContainerDataSource.delete(id));
+      verify(() => mockWaterContainerDataSource.delete(id));
 
       expect(expectedResult, isA<CacheFailure>());
     });

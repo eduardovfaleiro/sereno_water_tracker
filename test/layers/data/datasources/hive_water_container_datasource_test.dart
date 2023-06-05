@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/water_container/hive_water_container_datasource_imp.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/water_container/water_container_datasource.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/dtos/water_container/water_container_dto.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/entities/water_container_entity.dart';
 
-import '../../../../mocks/mock_box/mock_box.mocks.dart';
-import '../../../../mocks/mock_hive_interface/mock_hive_interface.mocks.dart';
+import '../../../core/database/my_hive_test.dart';
+import 'hive_amount_of_water_drank_today_test.dart';
 
 void main() {
   late MockBox mockBox;
@@ -26,14 +26,14 @@ void main() {
 
       int number = 1;
 
-      when(mockHiveInterface.box(any)).thenReturn(mockBox);
-      when(mockBox.add(any)).thenAnswer((_) async => number);
+      when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
+      when(() => mockBox.add(any())).thenAnswer((_) async => number);
 
       int result = await dataSource.create(waterContainerEntity);
 
       verifyInOrder([
-        mockHiveInterface.box(WATER_CONTAINER),
-        mockBox.add(waterContainerEntity),
+        () => mockHiveInterface.box(WATER_CONTAINER),
+        () => mockBox.add(waterContainerEntity),
       ]);
 
       expect(result, number);
@@ -44,12 +44,13 @@ void main() {
     test('Should forward the call to HiveInterface', () async {
       int id = 1;
 
-      when(mockHiveInterface.box(any)).thenReturn(mockBox);
+      when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
+      when(() => mockBox.delete(any())).thenAnswer((_) async {});
 
       await dataSource.delete(id);
 
-      verify(mockHiveInterface.box(WATER_CONTAINER));
-      verify(mockBox.delete(id));
+      verify(() => mockHiveInterface.box(WATER_CONTAINER));
+      verify(() => mockBox.delete(id));
     });
   });
 
@@ -61,12 +62,12 @@ void main() {
     ];
 
     test('Should return all water containers if call to datasource is succesful', () async {
-      when(mockHiveInterface.box(any)).thenReturn(mockBox);
-      when(mockBox.values).thenReturn(allWaterContainers);
+      when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
+      when(() => mockBox.values).thenReturn(allWaterContainers);
 
       var result = await dataSource.getAllContainers();
 
-      verifyInOrder([mockHiveInterface.box(WATER_CONTAINER), mockBox.values]);
+      verifyInOrder([() => mockHiveInterface.box(WATER_CONTAINER), () => mockBox.values]);
 
       expect(result, allWaterContainers);
     });
@@ -79,13 +80,13 @@ void main() {
       int id = 1;
       var mockBox = MockBox();
 
-      when(mockHiveInterface.box(any)).thenReturn(mockBox);
-      when(mockBox.getAt(id)).thenAnswer((_) async => waterContainerDto);
+      when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
+      when(() => mockBox.getAt(id)).thenAnswer((_) async => waterContainerDto);
 
       var result = await dataSource.get(id);
 
-      verify(mockHiveInterface.box(WATER_CONTAINER));
-      verify(mockBox.getAt(id));
+      verify(() => mockHiveInterface.box(WATER_CONTAINER));
+      verify(() => mockBox.getAt(id));
 
       expect(result, waterContainerDto);
     });
