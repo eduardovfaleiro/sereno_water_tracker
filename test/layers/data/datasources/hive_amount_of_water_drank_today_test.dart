@@ -1,13 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive/hive.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/amount_of_water_drank_today/amount_of_water_drank_today_datasource.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/amount_of_water_drank_today/hive_amount_of_water_drank_today_datasource.dart';
 
-import '../../../core/database/my_hive_test.dart';
-
-class MockBox extends Mock implements Box {}
+import '../../../mocks.dart';
 
 void main() {
   late MockBox mockBox;

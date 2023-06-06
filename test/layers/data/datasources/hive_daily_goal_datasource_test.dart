@@ -1,33 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive/hive.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/datasources/daily_goal/daily_goal_datasource.dart';
+import 'package:sereno_clean_architecture_solid/layers/data/datasources/daily_goal/hive_daily_goal_datasource_imp.dart';
 
-import '../../../core/database/my_hive_test.dart';
-import 'hive_amount_of_water_drank_today_test.dart';
-
-class HiveDailyGoalDataSource implements DailyGoalDataSource {
-  final HiveInterface _hiveInterface;
-
-  HiveDailyGoalDataSource(this._hiveInterface);
-
-  @override
-  Future<void> create(int amount) async {
-    _hiveInterface.box(WATER_DATA).put(DAILY_GOAL, amount);
-  }
-
-  @override
-  Future<int> get() async {
-    return _hiveInterface.box(WATER_DATA).get(DAILY_GOAL);
-  }
-
-  @override
-  Future<int> update() {
-    // TODO: implement update
-    throw UnimplementedError();
-  }
-}
+import '../../../mocks.dart';
 
 void main() {
   late MockBox mockBox;

@@ -23,7 +23,7 @@ void main() {
   group('create', () {
     int amount = 1000;
 
-    test('Should make the call for the datasource successfuly', () async {
+    test('Should make the call for the datasource successfully', () async {
       await repository.create(amount);
 
       verify(() => mockDailyGoalDataSource.create(amount));

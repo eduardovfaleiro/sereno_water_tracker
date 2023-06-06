@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
@@ -12,7 +13,8 @@ class WaterDisplayController extends ChangeNotifier {
   WaterDisplayController(this._waterContainerRepository, this._amountOfWaterDrankTodayRepository);
 
   Future<Result<int>> getAmountOfWaterDrankToday(BuildContext context) async {
-    return _amountOfWaterDrankTodayRepository.get();
+    return right<Failure, int>(1400);
+    // return _amountOfWaterDrankTodayRepository.get();
   }
 
   Future<void> createWaterContainer(WaterContainerEntity waterContainerEntity) {

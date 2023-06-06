@@ -1,11 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive/hive.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
 
-import '../../layers/data/datasources/hive_amount_of_water_drank_today_test.dart';
-
-class MockHiveInterface extends Mock implements HiveInterface {}
+import '../../mocks.dart';
 
 void main() {
   late MockHiveInterface mockHiveInterface;

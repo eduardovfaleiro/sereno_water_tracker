@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../../core/core.dart';
 import '../../../../../core/theme/themes.dart';
-import '../../../controllers/water_display_controller.dart';
+import '../../controllers/water_display_controller.dart';
 import '../../widgets/buttons/circular_button.dart';
 
 class WaterDisplayPage extends StatelessWidget {
@@ -119,7 +119,7 @@ class AmountOfWaterDrankTodayWidget extends StatelessWidget {
               return const Text('Indisponível');
             }
 
-            return Text('${snapshot.data} ml');
+            return Text('$result ml');
           },
         ),
       ],

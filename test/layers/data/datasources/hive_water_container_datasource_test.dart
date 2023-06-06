@@ -6,8 +6,7 @@ import 'package:sereno_clean_architecture_solid/layers/data/datasources/water_co
 import 'package:sereno_clean_architecture_solid/layers/data/dtos/water_container/water_container_dto.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/entities/water_container_entity.dart';
 
-import '../../../core/database/my_hive_test.dart';
-import 'hive_amount_of_water_drank_today_test.dart';
+import '../../../mocks.dart';
 
 void main() {
   late MockBox mockBox;
