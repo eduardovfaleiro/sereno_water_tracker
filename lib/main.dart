@@ -5,10 +5,11 @@ import 'package:provider/provider.dart';
 import 'core/theme/themes.dart';
 import 'core/utils/functions/init_app.dart';
 import 'layers/presentation/controllers/water_display_controller.dart';
-import 'layers/presentation/pages/water/water_display_page.dart';
+import 'layers/presentation/pages/water_starter_page/water_starter_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await initApp();
 
   runApp(
@@ -30,7 +31,7 @@ class SerenoCleanArchitectureSolid extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const WaterDisplayPage(),
+      home: const WaterStarterPage(),
       theme: Themes.dark,
     );
   }

@@ -47,17 +47,14 @@ class WaterDisplayPage extends StatelessWidget {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    AmountOfWaterDrankTodayWidget(waterDisplayController.getAmountOfWaterDrankToday(context)),
+                    WaterDataWidget(
+                      'Water drank today',
+                      waterDisplayController.getAmountOfWaterDrankToday(context),
+                    ),
                     const SizedBox(height: Spacing.small2),
                     const LinearProgressIndicator(value: 0),
                     const SizedBox(height: Spacing.small2),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Meta diária'),
-                        Text('3000 ml'),
-                      ],
-                    ),
+                    WaterDataWidget('Daily goal', waterDisplayController.getDailyGoal()),
                     const SizedBox(height: Spacing.medium2),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -95,31 +92,33 @@ class WaterDisplayPage extends StatelessWidget {
   }
 }
 
-class AmountOfWaterDrankTodayWidget extends StatelessWidget {
-  final Future<Result<int>> amountOfWaterDrankToday;
+class WaterDataWidget extends StatelessWidget {
+  final String text;
+  final Future<Result<int>> value;
 
-  const AmountOfWaterDrankTodayWidget(this.amountOfWaterDrankToday, {super.key});
+  const WaterDataWidget(this.text, this.value, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text('Água bebida hoje'),
+        Text(text),
         FutureBuilder(
-          future: amountOfWaterDrankToday,
+          future: value,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text('Carregando...');
+              return const Text('Loading...');
             }
 
-            var result = snapshot.data!.fold((l) => l, (r) => r);
-
-            if (result is Failure) {
-              return const Text('Indisponível');
-            }
-
-            return Text('$result ml');
+            return snapshot.data!.fold(
+              (failure) {
+                return const Text('Unavailable');
+              },
+              (amountOfWaterDrankToday) {
+                return Text('$amountOfWaterDrankToday ml');
+              },
+            );
           },
         ),
       ],

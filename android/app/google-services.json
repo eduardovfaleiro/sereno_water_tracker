@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "83191235630",
+    "project_id": "sereno-144e7",
+    "storage_bucket": "sereno-144e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83191235630:android:98080cf4e21593e5aa4bbf",
+        "android_client_info": {
+          "package_name": "com.example.sereno_clean_architecture_solid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "83191235630-pvkae0qsc04sb3f6dg7nub7734if4k2i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjGmH3beOV0gAkzpymSGBIcODxOG854PA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "83191235630-pvkae0qsc04sb3f6dg7nub7734if4k2i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

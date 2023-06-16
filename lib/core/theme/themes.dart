@@ -73,6 +73,11 @@ class Themes {
     ),
   );
 
+  static final SliderThemeData _sliderThemeData = SliderThemeData(
+    overlayShape: SliderComponentShape.noOverlay,
+    showValueIndicator: ShowValueIndicator.always,
+  );
+
   static const IconThemeData _iconTheme = IconThemeData(color: MyColors.blue, size: 30);
 
   static final ColorScheme _darkColorScheme = ColorScheme(
@@ -110,6 +115,7 @@ class Themes {
   );
 
   static final ThemeData dark = ThemeData(
+    sliderTheme: _sliderThemeData,
     useMaterial3: _useMaterial3,
     appBarTheme: _appBarTheme,
     dialogTheme: _dialogTheme,
