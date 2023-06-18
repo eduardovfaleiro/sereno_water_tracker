@@ -4,7 +4,7 @@ class MyColors {
   static const Color darkBlue = Color(0xFF080F26);
 
   static const MaterialColor blue = MaterialColor(
-    0xFF447BAE,
+    0xFF0B131B,
     <int, Color>{
       50: Color.fromRGBO(68, 123, 174, .1),
       100: Color.fromRGBO(68, 123, 174, .2),

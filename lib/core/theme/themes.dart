@@ -24,43 +24,6 @@ class Themes {
     labelSmall: TextStyle(fontSize: 12.0),
   );
 
-  static final ElevatedButtonThemeData _elevatedButtonThemeData = ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 64), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.borderRadius))),
-  );
-
-  static const PopupMenuThemeData _popupMenuButtonThemeData = PopupMenuThemeData(
-    color: MyColors.black,
-    position: PopupMenuPosition.under,
-    shape: RoundedRectangleBorder(),
-    textStyle: TextStyle(color: MyColors.grey),
-    surfaceTintColor: Colors.transparent,
-    labelTextStyle: MaterialStatePropertyAll(TextStyle(color: MyColors.grey)),
-  );
-
-  static final TextButtonThemeData _textButtonThemeData = TextButtonThemeData(
-    style: TextButton.styleFrom(padding: const EdgeInsets.all(12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.borderRadius))),
-  );
-
-  static final InputDecorationTheme _inputDecorationTheme = InputDecorationTheme(
-    contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-    filled: true,
-    border: UnderlineInputBorder(
-      borderRadius: BorderRadius.circular(Sizes.borderRadius),
-      borderSide: const BorderSide(width: 0),
-    ),
-    enabledBorder: UnderlineInputBorder(
-      borderRadius: BorderRadius.circular(Sizes.borderRadius),
-      borderSide: const BorderSide(width: 0),
-    ),
-    disabledBorder: UnderlineInputBorder(
-      borderRadius: BorderRadius.circular(Sizes.borderRadius),
-      borderSide: const BorderSide(width: 0),
-    ),
-    suffixIconColor: MyColors.blue,
-  );
-
-  static const DialogTheme _dialogTheme = DialogTheme(backgroundColor: MyColors.black);
-
   static const bool _useMaterial3 = true;
 
   static const AppBarTheme _appBarTheme = AppBarTheme(
@@ -68,7 +31,6 @@ class Themes {
     backgroundColor: Colors.transparent,
     titleTextStyle: TextStyle(
       fontSize: FontSize.small2,
-      color: MyColors.grey,
       fontWeight: FontWeight.w500,
     ),
   );
@@ -76,55 +38,48 @@ class Themes {
   static final SliderThemeData _sliderThemeData = SliderThemeData(
     overlayShape: SliderComponentShape.noOverlay,
     showValueIndicator: ShowValueIndicator.always,
+    valueIndicatorColor: Colors.white,
   );
 
-  static const IconThemeData _iconTheme = IconThemeData(color: MyColors.blue, size: 30);
-
-  static final ColorScheme _darkColorScheme = ColorScheme(
+  static const ColorScheme _darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
-    primary: const Color(0xFF9ACBFF),
-    onPrimary: const Color.fromARGB(255, 69, 177, 248),
-    primaryContainer: const Color(0xFF004A79),
-    onPrimaryContainer: const Color(0xFFCFE5FF),
-    secondary: const Color(0xFFBAC8DA),
-    onSecondary: const Color(0xFF243240),
-    secondaryContainer: const Color(0xFF3A4857),
-    onSecondaryContainer: const Color(0xFFD6E4F7),
-    tertiary: const Color(0xFFD4BEE6),
-    onTertiary: const Color(0xFF392A49),
-    tertiaryContainer: const Color(0xFF514060),
-    onTertiaryContainer: const Color(0xFFF0DBFF),
-    error: const Color(0xFFFFB4AB),
-    errorContainer: const Color(0xFF93000A),
-    onError: const Color(0xFF690005),
-    onErrorContainer: const Color(0xFFFFDAD6),
+    primary: Color(0xFF4E9CC8),
+    onPrimary: Color.fromARGB(255, 69, 177, 248),
+    primaryContainer: Color(0xFF004A79),
+    onPrimaryContainer: Color(0xFFCFE5FF),
+    secondary: Color(0xFFBAC8DA),
+    onSecondary: Color(0xFF243240),
+    secondaryContainer: Color(0xFF3A4857),
+    onSecondaryContainer: Color(0xFFD6E4F7),
+    tertiary: Color(0xFFD4BEE6),
+    onTertiary: Color(0xFF392A49),
+    tertiaryContainer: Color(0xFF514060),
+    onTertiaryContainer: Color(0xFFF0DBFF),
+    error: Color(0xFFFFB4AB),
+    errorContainer: Color(0xFF93000A),
+    onError: Color(0xFF690005),
+    onErrorContainer: Color(0xFFFFDAD6),
     background: Colors.transparent,
-    onBackground: MyColors.black,
-    surface: MyColors.blue[100] as Color,
-    onSurface: const Color(0xFFC6C6CA),
-    surfaceVariant: MyColors.grey[50],
-    onSurfaceVariant: const Color(0xFFC2C7CF),
-    outline: const Color(0xFF8C9199),
-    onInverseSurface: const Color.fromARGB(255, 39, 133, 228),
-    inverseSurface: const Color(0xFFE2E2E5),
-    inversePrimary: const Color(0xFF00629E),
-    shadow: const Color.fromARGB(255, 0, 0, 0),
+    onBackground: Colors.black,
+    surface: Color.fromRGBO(68, 123, 174, .2), // TODO
+    onSurface: Color(0xFFC6C6CA),
+    surfaceVariant: Color.fromRGBO(190, 190, 190, .1), // TODO
+    onSurfaceVariant: Color(0xFFC2C7CF),
+    outline: Color(0xFF8C9199),
+    onInverseSurface: Color.fromARGB(255, 39, 133, 228),
+    inverseSurface: Color(0xFFE2E2E5),
+    inversePrimary: Color(0xFF00629E),
+    shadow: Color.fromARGB(255, 0, 0, 0),
     surfaceTint: Colors.black,
-    outlineVariant: const Color(0xFF42474E),
-    scrim: const Color(0xFF000000),
+    outlineVariant: Color(0xFF42474E),
+    scrim: Color(0xFF000000),
   );
 
   static final ThemeData dark = ThemeData(
     sliderTheme: _sliderThemeData,
     useMaterial3: _useMaterial3,
     appBarTheme: _appBarTheme,
-    dialogTheme: _dialogTheme,
-    popupMenuTheme: _popupMenuButtonThemeData,
     textTheme: _textTheme,
-    elevatedButtonTheme: _elevatedButtonThemeData,
-    textButtonTheme: _textButtonThemeData,
-    inputDecorationTheme: _inputDecorationTheme,
-    iconTheme: _iconTheme,
     colorScheme: _darkColorScheme,
   );
 }

@@ -74,7 +74,7 @@ class WaterDisplayPage extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return const CircularButton(
                             // onTap: waterDisplayController.createWaterContainer(waterContainerEntity),
-                            color: MyColors.darkBlue,
+                            color: Color(0xff4E9CC8),
                             label: Text('250 ml', style: TextStyle(color: Colors.white)),
                             child: Icon(CommunityMaterialIcons.cup),
                           );
