@@ -29,7 +29,6 @@ class DailyGoalRepositoryImp implements DailyGoalRepository {
 
   @override
   Future<Result<int>> update(int amount) {
-    // TODO: implement update
     throw UnimplementedError();
   }
 }

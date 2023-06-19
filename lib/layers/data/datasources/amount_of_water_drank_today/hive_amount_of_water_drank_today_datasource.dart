@@ -25,13 +25,11 @@ class HiveAmountOfWaterDrankTodayDataSourceImp implements AmountOfWaterDrankToda
 
   @override
   Future<int> subtract(int amount) {
-    // TODO: implement subtract
     throw UnimplementedError();
   }
 
   @override
   Future<int> update(int amount) {
-    // TODO: implement update
     throw UnimplementedError();
   }
 }

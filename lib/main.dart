@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 
 import 'core/theme/themes.dart';
 import 'core/utils/functions/init_app.dart';
-import 'layers/presentation/controllers/water_display_controller.dart';
-import 'layers/presentation/pages/water_starter_page/water_starter_page.dart';
+import 'layers/presentation/view_models/user_view_model.dart';
+import 'layers/presentation/view_models/view_stage_view_model.dart';
+import 'layers/presentation/view_models/water_display_view_model.dart';
+import 'layers/presentation/views/water/water_starter_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,8 +17,14 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<WaterDisplayController>(
-          create: (_) => GetIt.I.get<WaterDisplayController>(),
+        ChangeNotifierProvider<WaterDisplayViewModel>(
+          create: (_) => GetIt.I.get<WaterDisplayViewModel>(),
+        ),
+        ChangeNotifierProvider<UserViewModel>(
+          create: (_) => GetIt.I.get<UserViewModel>(),
+        ),
+        ChangeNotifierProvider<ViewStageViewModel>(
+          create: (_) => GetIt.I.get<ViewStageViewModel>(),
         ),
       ],
       child: const SerenoCleanArchitectureSolid(),
@@ -30,8 +38,11 @@ class SerenoCleanArchitectureSolid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => WaterStarterView(),
+      },
       debugShowCheckedModeBanner: false,
-      home: const WaterStarterPage(),
       theme: Themes.dark,
     );
   }

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../../core/core.dart';
 import '../../../../../core/theme/themes.dart';
-import '../../controllers/water_display_controller.dart';
+import '../../view_models/water_display_view_model.dart';
 import '../../widgets/buttons/circular_button.dart';
 
 class WaterDisplayPage extends StatelessWidget {
@@ -35,8 +35,8 @@ class WaterDisplayPage extends StatelessWidget {
         ),
         Scaffold(
           appBar: AppBar(title: const Text('Water')),
-          body: Consumer<WaterDisplayController>(
-            builder: (context, waterDisplayController, _) {
+          body: Consumer<WaterDisplayViewModel>(
+            builder: (context, waterDisplayViewModel, _) {
               return Padding(
                 padding: const EdgeInsets.only(
                   left: Spacing.small3,
@@ -49,12 +49,12 @@ class WaterDisplayPage extends StatelessWidget {
                   children: [
                     WaterDataWidget(
                       'Water drank today',
-                      waterDisplayController.getAmountOfWaterDrankToday(context),
+                      waterDisplayViewModel.getAmountOfWaterDrankToday(context),
                     ),
                     const SizedBox(height: Spacing.small2),
                     const LinearProgressIndicator(value: 0),
                     const SizedBox(height: Spacing.small2),
-                    WaterDataWidget('Daily goal', waterDisplayController.getDailyGoal()),
+                    WaterDataWidget('Daily goal', waterDisplayViewModel.getDailyGoal()),
                     const SizedBox(height: Spacing.medium2),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,7 +73,7 @@ class WaterDisplayPage extends StatelessWidget {
                         itemCount: 1,
                         itemBuilder: (context, index) {
                           return const CircularButton(
-                            // onTap: waterDisplayController.createWaterContainer(waterContainerEntity),
+                            // onTap: waterDisplayViewModel.createWaterContainer(waterContainerEntity),
                             color: Color(0xff4E9CC8),
                             label: Text('250 ml', style: TextStyle(color: Colors.white)),
                             child: Icon(CommunityMaterialIcons.cup),

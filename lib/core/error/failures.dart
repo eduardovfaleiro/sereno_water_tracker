@@ -19,3 +19,17 @@ class GetItFailure implements Failure {
 
   GetItFailure([this.message]);
 }
+
+class AlreadyLastStageFailure implements Failure {
+  @override
+  final String? message;
+
+  AlreadyLastStageFailure([this.message]);
+}
+
+class AlreadyFirstStageFailure implements Failure {
+  @override
+  final String? message;
+
+  AlreadyFirstStageFailure([this.message]);
+}

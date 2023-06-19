@@ -20,7 +20,6 @@ class HiveDailyGoalDataSource implements DailyGoalDataSource {
 
   @override
   Future<int> update() {
-    // TODO: implement update
     throw UnimplementedError();
   }
 }
