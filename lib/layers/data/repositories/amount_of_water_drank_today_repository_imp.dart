@@ -13,7 +13,7 @@ class AmountOfWaterDrankTodayRepositoryImp implements AmountOfWaterDrankTodayRep
   Future<Result<int>> get() async {
     try {
       return Right(await _amountOfWaterDrankTodayDataSource.get());
-    } catch (e) {
+    } catch (error) {
       return Left(CacheFailure("Call to datasource failed."));
     }
   }
@@ -22,8 +22,8 @@ class AmountOfWaterDrankTodayRepositoryImp implements AmountOfWaterDrankTodayRep
   Future<Result<int>> addUp(int amount) async {
     try {
       return Right(await _amountOfWaterDrankTodayDataSource.addUp(amount));
-    } catch (e) {
-      return Left(CacheFailure());
+    } catch (error) {
+      return Left(CacheFailure(error.toString()));
     }
   }
 

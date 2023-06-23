@@ -12,11 +12,13 @@ const String LOCALE = 'pt_BR';
 const String MASS_UNIT_K = 'kg';
 const String VOLUME_UNIT_M = 'ml';
 const String DAILY_DRINKING_FREQUENCY = 'timesToDrinkPerDay';
+const String SLEEP_TIME = 'sleepTime';
 
 const int DECIMALS = 1;
 const int DAYS_IN_A_WEEK = 7;
 const int MAX_NUMBER_OF_TIMES_TO_DRINK_A_DAY = 10;
-const int MAX_WEIGHT = 200;
+const double MAX_WEIGHT = 200;
+const double MIN_WEIGHT = 1;
 const int NUMBER_OF_STAGES = 5;
 
 final GetIt getIt = GetIt.I;

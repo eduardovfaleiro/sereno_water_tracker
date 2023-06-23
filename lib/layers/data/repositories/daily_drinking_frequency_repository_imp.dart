@@ -13,8 +13,8 @@ class TimesToDrinkPerDayRepositoryImp implements TimesToDrinkPerDayRepository {
   Future<Result<int>> get() async {
     try {
       return Right(await _timesToDrinkPerDayDataSouce.get());
-    } catch (e) {
-      return Left(CacheFailure());
+    } catch (error) {
+      return Left(CacheFailure(error.toString()));
     }
   }
 }

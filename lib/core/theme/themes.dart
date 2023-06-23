@@ -41,6 +41,34 @@ class Themes {
     valueIndicatorColor: Colors.white,
   );
 
+  static const TimePickerThemeData _timePickerThemeData = TimePickerThemeData(
+    backgroundColor: Color(0xff0B131B),
+  );
+
+  static const ElevatedButtonThemeData _elevatedButtonThemeData = ElevatedButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: MaterialStatePropertyAll<Color>(Color.fromARGB(255, 78, 176, 200)),
+    ),
+  );
+
+  static final InputDecorationTheme _inputDecorationTheme = InputDecorationTheme(
+    // labelStyle: const TextStyle(fontSize: FontSize.small1),
+    contentPadding: const EdgeInsets.symmetric(vertical: Spacing.small1, horizontal: Spacing.small2),
+    filled: true,
+    border: UnderlineInputBorder(
+      borderRadius: BorderRadius.circular(Sizes.borderRadius),
+      borderSide: const BorderSide(width: 0),
+    ),
+    enabledBorder: UnderlineInputBorder(
+      borderRadius: BorderRadius.circular(Sizes.borderRadius),
+      borderSide: const BorderSide(width: 0),
+    ),
+    disabledBorder: UnderlineInputBorder(
+      borderRadius: BorderRadius.circular(Sizes.borderRadius),
+      borderSide: const BorderSide(width: 0),
+    ),
+  );
+
   static const ColorScheme _darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
     primary: Color(0xFF4E9CC8),
@@ -81,5 +109,8 @@ class Themes {
     appBarTheme: _appBarTheme,
     textTheme: _textTheme,
     colorScheme: _darkColorScheme,
+    inputDecorationTheme: _inputDecorationTheme,
+    timePickerTheme: _timePickerThemeData,
+    elevatedButtonTheme: _elevatedButtonThemeData,
   );
 }

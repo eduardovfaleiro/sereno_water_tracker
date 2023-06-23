@@ -14,15 +14,14 @@ import '../../../layers/data/repositories/amount_of_water_drank_today_repository
 import '../../../layers/data/repositories/daily_drinking_frequency_repository_imp.dart';
 import '../../../layers/data/repositories/daily_goal_repository_imp.dart';
 import '../../../layers/data/repositories/water_container_repository_imp.dart';
+import '../../../layers/domain/entities/user_entity.dart';
 import '../../../layers/domain/repositories/amount_of_water_drank_today_repository.dart';
 import '../../../layers/domain/repositories/daily_drinking_frequency_repository.dart';
 import '../../../layers/domain/repositories/daily_goal_repository.dart';
 import '../../../layers/domain/repositories/water_container_repository.dart';
 import '../../../layers/presentation/view_models/user_view_model.dart';
-import '../../../layers/presentation/view_models/view_stage_view_model.dart';
 import '../../../layers/presentation/view_models/water_display_view_model.dart';
 import '../../core.dart';
-import '../injection/registerers/register_factory.dart';
 import '../injection/registerers/register_lazy_singleton_imp.dart';
 import 'init_get_it.dart';
 
@@ -57,10 +56,7 @@ Future<void> initApp() async {
       () => WaterDisplayViewModel(GetIt.I(), GetIt.I(), GetIt.I()),
     ),
     RegisterLazySingletonImp<UserViewModel>(
-      () => UserViewModel(),
-    ),
-    RegisterFactoryImp<ViewStageViewModel>(
-      () => ViewStageViewModel(FIRST, numberOfStages: NUMBER_OF_STAGES),
+      () => UserViewModel(getIt(), UserEntity()),
     ),
   ]);
 

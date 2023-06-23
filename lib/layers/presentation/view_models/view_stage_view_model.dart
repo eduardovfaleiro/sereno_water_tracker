@@ -1,9 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/core.dart';
 import '../enums/view_stage_enum.dart';
 
 const FIRST = ViewStage.first;
@@ -12,38 +10,22 @@ const THIRD = ViewStage.third;
 const FOURTH = ViewStage.fourth;
 const FIFTH = ViewStage.fifth;
 
-class ViewStageViewModel extends ChangeNotifier {
-  int numberOfStages;
-  ViewStage _viewStage;
+class ViewStageViewModel {
+  final int numberOfStages;
+  ValueNotifier<ViewStage> stage;
 
-  ViewStageViewModel(this._viewStage, {required this.numberOfStages});
+  ViewStageViewModel({required this.stage, required this.numberOfStages});
 
-  void init({
-    required ViewStage viewStage,
-    required int numberOfStages,
-  }) {
-    _viewStage = viewStage;
-    this.numberOfStages = numberOfStages;
+  void nextStage() {
+    if (stage.value == _lastViewStage) return;
+
+    stage.value = ViewStage.values[_currentViewStageIndex + 1];
   }
 
-  ViewStage getViewStage() {
-    return _viewStage;
-  }
+  void previousStage() {
+    if (stage.value == FIRST) return;
 
-  Result<void> nextStage() {
-    if (_viewStage == _lastViewStage) return Left(AlreadyLastStageFailure());
-
-    _viewStage = ViewStage.values[_currentViewStageIndex + 1];
-
-    return Right(notifyListeners());
-  }
-
-  Result<void> previousStage() {
-    if (_viewStage == FIRST) return Left(AlreadyFirstStageFailure());
-
-    _viewStage = ViewStage.values[_currentViewStageIndex - 1];
-
-    return Right(notifyListeners());
+    stage.value = ViewStage.values[_currentViewStageIndex - 1];
   }
 
   ViewStage get _lastViewStage {
@@ -51,6 +33,6 @@ class ViewStageViewModel extends ChangeNotifier {
   }
 
   int get _currentViewStageIndex {
-    return ViewStage.values.indexWhere((stage) => stage == _viewStage);
+    return ViewStage.values.indexWhere((stage) => this.stage.value == stage);
   }
 }

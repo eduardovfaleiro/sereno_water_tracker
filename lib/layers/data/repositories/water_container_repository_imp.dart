@@ -20,8 +20,8 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
   Future<Result<void>> delete(int id) async {
     try {
       return Right(_waterContainerDataSource.delete(id));
-    } catch (e) {
-      return Left(CacheFailure());
+    } catch (error) {
+      return Left(CacheFailure(error.toString()));
     }
   }
 
@@ -31,8 +31,8 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
       var waterContainerDto = await _waterContainerDataSource.get(id);
 
       return Right(waterContainerDto);
-    } catch (e) {
-      return Left(CacheFailure());
+    } catch (error) {
+      return Left(CacheFailure(error.toString()));
     }
   }
 
@@ -40,8 +40,8 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
   Future<Result<List<WaterContainerEntity>>> getAllContainers() async {
     try {
       return Right(await _waterContainerDataSource.getAllContainers());
-    } catch (e) {
-      return Left(CacheFailure());
+    } catch (error) {
+      return Left(CacheFailure(error.toString()));
     }
   }
 }

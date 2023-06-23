@@ -5,10 +5,10 @@ import 'package:provider/provider.dart';
 import '../../../../../core/core.dart';
 import '../../../../../core/theme/themes.dart';
 import '../../view_models/water_display_view_model.dart';
-import '../../widgets/buttons/circular_button.dart';
+import '../../widgets/circular_button.dart';
 
-class WaterDisplayPage extends StatelessWidget {
-  const WaterDisplayPage({super.key});
+class WaterDisplayView extends StatelessWidget {
+  const WaterDisplayView({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -13,8 +13,8 @@ class WeightRepositoryImp implements WeightRepository {
   Future<Result<void>> update(double weight) async {
     try {
       return Right(await _weightRepositoryDataSource.update(weight));
-    } catch (e) {
-      return Left(CacheFailure());
+    } catch (error) {
+      return Left(CacheFailure(error.toString()));
     }
   }
 }

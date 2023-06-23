@@ -13,8 +13,8 @@ class DailyGoalRepositoryImp implements DailyGoalRepository {
   Future<Either<Failure, void>> create(int amount) async {
     try {
       return Right(_dailyGoalDataSource.create(amount));
-    } catch (e) {
-      return Left(CacheFailure());
+    } catch (error) {
+      return Left(CacheFailure(error.toString()));
     }
   }
 
@@ -22,8 +22,8 @@ class DailyGoalRepositoryImp implements DailyGoalRepository {
   Future<Result<int>> get() async {
     try {
       return Right(await _dailyGoalDataSource.get());
-    } catch (e) {
-      return Left(CacheFailure());
+    } catch (error) {
+      return Left(CacheFailure(error.toString()));
     }
   }
 
