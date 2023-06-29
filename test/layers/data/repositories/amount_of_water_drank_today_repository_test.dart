@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/core/error/exceptions.dart';
-import 'package:sereno_clean_architecture_solid/layers/data/datasources/amount_of_water_drank_today/amount_of_water_drank_today_datasource.dart';
+import 'package:sereno_clean_architecture_solid/layers/data/datasources/amount_of_water_drank_today_datasource.dart';
 import 'package:sereno_clean_architecture_solid/layers/data/repositories/amount_of_water_drank_today_repository_imp.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/repositories/amount_of_water_drank_today_repository.dart';
 

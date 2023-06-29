@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/core.dart';
-import '../../../../core/theme/themes.dart';
-import '../../../../core/utils/functions/get_time_of_day_value.dart';
-import '../../../../core/utils/number_utils.dart';
-import '../../view_models/user_view_model.dart';
+import '../../../core/core.dart';
+import '../../../core/theme/themes.dart';
+import '../../../core/utils/functions/get_time_of_day_value.dart';
+import '../../../core/utils/number_utils.dart';
+import '../view_models/user_view_model.dart';
 
-part '../../../../core/utils/functions/show_time_picker_waking_hours.dart';
-part 'widgets/date_input_card_widget.dart';
-part 'widgets/input_card_widget.dart';
+part '../../../core/utils/functions/show_time_picker_waking_hours.dart';
 
 class WaterStarterView extends StatelessWidget {
   const WaterStarterView({super.key});
@@ -21,8 +19,8 @@ class WaterStarterView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-          child: Consumer<UserViewModel>(
-            builder: (context, userViewModel, _) {
+          child: Consumer<UserEntityViewModel>(
+            builder: (context, userEntityViewModel, _) {
               return ListView(
                 padding: const EdgeInsets.only(top: Spacing.big, left: Spacing.normal, right: Spacing.normal),
                 children: [
@@ -62,47 +60,47 @@ class WaterStarterView extends StatelessWidget {
                       InputCardWidget(
                         question: const MarkdownBody(data: "# What's your **weight**?"),
                         value: Text(
-                          '${NumberUtils(userViewModel.weight).roundByDecimalsToString()} $MASS_UNIT_K',
+                          '${NumberUtils(userEntityViewModel.weight).roundByDecimalsToString()} $MASS_UNIT_K',
                           style: const TextStyle(fontSize: FontSize.small1),
                         ),
                         slider: Slider(
                           max: MAX_WEIGHT,
                           min: MIN_WEIGHT,
-                          value: userViewModel.weight,
+                          value: userEntityViewModel.weight,
                           onChanged: (value) {
-                            userViewModel.updateWeight(value);
+                            userEntityViewModel.updateWeight(value);
                           },
                         ),
                       ),
                       const SizedBox(height: Spacing.small2),
                       InputCardWidget(
                         question: const MarkdownBody(data: '# How **often** do you want to\ndrink a **day**?'),
-                        value: Text('${userViewModel.timesToDrinkPerDay} times', style: const TextStyle(fontSize: FontSize.small1)),
+                        value: Text('${userEntityViewModel.dailyDrinkingFrequency} times', style: const TextStyle(fontSize: FontSize.small1)),
                         slider: Slider(
                           max: MAX_NUMBER_OF_TIMES_TO_DRINK_A_DAY.toDouble(),
                           divisions: MAX_NUMBER_OF_TIMES_TO_DRINK_A_DAY,
-                          value: userViewModel.timesToDrinkPerDay.toDouble(),
+                          value: userEntityViewModel.dailyDrinkingFrequency.toDouble(),
                           onChanged: (value) {
-                            userViewModel.updateTimesToDrinkPerDay(value.toInt());
+                            userEntityViewModel.updateDailyDrinkingFrequency(value.toInt());
                           },
                         ),
                       ),
                       const SizedBox(height: Spacing.small2),
                       InputCardWidget(
                         question: const MarkdownBody(data: '# How **often** do you exercise\n# a **week**?'),
-                        value: Text('${userViewModel.weeklyWorkoutDays} days', style: const TextStyle(fontSize: FontSize.small1)),
+                        value: Text('${userEntityViewModel.weeklyWorkoutDays} days', style: const TextStyle(fontSize: FontSize.small1)),
                         slider: Slider(
                           max: DAYS_IN_A_WEEK.toDouble(),
                           divisions: DAYS_IN_A_WEEK,
-                          value: userViewModel.weeklyWorkoutDays.toDouble(),
+                          value: userEntityViewModel.weeklyWorkoutDays.toDouble(),
                           onChanged: (value) {
-                            userViewModel.updateWeeklyWorkoutDays(value.toInt());
+                            userEntityViewModel.updateWeeklyWorkoutDays(value.toInt());
                           },
                         ),
                       ),
                       const SizedBox(height: Spacing.small2),
                       DateInputCardWidget(
-                        onTap: () => showTimePickerWakingHours(context: context, userViewModel: userViewModel),
+                        onTap: () => showTimePickerWakingHours(context: context, userEntityViewModel: userEntityViewModel),
                         question: const MarkdownBody(data: '# What are your **waking** hours?'),
                       ),
                     ],
@@ -129,6 +127,8 @@ class WaterStarterView extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
+                        // getIt<UserEntityViewModel>().updateLocalDataBase();
+
                         Navigator.pushNamed(context, '/waterDisplay');
                       },
                       child: const Row(
@@ -139,6 +139,12 @@ class WaterStarterView extends StatelessWidget {
                             'Finish',
                             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                           ),
+                          SizedBox(width: Spacing.small1),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: Colors.black,
+                            size: Spacing.small2,
+                          ),
                         ],
                       ),
                     ),
@@ -148,5 +154,109 @@ class WaterStarterView extends StatelessWidget {
             ),
           ],
         ));
+  }
+}
+
+class InputCardWidget extends StatefulWidget {
+  final Widget question;
+  final Widget value;
+  final Slider slider;
+
+  const InputCardWidget({
+    super.key,
+    required this.question,
+    required this.value,
+    required this.slider,
+  });
+
+  @override
+  State<InputCardWidget> createState() => _InputCardWidgetState();
+}
+
+class _InputCardWidgetState extends State<InputCardWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(Spacing.small3),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(Sizes.borderRadius),
+        color: const Color(0xff0B131B),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              widget.question,
+              widget.value,
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: Spacing.normal, bottom: Spacing.small2),
+            child: widget.slider,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DateInputCardWidget extends StatefulWidget {
+  final Widget question;
+  final void Function() onTap;
+
+  const DateInputCardWidget({
+    super.key,
+    required this.onTap,
+    required this.question,
+  });
+
+  @override
+  State<DateInputCardWidget> createState() => _DateInputCardWidgetState();
+}
+
+class _DateInputCardWidgetState extends State<DateInputCardWidget> {
+  var userEntityViewModel = getIt<UserEntityViewModel>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<UserEntityViewModel>(
+      builder: (context, userEntityViewModel, _) {
+        return InkWell(
+          onTap: widget.onTap,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(Spacing.small3),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Sizes.borderRadius),
+              color: const Color(0xff0B131B),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    widget.question,
+                    (userEntityViewModel.sleepTime != null && userEntityViewModel.wakeUpTime != null)
+                        ? Text(
+                            'From ${getTimeOfDayValue(userEntityViewModel.wakeUpTime!)} to '
+                            '${getTimeOfDayValue(userEntityViewModel.sleepTime!)}',
+                          )
+                        : const Text(
+                            'Press to select time',
+                            style: TextStyle(color: Color.fromARGB(255, 83, 137, 192)),
+                          ),
+                  ],
+                ),
+                const Icon(Icons.access_time_filled, color: Colors.grey),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

@@ -2,7 +2,7 @@ part of water_starter_view;
 
 Future<void> showTimePickerWakingHours({
   required BuildContext context,
-  required UserViewModel userViewModel,
+  required UserEntityViewModel userEntityViewModel,
 }) async {
   await showTimePicker(
     context: context,
@@ -12,7 +12,7 @@ Future<void> showTimePickerWakingHours({
     (wakeUpTime) async {
       if (wakeUpTime == null) return;
 
-      userViewModel.updateWakeUpTime(wakeUpTime);
+      userEntityViewModel.updateWakeUpTime(wakeUpTime);
 
       await showTimePicker(
         context: context,
@@ -21,7 +21,7 @@ Future<void> showTimePickerWakingHours({
       ).then((sleepTime) {
         if (sleepTime == null) return;
 
-        userViewModel.updateSleepTime(sleepTime);
+        userEntityViewModel.updateSleepTime(sleepTime);
       });
     },
   );

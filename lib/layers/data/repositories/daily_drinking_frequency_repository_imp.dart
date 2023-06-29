@@ -2,19 +2,19 @@ import 'package:dartz/dartz.dart';
 
 import '../../../core/core.dart';
 import '../../domain/repositories/daily_drinking_frequency_repository.dart';
-import '../datasources/times_to_drink_per_day_datasource.dart';
+import '../datasources/daily_drinking_frequency_datasource.dart';
 
-class TimesToDrinkPerDayRepositoryImp implements TimesToDrinkPerDayRepository {
-  final TimesToDrinkPerDayDataSource _timesToDrinkPerDayDataSouce;
+class DailyDrinkingFrequencyRepositoryImp implements DailyDrinkingFrequencyRepository {
+  final DailyDrinkingFrequencyDataSource _dailyDrinkingFrequencyDataSouce;
 
-  TimesToDrinkPerDayRepositoryImp(this._timesToDrinkPerDayDataSouce);
+  DailyDrinkingFrequencyRepositoryImp(this._dailyDrinkingFrequencyDataSouce);
 
   @override
   Future<Result<int>> get() async {
     try {
-      return Right(await _timesToDrinkPerDayDataSouce.get());
+      return Right(await _dailyDrinkingFrequencyDataSouce.get());
     } catch (error) {
-      return Left(CacheFailure(error.toString()));
+      return Left(CacheFailure());
     }
   }
 }

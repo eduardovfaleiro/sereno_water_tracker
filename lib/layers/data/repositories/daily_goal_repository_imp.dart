@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../../core/core.dart';
 import '../../domain/repositories/daily_goal_repository.dart';
-import '../datasources/daily_goal/daily_goal_datasource.dart';
+import '../datasources/daily_goal_datasource.dart';
 
 class DailyGoalRepositoryImp implements DailyGoalRepository {
   final DailyGoalDataSource _dailyGoalDataSource;
@@ -14,7 +14,7 @@ class DailyGoalRepositoryImp implements DailyGoalRepository {
     try {
       return Right(_dailyGoalDataSource.create(amount));
     } catch (error) {
-      return Left(CacheFailure(error.toString()));
+      return Left(CacheFailure());
     }
   }
 
@@ -23,7 +23,7 @@ class DailyGoalRepositoryImp implements DailyGoalRepository {
     try {
       return Right(await _dailyGoalDataSource.get());
     } catch (error) {
-      return Left(CacheFailure(error.toString()));
+      return Left(CacheFailure());
     }
   }
 

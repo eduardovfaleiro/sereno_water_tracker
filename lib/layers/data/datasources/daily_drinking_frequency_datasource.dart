@@ -2,14 +2,14 @@ import 'package:hive/hive.dart';
 
 import '../../../core/core.dart';
 
-abstract interface class TimesToDrinkPerDayDataSource {
+abstract interface class DailyDrinkingFrequencyDataSource {
   Future<int> get();
 }
 
-class HiveTimesToDrinkPerDayDataSourceImp implements TimesToDrinkPerDayDataSource {
+class HiveDailyDrinkingFrequencyDataSourceImp implements DailyDrinkingFrequencyDataSource {
   final HiveInterface _hiveInterface;
 
-  HiveTimesToDrinkPerDayDataSourceImp(this._hiveInterface);
+  HiveDailyDrinkingFrequencyDataSourceImp(this._hiveInterface);
 
   @override
   Future<int> get() async {

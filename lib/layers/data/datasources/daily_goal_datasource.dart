@@ -1,7 +1,12 @@
 import 'package:hive/hive.dart';
 
-import '../../../../core/core.dart';
-import 'daily_goal_datasource.dart';
+import '../../../core/core.dart';
+
+abstract interface class DailyGoalDataSource {
+  Future<int> get();
+  Future<int> update();
+  Future<void> create(int amount);
+}
 
 class HiveDailyGoalDataSource implements DailyGoalDataSource {
   final HiveInterface _hiveInterface;

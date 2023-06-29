@@ -1,20 +1,7 @@
 part of core;
 
-abstract class Failure {
-  final String message;
+abstract class Failure {}
 
-  Failure(this.message);
+class CacheFailure extends Failure {}
 
-  @override
-  String toString() {
-    return message;
-  }
-}
-
-class CacheFailure extends Failure {
-  CacheFailure(super.message);
-}
-
-class GetItFailure extends Failure {
-  GetItFailure(super.message);
-}
+class ValidationFailure extends Failure {}

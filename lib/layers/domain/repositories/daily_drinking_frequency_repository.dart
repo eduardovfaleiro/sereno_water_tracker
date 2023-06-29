@@ -1,5 +1,5 @@
 import '../../../core/core.dart';
 
-abstract interface class TimesToDrinkPerDayRepository {
+abstract interface class DailyDrinkingFrequencyRepository {
   Future<Result<int>> get();
 }

@@ -1,48 +1,77 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
+import 'package:sereno_clean_architecture_solid/layers/data/datasources/user_datasource.dart';
 
-abstract interface class UserDataSource {
-  Future<void> updateWeight(double weight);
-  Future<void> updateSleepTime(TimeOfDay sleepTime);
-  Future<void> updateWakeUpTime(TimeOfDay wakeUpTime);
-  Future<void> updateWeeklyWorkoutDays(int weeklyWorkoutDays);
-  Future<void> updateTimesToDrinkPerDay(int timesToDrinkPerDay);
+import '../../../mocks.dart';
+
+void main() {
+  late MockBox mockBox;
+  late MockHiveInterface mockHiveInterface;
+
+  late UserDataSource dataSource;
+
+  setUp(() {
+    mockBox = MockBox();
+    mockHiveInterface = MockHiveInterface();
+    dataSource = HiveUserDataSourceImp(mockHiveInterface);
+
+    when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
+    when(() => mockBox.put(any(), any())).thenAnswer((_) async {});
+  });
+
+  group('updateSleepTime', () {
+    var sleepTime = const TimeOfDay(hour: 22, minute: 0);
+
+    test('Should make call for database to update sleeptime', () async {
+      await dataSource.updateSleepTime(sleepTime);
+
+      verifyInOrder([
+        () => mockHiveInterface.box(USER_DATA),
+        () => mockBox.put(SLEEP_TIME, sleepTime),
+      ]);
+    });
+  });
+
+  group('updateWakeUpTime', () {
+    var wakeUpTime = const TimeOfDay(hour: 10, minute: 0);
+
+    test('Should make call for database to update wake up time', () async {
+      await dataSource.updateWakeUpTime(wakeUpTime);
+
+      verifyInOrder([
+        () => mockHiveInterface.box(USER_DATA),
+        () => mockBox.put(WAKE_UP_TIME, wakeUpTime),
+      ]);
+    });
+  });
+
+  group('updateWeeklyWorkoutDays', () {
+    int weeklyWorkoutDays = 4;
+
+    test(
+        'Should make call for database to update the '
+        'number of days the user works out a week', () async {
+      await dataSource.updateWeeklyWorkoutDays(weeklyWorkoutDays);
+
+      verifyInOrder([
+        () => mockHiveInterface.box(USER_DATA),
+        () => mockBox.put(WEEKLY_WORKOUT_DAYS, weeklyWorkoutDays),
+      ]);
+    });
+  });
+
+  group('updateWeight', () {
+    double weight = 75;
+
+    test('Should make call for database to update the user\'s weight', () async {
+      await dataSource.updateWeight(weight);
+
+      verifyInOrder([
+        () => mockHiveInterface.box(USER_DATA),
+        () => mockBox.put(WEIGHT, weight),
+      ]);
+    });
+  });
 }
-
-class HiveUserDataSourceImp implements UserDataSource {
-  final HiveInterface _hiveInterface;
-
-  HiveUserDataSourceImp(this._hiveInterface);
-
-  @override
-  Future<void> updateSleepTime(TimeOfDay sleepTime) async {
-    _hiveInterface.box(USER_DATA).put(SLEEP_TIME, sleepTime);
-  }
-
-  @override
-  Future<void> updateTimesToDrinkPerDay(int timesToDrinkPerDay) {
-    // TODO: implement updateTimesToDrinkPerDay
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> updateWakeUpTime(TimeOfDay wakeUpTime) {
-    // TODO: implement updateWakeUpTime
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> updateWeeklyWorkoutDays(int weeklyWorkoutDays) {
-    // TODO: implement updateWeeklyWorkoutDays
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> updateWeight(double weight) {
-    // TODO: implement updateWeight
-    throw UnimplementedError();
-  }
-}
-
-void main() {}

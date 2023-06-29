@@ -5,14 +5,14 @@ import '../../../core/core.dart';
 
 class UserEntity {
   final double weight;
-  final int timesToDrinkPerDay;
+  final int dailyDrinkingFrequency;
   final int weeklyWorkoutDays;
   final TimeOfDay? sleepTime;
   final TimeOfDay? wakeUpTime;
 
   UserEntity({
     this.weight = MIN_WEIGHT,
-    this.timesToDrinkPerDay = 1,
+    this.dailyDrinkingFrequency = 1,
     this.weeklyWorkoutDays = 0,
     this.sleepTime,
     this.wakeUpTime,
@@ -20,14 +20,14 @@ class UserEntity {
 
   UserEntity copyWith({
     double? weight,
-    int? timesToDrinkPerDay,
+    int? dailyDrinkingFrequency,
     int? weeklyWorkoutDays,
     TimeOfDay? sleepTime,
     TimeOfDay? wakeUpTime,
   }) {
     return UserEntity(
       weight: weight ?? this.weight,
-      timesToDrinkPerDay: timesToDrinkPerDay ?? this.timesToDrinkPerDay,
+      dailyDrinkingFrequency: dailyDrinkingFrequency ?? this.dailyDrinkingFrequency,
       weeklyWorkoutDays: weeklyWorkoutDays ?? this.weeklyWorkoutDays,
       sleepTime: sleepTime ?? this.sleepTime,
       wakeUpTime: wakeUpTime ?? this.wakeUpTime,

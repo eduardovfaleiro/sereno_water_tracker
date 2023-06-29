@@ -89,9 +89,9 @@ class Themes {
     onErrorContainer: Color(0xFFFFDAD6),
     background: Colors.transparent,
     onBackground: Colors.black,
-    surface: Color.fromRGBO(68, 123, 174, .2), // TODO
+    surface: Color.fromRGBO(68, 123, 174, .2), // TODO: was different color
     onSurface: Color(0xFFC6C6CA),
-    surfaceVariant: Color.fromRGBO(190, 190, 190, .1), // TODO
+    surfaceVariant: Color.fromRGBO(190, 190, 190, .1), // TODO: was different color
     onSurfaceVariant: Color(0xFFC2C7CF),
     outline: Color(0xFF8C9199),
     onInverseSurface: Color.fromARGB(255, 39, 133, 228),

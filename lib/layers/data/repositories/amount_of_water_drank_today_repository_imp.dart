@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../../core/core.dart';
 import '../../domain/repositories/amount_of_water_drank_today_repository.dart';
-import '../datasources/amount_of_water_drank_today/amount_of_water_drank_today_datasource.dart';
+import '../datasources/amount_of_water_drank_today_datasource.dart';
 
 class AmountOfWaterDrankTodayRepositoryImp implements AmountOfWaterDrankTodayRepository {
   final AmountOfWaterDrankTodayDataSource _amountOfWaterDrankTodayDataSource;
@@ -14,7 +14,7 @@ class AmountOfWaterDrankTodayRepositoryImp implements AmountOfWaterDrankTodayRep
     try {
       return Right(await _amountOfWaterDrankTodayDataSource.get());
     } catch (error) {
-      return Left(CacheFailure("Call to datasource failed."));
+      return Left(CacheFailure());
     }
   }
 
@@ -23,7 +23,7 @@ class AmountOfWaterDrankTodayRepositoryImp implements AmountOfWaterDrankTodayRep
     try {
       return Right(await _amountOfWaterDrankTodayDataSource.addUp(amount));
     } catch (error) {
-      return Left(CacheFailure(error.toString()));
+      return Left(CacheFailure());
     }
   }
 

@@ -1,21 +1,15 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, void_checks
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/user_entity.dart';
-import '../../domain/repositories/user_repository.dart';
 
-class UserViewModel extends ChangeNotifier {
-  final UserRepository _userRepository;
-
+class UserEntityViewModel extends ChangeNotifier {
   UserEntity _userEntity;
 
-  UserViewModel(
-    this._userRepository,
-    this._userEntity,
-  );
+  UserEntityViewModel(this._userEntity);
 
   double get weight => _userEntity.weight;
-  int get timesToDrinkPerDay => _userEntity.timesToDrinkPerDay;
+  int get dailyDrinkingFrequency => _userEntity.dailyDrinkingFrequency;
   int get weeklyWorkoutDays => _userEntity.weeklyWorkoutDays;
   TimeOfDay? get sleepTime => _userEntity.sleepTime;
   TimeOfDay? get wakeUpTime => _userEntity.wakeUpTime;
@@ -26,8 +20,8 @@ class UserViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateTimesToDrinkPerDay(int timesToDrinkPerDay) {
-    _userEntity = _userEntity.copyWith(timesToDrinkPerDay: timesToDrinkPerDay);
+  void updateDailyDrinkingFrequency(int dailyDrinkingFrequency) {
+    _userEntity = _userEntity.copyWith(dailyDrinkingFrequency: dailyDrinkingFrequency);
 
     notifyListeners();
   }
@@ -49,8 +43,4 @@ class UserViewModel extends ChangeNotifier {
 
     notifyListeners();
   }
-
-  // Future<Result<void>> updateDB() {
-  //   // return _userRepository.updateSleepTime(sleepTime)
-  // }
 }

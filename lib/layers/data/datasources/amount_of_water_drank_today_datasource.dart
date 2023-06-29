@@ -1,7 +1,13 @@
 import 'package:hive/hive.dart';
 
-import '../../../../core/core.dart';
-import 'amount_of_water_drank_today_datasource.dart';
+import '../../../core/core.dart';
+
+abstract interface class AmountOfWaterDrankTodayDataSource {
+  Future<int> get();
+  Future<int> update(int amount);
+  Future<int> subtract(int amount);
+  Future<int> addUp(int amount);
+}
 
 class HiveAmountOfWaterDrankTodayDataSourceImp implements AmountOfWaterDrankTodayDataSource {
   final HiveInterface _hiveInterface;

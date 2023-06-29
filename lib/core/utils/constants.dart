@@ -11,8 +11,10 @@ const String USER_DATA = 'userData';
 const String LOCALE = 'pt_BR';
 const String MASS_UNIT_K = 'kg';
 const String VOLUME_UNIT_M = 'ml';
-const String DAILY_DRINKING_FREQUENCY = 'timesToDrinkPerDay';
+const String DAILY_DRINKING_FREQUENCY = 'dailyDrinkingFrequency';
 const String SLEEP_TIME = 'sleepTime';
+const String WAKE_UP_TIME = 'wakeUpTime';
+const String WEEKLY_WORKOUT_DAYS = 'weeklyWorkoutDays';
 
 const int DECIMALS = 1;
 const int DAYS_IN_A_WEEK = 7;

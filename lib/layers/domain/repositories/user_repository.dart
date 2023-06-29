@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
+import '../entities/user_entity.dart';
 
 // test
 abstract interface class UserRepository {
@@ -8,5 +9,5 @@ abstract interface class UserRepository {
   Future<Result<void>> updateSleepTime(TimeOfDay sleepTime);
   Future<Result<void>> updateWakeUpTime(TimeOfDay wakeUpTime);
   Future<Result<void>> updateWeeklyWorkoutDays(int weeklyWorkoutDays);
-  Future<Result<void>> updateTimesToDrinkPerDay(int timesToDrinkPerDay);
+  Future<Result<UserEntity>> getUser();
 }
