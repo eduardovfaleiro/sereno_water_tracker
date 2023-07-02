@@ -13,6 +13,7 @@ class UserEntityViewModel extends ChangeNotifier {
   int get weeklyWorkoutDays => _userEntity.weeklyWorkoutDays;
   TimeOfDay? get sleepTime => _userEntity.sleepTime;
   TimeOfDay? get wakeUpTime => _userEntity.wakeUpTime;
+  UserEntity getUserEntity() => _userEntity;
 
   void updateWeeklyWorkoutDays(int weeklyWorkoutDays) {
     _userEntity = _userEntity.copyWith(weeklyWorkoutDays: weeklyWorkoutDays);

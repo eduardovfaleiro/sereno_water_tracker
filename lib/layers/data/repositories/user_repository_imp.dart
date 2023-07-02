@@ -2,19 +2,24 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
-import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/user_repository.dart';
-import '../datasources/user_datasource.dart';
+import '../datasources/sleep_time_datasource.dart';
+import '../datasources/wake_up_time_datasource.dart';
+import '../datasources/weekly_workout_days_datasource.dart';
+import '../datasources/weight_datasource.dart';
 
 class UserRepositoryImp implements UserRepository {
-  final UserDataSource _dataSource;
+  final WeightDataSource _weightDataSource;
+  final WeeklyWorkoutDaysDataSource _weeklyWorkoutDaysDataSource;
+  final WakeUpTimeDataSource _wakeUpTimeDataSource;
+  final SleepTimeDataSource _sleepTimeDataSource;
 
-  UserRepositoryImp(this._dataSource);
+  UserRepositoryImp(this._weightDataSource, this._weeklyWorkoutDaysDataSource, this._wakeUpTimeDataSource, this._sleepTimeDataSource);
 
   @override
   Future<Result<void>> updateSleepTime(TimeOfDay sleepTime) async {
     try {
-      return Right(await _dataSource.updateSleepTime(sleepTime));
+      return Right(await _sleepTimeDataSource.update(sleepTime));
     } catch (error) {
       return Left(CacheFailure());
     }
@@ -23,7 +28,7 @@ class UserRepositoryImp implements UserRepository {
   @override
   Future<Result<void>> updateWakeUpTime(TimeOfDay wakeUpTime) async {
     try {
-      return Right(await _dataSource.updateWakeUpTime(wakeUpTime));
+      return Right(await _wakeUpTimeDataSource.update(wakeUpTime));
     } catch (error) {
       return Left(CacheFailure());
     }
@@ -32,7 +37,7 @@ class UserRepositoryImp implements UserRepository {
   @override
   Future<Result<void>> updateWeeklyWorkoutDays(int weeklyWorkoutDays) async {
     try {
-      return Right(await _dataSource.updateWeeklyWorkoutDays(weeklyWorkoutDays));
+      return Right(await _weeklyWorkoutDaysDataSource.update(weeklyWorkoutDays));
     } catch (error) {
       return Left(CacheFailure());
     }
@@ -41,21 +46,9 @@ class UserRepositoryImp implements UserRepository {
   @override
   Future<Result<void>> updateWeight(double weight) async {
     try {
-      return Right(await _dataSource.updateWeight(weight));
+      return Right(await _weightDataSource.update(weight));
     } catch (error) {
       return Left(CacheFailure());
     }
   }
-  
-  @override
-  Future<Result<UserEntity>> getUser() {
-    try {
-      return Right(await _dataSource.getUser());
-    } catch(error) {
-      return Left(CacheFailure());
-    }
-  }
-
-  
-  
 }

@@ -1,7 +1,5 @@
 import '../entities/user_entity.dart';
 
-// TODO: test
-
 abstract interface class ValidateUserEntityUseCase {
   bool call(UserEntity userEntity);
 }

@@ -3,8 +3,11 @@ import 'package:hive/hive.dart';
 import '../../../layers/data/datasources/amount_of_water_drank_today_datasource.dart';
 import '../../../layers/data/datasources/daily_drinking_frequency_datasource.dart';
 import '../../../layers/data/datasources/daily_goal_datasource.dart';
-import '../../../layers/data/datasources/user_datasource.dart';
+import '../../../layers/data/datasources/sleep_time_datasource.dart';
+import '../../../layers/data/datasources/wake_up_time_datasource.dart';
 import '../../../layers/data/datasources/water_container_datasource.dart';
+import '../../../layers/data/datasources/weekly_workout_days_datasource.dart';
+import '../../../layers/data/datasources/weight_datasource.dart';
 import '../../../layers/data/repositories/amount_of_water_drank_today_repository_imp.dart';
 import '../../../layers/data/repositories/daily_drinking_frequency_repository_imp.dart';
 import '../../../layers/data/repositories/daily_goal_repository_imp.dart';
@@ -17,6 +20,7 @@ import '../../../layers/domain/repositories/daily_goal_repository.dart';
 import '../../../layers/domain/repositories/user_repository.dart';
 import '../../../layers/domain/repositories/water_container_repository.dart';
 import '../../../layers/domain/usecases/validate_user_entity_usecase.dart';
+import '../../../layers/presentation/view_models/save_user_view_model.dart';
 import '../../../layers/presentation/view_models/user_view_model.dart';
 import '../../../layers/presentation/view_models/water_display_view_model.dart';
 import '../../core.dart';
@@ -34,6 +38,22 @@ void initGetIt() {
 
   // Data sources
 
+  getIt.registerLazySingleton<SleepTimeDataSource>(() {
+    return HiveSleepTimeDataSourceImp(getIt());
+  });
+
+  getIt.registerLazySingleton<WakeUpTimeDataSource>(() {
+    return HiveWakeUpTimeDataSourceImp(getIt());
+  });
+
+  getIt.registerLazySingleton<WeeklyWorkoutDaysDataSource>(() {
+    return HiveWeeklyWorkoutDaysDataSourceImp(getIt());
+  });
+
+  getIt.registerLazySingleton<WeightDataSource>(() {
+    return HiveWeightDataSourceImp(getIt());
+  });
+
   getIt.registerLazySingleton<WaterContainerDataSource>(() {
     return HiveWaterContainerDataSourceImp(getIt());
   });
@@ -48,10 +68,6 @@ void initGetIt() {
 
   getIt.registerLazySingleton<DailyDrinkingFrequencyDataSource>(() {
     return HiveDailyDrinkingFrequencyDataSourceImp(getIt());
-  });
-
-  getIt.registerLazySingleton<UserDataSource>(() {
-    return HiveUserDataSourceImp(getIt());
   });
 
   // Repositories
@@ -73,7 +89,7 @@ void initGetIt() {
   });
 
   getIt.registerLazySingleton<UserRepository>(() {
-    return UserRepositoryImp(getIt());
+    return UserRepositoryImp(getIt(), getIt(), getIt(), getIt());
   });
 
   // Usecases
@@ -85,6 +101,10 @@ void initGetIt() {
 
   getIt.registerLazySingleton<WaterDisplayViewModel>(() {
     return WaterDisplayViewModel(getIt(), getIt(), getIt());
+  });
+
+  getIt.registerLazySingleton<SaveUserViewModel>(() {
+    return SaveUserViewModelImp(getIt());
   });
 
   getIt.registerLazySingleton<UserEntityViewModel>(() {

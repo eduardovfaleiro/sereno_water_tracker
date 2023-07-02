@@ -24,13 +24,13 @@ void main() async {
           create: (_) => GetIt.I.get<UserEntityViewModel>(),
         ),
       ],
-      child: const SerenoCleanArchitectureSolid(),
+      child: const Sereno(),
     ),
   );
 }
 
-class SerenoCleanArchitectureSolid extends StatelessWidget {
-  const SerenoCleanArchitectureSolid({super.key});
+class Sereno extends StatelessWidget {
+  const Sereno({super.key});
 
   @override
   Widget build(BuildContext context) {

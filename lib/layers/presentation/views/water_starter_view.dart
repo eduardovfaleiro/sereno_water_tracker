@@ -8,6 +8,7 @@ import '../../../core/core.dart';
 import '../../../core/theme/themes.dart';
 import '../../../core/utils/functions/get_time_of_day_value.dart';
 import '../../../core/utils/number_utils.dart';
+import '../view_models/save_user_view_model.dart';
 import '../view_models/user_view_model.dart';
 
 part '../../../core/utils/functions/show_time_picker_waking_hours.dart';
@@ -127,7 +128,7 @@ class WaterStarterView extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        // getIt<UserEntityViewModel>().updateLocalDataBase();
+                        getIt<SaveUserViewModel>().updateUser(getIt<UserEntityViewModel>().getUserEntity());
 
                         Navigator.pushNamed(context, '/waterDisplay');
                       },
