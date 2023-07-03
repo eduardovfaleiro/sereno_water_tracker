@@ -104,10 +104,10 @@ void initGetIt() {
   });
 
   getIt.registerLazySingleton<SaveUserViewModel>(() {
-    return SaveUserViewModelImp(getIt());
+    return SaveUserViewModelImp(getIt(), getIt());
   });
 
   getIt.registerLazySingleton<UserEntityViewModel>(() {
-    return UserEntityViewModel(getIt());
+    return UserEntityViewModel(getIt(), getIt());
   });
 }

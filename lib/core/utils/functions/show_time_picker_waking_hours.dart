@@ -4,23 +4,27 @@ Future<void> showTimePickerWakingHours({
   required BuildContext context,
   required UserEntityViewModel userEntityViewModel,
 }) async {
-  await showTimePicker(
-    context: context,
-    initialTime: TimeOfDay.now(),
-    helpText: 'When do you usually wake up?',
-  ).then(
-    (wakeUpTime) async {
-      if (wakeUpTime == null) return;
+  Future<TimeOfDay?> showWakeUpTimePicker() {
+    return showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      helpText: 'When do you usually wake up?',
+    );
+  }
 
+  Future<TimeOfDay?> showSleepTimePicker({required TimeOfDay? wakeUpTime}) {
+    return showTimePicker(
+      context: context,
+      initialTime: wakeUpTime ?? TimeOfDay.now(),
+      helpText: 'When do you usually go sleep?',
+    );
+  }
+
+  await showWakeUpTimePicker().then(
+    (wakeUpTime) async {
       userEntityViewModel.updateWakeUpTime(wakeUpTime);
 
-      await showTimePicker(
-        context: context,
-        initialTime: wakeUpTime,
-        helpText: 'When do you usually go sleep?',
-      ).then((sleepTime) {
-        if (sleepTime == null) return;
-
+      await showSleepTimePicker(wakeUpTime: wakeUpTime).then((sleepTime) {
         userEntityViewModel.updateSleepTime(sleepTime);
       });
     },

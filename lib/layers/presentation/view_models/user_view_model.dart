@@ -1,12 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, void_checks
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/user_entity.dart';
+import '../../domain/usecases/validate_user_entity_usecase.dart';
 
 class UserEntityViewModel extends ChangeNotifier {
+  final ValidateUserEntityUseCase _validateUserEntityUseCase;
   UserEntity _userEntity;
 
-  UserEntityViewModel(this._userEntity);
+  UserEntityViewModel(this._userEntity, this._validateUserEntityUseCase);
 
   double get weight => _userEntity.weight;
   int get dailyDrinkingFrequency => _userEntity.dailyDrinkingFrequency;
@@ -33,15 +36,17 @@ class UserEntityViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateSleepTime(TimeOfDay sleepTime) {
+  void updateSleepTime(TimeOfDay? sleepTime) {
     _userEntity = _userEntity.copyWith(sleepTime: sleepTime);
 
     notifyListeners();
   }
 
-  void updateWakeUpTime(TimeOfDay wakeUpTime) {
+  void updateWakeUpTime(TimeOfDay? wakeUpTime) {
     _userEntity = _userEntity.copyWith(wakeUpTime: wakeUpTime);
 
     notifyListeners();
   }
+
+  bool get isUserValid => _validateUserEntityUseCase(_userEntity) is Right;
 }

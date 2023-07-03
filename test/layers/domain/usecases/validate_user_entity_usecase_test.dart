@@ -1,5 +1,7 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/entities/user_entity.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/usecases/validate_user_entity_usecase.dart';
 
@@ -14,8 +16,9 @@ void main() {
     var userEntity = UserEntity();
 
     var result = useCase(userEntity);
+    var expectedResult = result.fold((failure) => failure, (_) {});
 
-    expect(result, false);
+    expect(expectedResult, isA<ValidationFailure>());
   });
 
   test('Should return true when neither wakeUpTime or sleepTime are null', () async {
@@ -26,6 +29,6 @@ void main() {
 
     var result = useCase(userEntity);
 
-    expect(result, true);
+    expect(result, const Right(null));
   });
 }

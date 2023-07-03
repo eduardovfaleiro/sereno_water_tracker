@@ -1,15 +1,18 @@
+import 'package:dartz/dartz.dart';
+
+import '../../../core/core.dart';
 import '../entities/user_entity.dart';
 
 abstract interface class ValidateUserEntityUseCase {
-  bool call(UserEntity userEntity);
+  Result<void> call(UserEntity userEntity);
 }
 
 class ValidateUserEntityUseCaseImp implements ValidateUserEntityUseCase {
   @override
-  bool call(UserEntity userEntity) {
-    if (userEntity.wakeUpTime == null) return false;
-    if (userEntity.sleepTime == null) return false;
+  Result<void> call(UserEntity userEntity) {
+    if (userEntity.wakeUpTime == null) return Left(ValidationFailures.wakeUpTime);
+    if (userEntity.sleepTime == null) return Left(ValidationFailures.sleepTime);
 
-    return true;
+    return const Right(null);
   }
 }

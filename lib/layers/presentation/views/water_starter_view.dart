@@ -127,10 +127,22 @@ class WaterStarterView extends StatelessWidget {
                           horizontal: Spacing.small2,
                         ),
                       ),
-                      onPressed: () {
-                        getIt<SaveUserViewModel>().updateUser(getIt<UserEntityViewModel>().getUserEntity());
+                      onPressed: () async {
+                        var updateUserResult = await getIt<SaveUserViewModel>().updateUser(getIt<UserEntityViewModel>().getUserEntity());
 
-                        Navigator.pushNamed(context, '/waterDisplay');
+                        updateUserResult.fold((failure) {
+                          if (failure is ValidationFailure) {
+                            return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(failure.message),
+                            ));
+                          }
+                        }, (success) {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text('Data saved successfully!'),
+                          ));
+
+                          Navigator.pushNamed(context, '/waterDisplay');
+                        });
                       },
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
@@ -219,8 +231,6 @@ class DateInputCardWidget extends StatefulWidget {
 }
 
 class _DateInputCardWidgetState extends State<DateInputCardWidget> {
-  var userEntityViewModel = getIt<UserEntityViewModel>();
-
   @override
   Widget build(BuildContext context) {
     return Consumer<UserEntityViewModel>(
@@ -241,15 +251,7 @@ class _DateInputCardWidgetState extends State<DateInputCardWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     widget.question,
-                    (userEntityViewModel.sleepTime != null && userEntityViewModel.wakeUpTime != null)
-                        ? Text(
-                            'From ${getTimeOfDayValue(userEntityViewModel.wakeUpTime!)} to '
-                            '${getTimeOfDayValue(userEntityViewModel.sleepTime!)}',
-                          )
-                        : const Text(
-                            'Press to select time',
-                            style: TextStyle(color: Color.fromARGB(255, 83, 137, 192)),
-                          ),
+                    const DatePickerMessage(),
                   ],
                 ),
                 const Icon(Icons.access_time_filled, color: Colors.grey),
@@ -259,5 +261,31 @@ class _DateInputCardWidgetState extends State<DateInputCardWidget> {
         );
       },
     );
+  }
+}
+
+class DatePickerMessage extends StatefulWidget {
+  const DatePickerMessage({super.key});
+
+  @override
+  State<DatePickerMessage> createState() => _DatePickerMessageState();
+}
+
+class _DatePickerMessageState extends State<DatePickerMessage> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<UserEntityViewModel>(builder: (context, userEntityViewModel, _) {
+      if (userEntityViewModel.isUserValid) {
+        return Text(
+          'From ${getTimeOfDayValue(userEntityViewModel.wakeUpTime!)} to '
+          '${getTimeOfDayValue(userEntityViewModel.sleepTime!)}',
+        );
+      }
+
+      return const Text(
+        'Press to select time',
+        style: TextStyle(color: Color.fromARGB(255, 83, 137, 192)),
+      );
+    });
   }
 }

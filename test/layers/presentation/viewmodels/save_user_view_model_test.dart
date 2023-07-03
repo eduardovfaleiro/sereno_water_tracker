@@ -3,18 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
+import 'package:sereno_clean_architecture_solid/layers/domain/entities/user_entity.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/repositories/user_repository.dart';
+import 'package:sereno_clean_architecture_solid/layers/domain/usecases/validate_user_entity_usecase.dart';
 import 'package:sereno_clean_architecture_solid/layers/presentation/view_models/save_user_view_model.dart';
 
 class MockUserRepository extends Mock implements UserRepository {}
 
+class MockValidateUserEntityUseCase extends Mock implements ValidateUserEntityUseCase {}
+
 void main() {
+  late MockValidateUserEntityUseCase mockValidateUserEntityUseCase;
   late MockUserRepository mockUserRepository;
   late SaveUserViewModel viewModel;
 
   setUp(() {
+    mockValidateUserEntityUseCase = MockValidateUserEntityUseCase();
     mockUserRepository = MockUserRepository();
-    viewModel = SaveUserViewModelImp(mockUserRepository);
+    viewModel = SaveUserViewModelImp(mockUserRepository, mockValidateUserEntityUseCase);
+
+    registerFallbackValue(const TimeOfDay(hour: 0, minute: 0));
+    registerFallbackValue(UserEntity());
   });
 
   group('updateWeight', () {
@@ -130,6 +139,82 @@ void main() {
         verify(() => mockUserRepository.updateSleepTime(sleepTime));
         expect(expectedResult, isA<CacheFailure>());
       });
+    });
+  });
+
+  group('updateUser', () {
+    var userEntity = UserEntity(
+      sleepTime: const TimeOfDay(hour: 22, minute: 0),
+      wakeUpTime: const TimeOfDay(hour: 10, minute: 0),
+    );
+
+    var userEntityIncomplete = UserEntity();
+
+    test('Should update user when successful', () async {
+      // arrange
+      when(() => mockValidateUserEntityUseCase(any())).thenReturn(const Right(null));
+      when(() => mockUserRepository.updateWeight(any())).thenAnswer((_) async => const Right(null));
+      when(() => mockUserRepository.updateSleepTime(any())).thenAnswer((_) async => const Right(null));
+      when(() => mockUserRepository.updateWakeUpTime(any())).thenAnswer((_) async => const Right(null));
+      when(() => mockUserRepository.updateWeeklyWorkoutDays(any())).thenAnswer((_) async => const Right(null));
+
+      // act
+      var validationResult = mockValidateUserEntityUseCase(userEntity);
+
+      var result = await viewModel.updateUser(userEntity);
+
+      // assert
+      verify(() => mockValidateUserEntityUseCase(userEntity));
+      verify(() => mockUserRepository.updateWeight(userEntity.weight));
+      verify(() => mockUserRepository.updateWeeklyWorkoutDays(userEntity.weeklyWorkoutDays));
+      verify(() => mockUserRepository.updateWakeUpTime(userEntity.wakeUpTime!));
+      verify(() => mockUserRepository.updateSleepTime(userEntity.sleepTime!));
+      verifyNoMoreInteractions(mockUserRepository);
+
+      // expect(validationResult, const Right(null));
+      expect(result, const Right(null));
+    });
+
+    test('Should return CacheFailure when call fails', () async {
+      // arrange
+      when(() => mockValidateUserEntityUseCase(any())).thenReturn(const Right(null));
+
+      when(() => mockUserRepository.updateWeight(any())).thenAnswer((_) async => const Right(null));
+      when(() => mockUserRepository.updateSleepTime(any())).thenAnswer((_) async => Left(CacheFailure()));
+      when(() => mockUserRepository.updateWakeUpTime(any())).thenAnswer((_) async => const Right(null));
+      when(() => mockUserRepository.updateWeeklyWorkoutDays(any())).thenAnswer((_) async => const Right(null));
+
+      // act
+      var validationResult = mockValidateUserEntityUseCase(userEntity);
+
+      var result = await viewModel.updateUser(userEntity);
+      var expectedResult = result.fold((failure) => failure, (_) {});
+
+      // assert
+      verify(() => mockValidateUserEntityUseCase(userEntity));
+      verify(() => mockUserRepository.updateWeight(userEntity.weight));
+      verify(() => mockUserRepository.updateWeeklyWorkoutDays(userEntity.weeklyWorkoutDays));
+      verify(() => mockUserRepository.updateWakeUpTime(userEntity.wakeUpTime!));
+      verify(() => mockUserRepository.updateSleepTime(userEntity.sleepTime!));
+      verifyNoMoreInteractions(mockUserRepository);
+
+      expect(validationResult, const Right(null));
+      expect(expectedResult, isA<CacheFailure>());
+    });
+
+    test('Should return ValidationFailure when validation fails', () async {
+      // arrange
+      when(() => mockValidateUserEntityUseCase(any())).thenReturn(Left(ValidationFailures.wakeUpTime));
+
+      // act
+      var result = await viewModel.updateUser(userEntityIncomplete);
+      var expectedResult = result.fold((failure) => failure, (_) {});
+
+      // assert
+      verify(() => mockValidateUserEntityUseCase(userEntityIncomplete));
+      verifyZeroInteractions(mockUserRepository);
+
+      expect(expectedResult, isA<ValidationFailure>());
     });
   });
 }
