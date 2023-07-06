@@ -18,28 +18,6 @@ void main() {
     repository = DailyDrinkingGoalRepositoryImp(mockDailyDrinkingGoalDataSource);
   });
 
-  group('create', () {
-    int amount = 1000;
-
-    test('Should make the call for the datasource successfully', () async {
-      when(() => mockDailyDrinkingGoalDataSource.create(amount)).thenAnswer((_) async {});
-
-      await repository.create(amount);
-
-      verify(() => mockDailyDrinkingGoalDataSource.create(amount));
-    });
-
-    // test('Should make the call for the datasource fails', () async {
-    //   when(() => mockDailyDrinkingGoalDataSource.create(any())).thenThrow(CacheException());
-
-    //   var result = await repository.create(amount);
-    //   var expectedResult = result.fold((l) => l, (r) => null);
-
-    //   verify(() => mockDailyDrinkingGoalDataSource.create(amount));
-    //   expect(expectedResult, isA<CacheFailure>());
-    // });
-  });
-
   group('get', () {
     int amount = 1000;
 

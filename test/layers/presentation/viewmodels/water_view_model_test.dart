@@ -99,4 +99,6 @@ void main() {
       expect(result, Right(percentage));
     });
   });
+
+  group('updateAmountDrankToday', () {});
 }

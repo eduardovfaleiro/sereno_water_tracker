@@ -4,8 +4,7 @@ import '../../../core/core.dart';
 
 abstract interface class DailyDrinkingGoalDataSource {
   Future<int> get();
-  Future<int> update();
-  Future<void> create(int amount);
+  Future<void> update(int amount);
 }
 
 class HiveDailyDrinkingGoalDataSource implements DailyDrinkingGoalDataSource {
@@ -14,17 +13,12 @@ class HiveDailyDrinkingGoalDataSource implements DailyDrinkingGoalDataSource {
   HiveDailyDrinkingGoalDataSource(this._hiveInterface);
 
   @override
-  Future<void> create(int amount) async {
-    _hiveInterface.box(WATER_DATA).put(DAILY_GOAL, amount);
-  }
-
-  @override
   Future<int> get() async {
-    return _hiveInterface.box(WATER_DATA).get(DAILY_GOAL);
+    return _hiveInterface.box(WATER_DATA).get(DAILY_DRINKING_GOAL);
   }
 
   @override
-  Future<int> update() {
-    throw UnimplementedError();
+  Future<void> update(int amount) async {
+    return _hiveInterface.box(WATER_DATA).put(DAILY_DRINKING_GOAL, amount);
   }
 }

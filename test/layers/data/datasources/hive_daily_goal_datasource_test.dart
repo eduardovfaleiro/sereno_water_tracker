@@ -28,23 +28,10 @@ void main() {
 
       verifyInOrder([
         () => mockHiveInterface.box(WATER_DATA),
-        () => mockBox.get(DAILY_GOAL),
+        () => mockBox.get(DAILY_DRINKING_GOAL),
       ]);
 
       expect(result, amount);
-    });
-  });
-
-  group('create', () {
-    test('Should make the call to HiveInterface', () async {
-      when(() => mockBox.put(any(), any())).thenAnswer((_) async {});
-
-      await dataSource.create(amount);
-
-      verifyInOrder([
-        () => mockHiveInterface.box(WATER_DATA),
-        () => mockBox.put(DAILY_GOAL, amount),
-      ]);
     });
   });
 }

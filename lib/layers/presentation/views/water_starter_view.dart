@@ -10,6 +10,7 @@ import '../../../core/utils/functions/get_time_of_day_value.dart';
 import '../../../core/utils/number_utils.dart';
 import '../view_models/save_user_view_model.dart';
 import '../view_models/user_view_model.dart';
+import '../view_models/water_view_model.dart';
 
 part '../../../core/utils/functions/show_time_picker_waking_hours.dart';
 
@@ -136,8 +137,10 @@ class WaterStarterView extends StatelessWidget {
                                   content: Text(failure.message),
                                 ));
                               }
-                            }, (success) {
-                              Navigator.pushReplacementNamed(context, '/waterDisplay');
+                            }, (success) async {
+                              await getIt<WaterViewModel>().initializeData().whenComplete(() {
+                                Navigator.pushReplacementNamed(context, '/waterDisplay');
+                              });
                             });
                           },
                         );

@@ -28,15 +28,13 @@ void main() {
       when(() => mockBox.get(any())).thenReturn(amountOfWaterDrankToday);
       when(() => mockBox.put(any(), any())).thenAnswer((_) async => amountOfWaterDrankTodayAddedUp);
 
-      var result = await dataSource.addUp(amountToAddUp);
+      await dataSource.addUp(amountToAddUp);
 
       verifyInOrder([
         () => mockHiveInterface.box(WATER_DATA),
         () => mockBox.get(AMOUNT_OF_WATER_DRANK_TODAY),
         () => mockBox.put(AMOUNT_OF_WATER_DRANK_TODAY, amountOfWaterDrankTodayAddedUp),
       ]);
-
-      expect(result, amountOfWaterDrankTodayAddedUp);
     });
   });
 

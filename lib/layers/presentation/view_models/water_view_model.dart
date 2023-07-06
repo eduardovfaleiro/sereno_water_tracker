@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
@@ -12,9 +13,11 @@ abstract interface class WaterViewModel extends ChangeNotifier {
   Future<Result<int>> getNumberOfTimesToDrinkDaily();
   Future<Result<double>> getDailyGoalCompletedPercentage();
 
-  Future<Result<void>> updateAmountDrankToday();
-  Future<Result<void>> updateDailyDrinkingGoal();
-  Future<Result<void>> updateNumberOfTimesToDrinkDaily();
+  Future<Result<void>> updateAmountDrankToday(int amount);
+  Future<Result<void>> updateDailyDrinkingGoal(int amount);
+  Future<Result<void>> updateNumberOfTimesToDrinkDaily(int times);
+
+  Future<Result<void>> initializeData();
 }
 
 class WaterViewModelImp extends ChangeNotifier implements WaterViewModel {
@@ -32,51 +35,51 @@ class WaterViewModelImp extends ChangeNotifier implements WaterViewModel {
 
   @override
   Future<Result<int>> getAmountDrankToday() {
-    var result = _amountOfWaterDrankTodayRepository.get();
-
-    notifyListeners();
-    return result;
+    return _amountOfWaterDrankTodayRepository.get();
   }
 
   @override
   Future<Result<int>> getNumberOfTimesToDrinkDaily() {
-    var result = _numberOfTimesToDrinkWaterDailyRepository.get();
-
-    notifyListeners();
-    return result;
+    return _numberOfTimesToDrinkWaterDailyRepository.get();
   }
 
   @override
   Future<Result<int>> getDailyDrinkingGoal() {
-    var result = _dailyDrinkingGoalRepository.get();
-
-    notifyListeners();
-    return result;
+    return _dailyDrinkingGoalRepository.get();
   }
 
   @override
   Future<Result<double>> getDailyGoalCompletedPercentage() {
-    var result = _getDailyDrinkingGoalCompletedPercentageUseCase();
-
-    notifyListeners();
-    return result;
+    return _getDailyDrinkingGoalCompletedPercentageUseCase();
   }
 
   @override
-  Future<Result<void>> updateAmountDrankToday() {
-    // TODO: implement updateAmountDrankToday
-    throw UnimplementedError();
+  Future<Result<void>> updateAmountDrankToday(int amount) {
+    return _amountOfWaterDrankTodayRepository.update(amount).whenComplete(() => notifyListeners());
   }
 
   @override
-  Future<Result<void>> updateDailyDrinkingGoal() {
-    // TODO: implement updateDailyDrinkingGoal
-    throw UnimplementedError();
+  Future<Result<void>> updateDailyDrinkingGoal(int amount) {
+    return _dailyDrinkingGoalRepository.update(amount).whenComplete(() => notifyListeners());
   }
 
   @override
-  Future<Result<void>> updateNumberOfTimesToDrinkDaily() {
-    // TODO: implement updateNumberOfTimesToDrinkDaily
-    throw UnimplementedError();
+  Future<Result<void>> updateNumberOfTimesToDrinkDaily(int times) {
+    return _numberOfTimesToDrinkWaterDailyRepository.update(times).whenComplete(() => notifyListeners());
+  }
+
+  // TODO: test
+  @override
+  Future<Result<void>> initializeData() async {
+    var amountOfWaterDrankTodayRepositoryResult = await _amountOfWaterDrankTodayRepository.update(MIN_AMOUNT_OF_WATER_DRANK_TODAY);
+    if (amountOfWaterDrankTodayRepositoryResult is Left) return amountOfWaterDrankTodayRepositoryResult;
+
+    var numberOfTimesToDrinkWaterDailyRepositoryResult = await _numberOfTimesToDrinkWaterDailyRepository.update(MIN_NUMBER_OF_TIMES_TO_DRINK_A_DAY);
+    if (numberOfTimesToDrinkWaterDailyRepositoryResult is Left) return numberOfTimesToDrinkWaterDailyRepositoryResult;
+
+    var dailyDrinkingGoalRepositoryResult = await _dailyDrinkingGoalRepository.update(MIN_DAILY_DRINKING_GOAL);
+    if (dailyDrinkingGoalRepositoryResult is Left) return dailyDrinkingGoalRepositoryResult;
+
+    return const Right(null);
   }
 }

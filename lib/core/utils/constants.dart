@@ -22,5 +22,8 @@ const int MAX_NUMBER_OF_TIMES_TO_DRINK_A_DAY = 10;
 const double MAX_WEIGHT = 200;
 const double MIN_WEIGHT = 1;
 const int NUMBER_OF_STAGES = 5;
+const int MIN_AMOUNT_OF_WATER_DRANK_TODAY = 0;
+const int MIN_NUMBER_OF_TIMES_TO_DRINK_A_DAY = 1;
+const int MIN_DAILY_DRINKING_GOAL = 1;
 
 final GetIt getIt = GetIt.I;
