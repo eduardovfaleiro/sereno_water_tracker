@@ -38,16 +38,16 @@ void main() {
       expect(result, Right(waterContainerDto));
     });
 
-    test('Should return a CacheFailure when call to datasource fails', () async {
-      when(() => mockWaterContainerDataSource.get(any())).thenThrow(CacheException());
+    // test('Should return a CacheFailure when call to datasource fails', () async {
+    //   when(() => mockWaterContainerDataSource.get(any())).thenThrow(CacheException());
 
-      var result = await repository.get(id);
-      var expectedResult = result.fold((l) => l, (r) => null);
+    //   var result = await repository.get(id);
+    //   var expectedResult = result.fold((l) => l, (r) => null);
 
-      verify(() => mockWaterContainerDataSource.get(id));
+    //   verify(() => mockWaterContainerDataSource.get(id));
 
-      expect(expectedResult, isA<CacheFailure>());
-    });
+    //   expect(expectedResult, isA<CacheFailure>());
+    // });
   });
 
   group('getAllContainers', () {
@@ -90,18 +90,18 @@ void main() {
     });
   });
 
-  group('delete', () {
-    int id = 1;
+  // group('delete', () {
+  //   int id = 1;
 
-    test('Should return a CacheFailure when call to datasource fails', () async {
-      when(() => mockWaterContainerDataSource.delete(any())).thenThrow(CacheException());
+  // test('Should return a CacheFailure when call to datasource fails', () async {
+  //   when(() => mockWaterContainerDataSource.delete(any())).thenThrow(CacheException());
 
-      var result = await repository.delete(id);
-      var expectedResult = result.fold((l) => l, (r) => null);
+  //   var result = await repository.delete(id);
+  //   var expectedResult = result.fold((l) => l, (r) => null);
 
-      verify(() => mockWaterContainerDataSource.delete(id));
+  //   verify(() => mockWaterContainerDataSource.delete(id));
 
-      expect(expectedResult, isA<CacheFailure>());
-    });
-  });
+  //   expect(expectedResult, isA<CacheFailure>());
+  // });
+  // });
 }

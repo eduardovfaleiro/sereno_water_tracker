@@ -8,13 +8,13 @@ import '../../../mocks.dart';
 void main() {
   late MockBox mockBox;
   late MockHiveInterface mockHiveInterface;
-  late DailyGoalDataSource dataSource;
+  late DailyDrinkingGoalDataSource dataSource;
   late int amount;
 
   setUp(() {
     mockBox = MockBox();
     mockHiveInterface = MockHiveInterface();
-    dataSource = HiveDailyGoalDataSource(mockHiveInterface);
+    dataSource = HiveDailyDrinkingGoalDataSource(mockHiveInterface);
 
     when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
     amount = 1000;

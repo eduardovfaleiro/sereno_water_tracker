@@ -11,20 +11,20 @@ class AmountOfWaterDrankTodayRepositoryImp implements AmountOfWaterDrankTodayRep
 
   @override
   Future<Result<int>> get() async {
-    try {
-      return Right(await _amountOfWaterDrankTodayDataSource.get());
-    } catch (error) {
-      return Left(CacheFailure());
-    }
+    // try {
+    return Right(await _amountOfWaterDrankTodayDataSource.get());
+    // } catch (error) {
+    //   return Left(CacheFailure());
+    // }
   }
 
   @override
   Future<Result<int>> addUp(int amount) async {
-    try {
-      return Right(await _amountOfWaterDrankTodayDataSource.addUp(amount));
-    } catch (error) {
-      return Left(CacheFailure());
-    }
+    // try {
+    return Right(await _amountOfWaterDrankTodayDataSource.addUp(amount));
+    // } catch (error) {
+    //   return Left(CacheFailure());
+    // }
   }
 
   @override

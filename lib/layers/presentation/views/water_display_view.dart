@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/core.dart';
 import '../../../../core/theme/themes.dart';
-import '../view_models/water_display_view_model.dart';
+import '../view_models/water_view_model.dart';
 import '../widgets/circular_button.dart';
 
 class WaterDisplayView extends StatelessWidget {
@@ -35,8 +35,8 @@ class WaterDisplayView extends StatelessWidget {
         ),
         Scaffold(
           appBar: AppBar(title: const Text('Water')),
-          body: Consumer<WaterDisplayViewModel>(
-            builder: (context, waterDisplayViewModel, _) {
+          body: Consumer<WaterViewModel>(
+            builder: (context, waterViewModel, _) {
               return Padding(
                 padding: const EdgeInsets.only(
                   left: Spacing.small3,
@@ -49,12 +49,12 @@ class WaterDisplayView extends StatelessWidget {
                   children: [
                     WaterDataWidget(
                       'Water drank today',
-                      waterDisplayViewModel.getAmountOfWaterDrankToday(context),
+                      waterViewModel.getAmountDrankToday(),
                     ),
                     const SizedBox(height: Spacing.small2),
-                    const LinearProgressIndicator(value: 0),
+                    ProgressBar(waterViewModel.getDailyGoalCompletedPercentage()),
                     const SizedBox(height: Spacing.small2),
-                    WaterDataWidget('Daily goal', waterDisplayViewModel.getDailyGoal()),
+                    WaterDataWidget('Daily goal', waterViewModel.getDailyDrinkingGoal()),
                     const SizedBox(height: Spacing.medium2),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,7 +73,7 @@ class WaterDisplayView extends StatelessWidget {
                         itemCount: 1,
                         itemBuilder: (context, index) {
                           return const CircularButton(
-                            // onTap: waterDisplayViewModel.createWaterContainer(waterContainerEntity),
+                            // onTap: waterViewModel.createWaterContainer(waterContainerEntity),
                             color: Color(0xff4E9CC8),
                             label: Text('250 ml', style: TextStyle(color: Colors.white)),
                             child: Icon(CommunityMaterialIcons.cup),
@@ -153,6 +153,34 @@ class BackgroundImageWithGradient extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class ProgressBar extends StatefulWidget {
+  final Future<Result<double>> value;
+
+  const ProgressBar(this.value, {super.key});
+
+  @override
+  State<ProgressBar> createState() => _ProgressBarState();
+}
+
+class _ProgressBarState extends State<ProgressBar> {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      builder: (context, snapshot) {
+        var percentage = snapshot.data as Result<double>?;
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LinearProgressIndicator(value: 0);
+        }
+
+        return LinearProgressIndicator(
+          value: percentage!.fold((failure) => 0, (success) => success),
+        );
+      },
     );
   }
 }

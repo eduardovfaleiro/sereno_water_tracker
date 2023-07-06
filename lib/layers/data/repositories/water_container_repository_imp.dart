@@ -18,22 +18,22 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
 
   @override
   Future<Result<void>> delete(int id) async {
-    try {
-      return Right(_waterContainerDataSource.delete(id));
-    } catch (error) {
-      return Left(CacheFailure());
-    }
+    // try {
+    return Right(_waterContainerDataSource.delete(id));
+    // } catch (error) {
+    //   return Left(CacheFailure());
+    // }
   }
 
   @override
   Future<Result<WaterContainerDto>> get(int id) async {
-    try {
-      var waterContainerDto = await _waterContainerDataSource.get(id);
+    // try {
+    var waterContainerDto = await _waterContainerDataSource.get(id);
 
-      return Right(waterContainerDto);
-    } catch (error) {
-      return Left(CacheFailure());
-    }
+    return Right(waterContainerDto);
+    // } catch (error) {
+    //   return Left(CacheFailure());
+    // }
   }
 
   @override

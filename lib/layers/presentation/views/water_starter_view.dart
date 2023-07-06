@@ -76,13 +76,13 @@ class WaterStarterView extends StatelessWidget {
                       const SizedBox(height: Spacing.small2),
                       InputCardWidget(
                         question: const MarkdownBody(data: '# How **often** do you want to\ndrink a **day**?'),
-                        value: Text('${userEntityViewModel.dailyDrinkingFrequency} times', style: const TextStyle(fontSize: FontSize.small1)),
+                        value: Text('${userEntityViewModel.numberOfTimesToDrinkWaterDaily} times', style: const TextStyle(fontSize: FontSize.small1)),
                         slider: Slider(
                           max: MAX_NUMBER_OF_TIMES_TO_DRINK_A_DAY.toDouble(),
                           divisions: MAX_NUMBER_OF_TIMES_TO_DRINK_A_DAY,
-                          value: userEntityViewModel.dailyDrinkingFrequency.toDouble(),
+                          value: userEntityViewModel.numberOfTimesToDrinkWaterDaily.toDouble(),
                           onChanged: (value) {
-                            userEntityViewModel.updateDailyDrinkingFrequency(value.toInt());
+                            userEntityViewModel.updateNumberOfTimesToDrinkWaterDaily(value.toInt());
                           },
                         ),
                       ),
@@ -128,21 +128,19 @@ class WaterStarterView extends StatelessWidget {
                         ),
                       ),
                       onPressed: () async {
-                        var updateUserResult = await getIt<SaveUserViewModel>().updateUser(getIt<UserEntityViewModel>().getUserEntity());
-
-                        updateUserResult.fold((failure) {
-                          if (failure is ValidationFailure) {
-                            return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(failure.message),
-                            ));
-                          }
-                        }, (success) {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text('Data saved successfully!'),
-                          ));
-
-                          Navigator.pushNamed(context, '/waterDisplay');
-                        });
+                        getIt<SaveUserViewModel>().updateUser(getIt<UserEntityViewModel>().getUserEntity()).then(
+                          (result) {
+                            result.fold((failure) {
+                              if (failure is ValidationFailure) {
+                                return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(failure.message),
+                                ));
+                              }
+                            }, (success) {
+                              Navigator.pushReplacementNamed(context, '/waterDisplay');
+                            });
+                          },
+                        );
                       },
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,

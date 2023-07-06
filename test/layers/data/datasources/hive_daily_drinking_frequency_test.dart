@@ -8,20 +8,20 @@ import '../../../mocks.dart';
 void main() {
   late MockBox mockBox;
   late MockHiveInterface mockHiveInterface;
-  late HiveDailyDrinkingFrequencyDataSourceImp dataSource;
+  late HiveNumberOfTimesToDrinkWaterDailyDataSourceImp dataSource;
 
   setUp(() {
     mockBox = MockBox();
     mockHiveInterface = MockHiveInterface();
-    dataSource = HiveDailyDrinkingFrequencyDataSourceImp(mockHiveInterface);
+    dataSource = HiveNumberOfTimesToDrinkWaterDailyDataSourceImp(mockHiveInterface);
   });
 
   group('get', () {
-    int dailyDrinkingFrequency = 5;
+    int numberOfTimesToDrinkWaterDaily = 5;
 
     test('Should return how many times the user should drink a day', () async {
       when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
-      when(() => mockBox.get(DAILY_DRINKING_FREQUENCY)).thenAnswer((_) => dailyDrinkingFrequency);
+      when(() => mockBox.get(DAILY_DRINKING_FREQUENCY)).thenAnswer((_) => numberOfTimesToDrinkWaterDaily);
 
       // act
       var result = await dataSource.get();
@@ -32,7 +32,7 @@ void main() {
         () => mockBox.get(DAILY_DRINKING_FREQUENCY),
       ]);
 
-      expect(result, dailyDrinkingFrequency);
+      expect(result, numberOfTimesToDrinkWaterDaily);
     });
   });
 }

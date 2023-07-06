@@ -19,10 +19,11 @@ import '../../../layers/domain/repositories/daily_drinking_frequency_repository.
 import '../../../layers/domain/repositories/daily_goal_repository.dart';
 import '../../../layers/domain/repositories/user_repository.dart';
 import '../../../layers/domain/repositories/water_container_repository.dart';
+import '../../../layers/domain/usecases/get_daily_drinking_goal_completion_in_percentage_usecase.dart';
 import '../../../layers/domain/usecases/validate_user_entity_usecase.dart';
 import '../../../layers/presentation/view_models/save_user_view_model.dart';
 import '../../../layers/presentation/view_models/user_view_model.dart';
-import '../../../layers/presentation/view_models/water_display_view_model.dart';
+import '../../../layers/presentation/view_models/water_view_model.dart';
 import '../../core.dart';
 
 void initGetIt() {
@@ -58,16 +59,16 @@ void initGetIt() {
     return HiveWaterContainerDataSourceImp(getIt());
   });
 
-  getIt.registerLazySingleton<DailyGoalDataSource>(() {
-    return HiveDailyGoalDataSource(getIt());
+  getIt.registerLazySingleton<DailyDrinkingGoalDataSource>(() {
+    return HiveDailyDrinkingGoalDataSource(getIt());
   });
 
   getIt.registerLazySingleton<AmountOfWaterDrankTodayDataSource>(() {
     return HiveAmountOfWaterDrankTodayDataSourceImp(getIt());
   });
 
-  getIt.registerLazySingleton<DailyDrinkingFrequencyDataSource>(() {
-    return HiveDailyDrinkingFrequencyDataSourceImp(getIt());
+  getIt.registerLazySingleton<NumberOfTimesToDrinkWaterDailyDataSource>(() {
+    return HiveNumberOfTimesToDrinkWaterDailyDataSourceImp(getIt());
   });
 
   // Repositories
@@ -76,16 +77,16 @@ void initGetIt() {
     return WaterContainerRepositoryImp(getIt());
   });
 
-  getIt.registerLazySingleton<DailyGoalRepository>(() {
-    return DailyGoalRepositoryImp(getIt());
+  getIt.registerLazySingleton<DailyDrinkingGoalRepository>(() {
+    return DailyDrinkingGoalRepositoryImp(getIt());
   });
 
   getIt.registerLazySingleton<AmountOfWaterDrankTodayRepository>(() {
     return AmountOfWaterDrankTodayRepositoryImp(getIt());
   });
 
-  getIt.registerLazySingleton<DailyDrinkingFrequencyRepository>(() {
-    return DailyDrinkingFrequencyRepositoryImp(getIt());
+  getIt.registerLazySingleton<NumberOfTimesToDrinkWaterDailyRepository>(() {
+    return NumberOfTimesToDrinkWaterDailyRepositoryImp(getIt());
   });
 
   getIt.registerLazySingleton<UserRepository>(() {
@@ -93,15 +94,16 @@ void initGetIt() {
   });
 
   // Usecases
+
   getIt.registerLazySingleton<ValidateUserEntityUseCase>(() {
     return ValidateUserEntityUseCaseImp();
   });
 
-  // View models
-
-  getIt.registerLazySingleton<WaterDisplayViewModel>(() {
-    return WaterDisplayViewModel(getIt(), getIt(), getIt());
+  getIt.registerLazySingleton<GetDailyDrinkingGoalCompletedPercentageUseCase>(() {
+    return GetDailyDrinkingGoalCompletedPercentageUseCaseImp(getIt(), getIt());
   });
+
+  // View models
 
   getIt.registerLazySingleton<SaveUserViewModel>(() {
     return SaveUserViewModelImp(getIt(), getIt());
@@ -109,5 +111,9 @@ void initGetIt() {
 
   getIt.registerLazySingleton<UserEntityViewModel>(() {
     return UserEntityViewModel(getIt(), getIt());
+  });
+
+  getIt.registerLazySingleton<WaterViewModel>(() {
+    return WaterViewModelImp(getIt(), getIt(), getIt(), getIt());
   });
 }

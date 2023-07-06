@@ -21,11 +21,12 @@ void main() {
   });
 
   group('get', () {
-    TimeOfDay wakeUpTime = const TimeOfDay(hour: 10, minute: 0);
+    var wakeUpTime = const TimeOfDay(hour: 10, minute: 0);
+    var wakeUpTimeString = '10:00';
 
     test('Should return call to get wake up time', () async {
       // arrange
-      when(() => mockBox.get(any())).thenAnswer((invocation) async => wakeUpTime);
+      when(() => mockBox.get(any())).thenReturn(wakeUpTimeString);
 
       // act
       var result = await dataSource.get();
@@ -41,11 +42,12 @@ void main() {
   });
 
   group('update', () {
-    TimeOfDay wakeUpTime = const TimeOfDay(hour: 10, minute: 0);
+    var wakeUpTime = const TimeOfDay(hour: 10, minute: 0);
+    var wakeUpTimeString = '10:00';
 
     test('Should update call to update wake up time', () async {
       // arrange
-      when(() => mockBox.put(any(), any())).thenAnswer((invocation) async {});
+      when(() => mockBox.put(any(), any())).thenAnswer((_) async {});
 
       // act
       await dataSource.update(wakeUpTime);
@@ -53,7 +55,7 @@ void main() {
       // assert
       verifyInOrder([
         () => mockHiveInterface.box(USER_DATA),
-        () => mockBox.put(WAKE_UP_TIME, wakeUpTime),
+        () => mockBox.put(WAKE_UP_TIME, wakeUpTimeString),
       ]);
     });
   });

@@ -12,7 +12,7 @@ class UserEntityViewModel extends ChangeNotifier {
   UserEntityViewModel(this._userEntity, this._validateUserEntityUseCase);
 
   double get weight => _userEntity.weight;
-  int get dailyDrinkingFrequency => _userEntity.dailyDrinkingFrequency;
+  int get numberOfTimesToDrinkWaterDaily => _userEntity.numberOfTimesToDrinkWaterDaily;
   int get weeklyWorkoutDays => _userEntity.weeklyWorkoutDays;
   TimeOfDay? get sleepTime => _userEntity.sleepTime;
   TimeOfDay? get wakeUpTime => _userEntity.wakeUpTime;
@@ -24,8 +24,8 @@ class UserEntityViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateDailyDrinkingFrequency(int dailyDrinkingFrequency) {
-    _userEntity = _userEntity.copyWith(dailyDrinkingFrequency: dailyDrinkingFrequency);
+  void updateNumberOfTimesToDrinkWaterDaily(int numberOfTimesToDrinkWaterDaily) {
+    _userEntity = _userEntity.copyWith(numberOfTimesToDrinkWaterDaily: numberOfTimesToDrinkWaterDaily);
 
     notifyListeners();
   }

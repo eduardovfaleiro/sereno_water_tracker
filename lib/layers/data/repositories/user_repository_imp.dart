@@ -18,37 +18,37 @@ class UserRepositoryImp implements UserRepository {
 
   @override
   Future<Result<void>> updateSleepTime(TimeOfDay sleepTime) async {
-    try {
-      return Right(await _sleepTimeDataSource.update(sleepTime));
-    } catch (error) {
-      return Left(CacheFailure());
-    }
+    // try {
+    return Right(await _sleepTimeDataSource.update(sleepTime));
+    // } catch (error) {
+    //   return Left(CacheFailure());
+    // }
   }
 
   @override
   Future<Result<void>> updateWakeUpTime(TimeOfDay wakeUpTime) async {
-    try {
-      return Right(await _wakeUpTimeDataSource.update(wakeUpTime));
-    } catch (error) {
-      return Left(CacheFailure());
-    }
+    // try {
+    return Right(await _wakeUpTimeDataSource.update(wakeUpTime));
+    // } catch (error) {
+    //   return Left(CacheFailure());
+    // }
   }
 
   @override
   Future<Result<void>> updateWeeklyWorkoutDays(int weeklyWorkoutDays) async {
-    try {
-      return Right(await _weeklyWorkoutDaysDataSource.update(weeklyWorkoutDays));
-    } catch (error) {
-      return Left(CacheFailure());
-    }
+    // try {
+    return Right(await _weeklyWorkoutDaysDataSource.update(weeklyWorkoutDays));
+    // } catch (error) {
+    //   return Left(CacheFailure());
+    // }
   }
 
   @override
   Future<Result<void>> updateWeight(double weight) async {
-    try {
-      return Right(await _weightDataSource.update(weight));
-    } catch (error) {
-      return Left(CacheFailure());
-    }
+    // try {
+    return Right(await _weightDataSource.update(weight));
+    // } catch (error) {
+    //   return Left(CacheFailure());
+    // }
   }
 }
