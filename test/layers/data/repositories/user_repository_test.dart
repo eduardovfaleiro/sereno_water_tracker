@@ -131,7 +131,7 @@ void main() {
   });
 
   group('updateWeight', () {
-    double weight = 75;
+    int weight = 75;
 
     test('Should update weight when call is successful', () async {
       // arrange

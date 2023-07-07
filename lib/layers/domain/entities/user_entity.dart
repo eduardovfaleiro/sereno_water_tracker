@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../core/core.dart';
 
 class UserEntity {
-  final double weight;
+  final int weight;
   final int numberOfTimesToDrinkWaterDaily;
   final int weeklyWorkoutDays;
   final TimeOfDay? sleepTime;
@@ -19,7 +19,7 @@ class UserEntity {
   });
 
   UserEntity copyWith({
-    double? weight,
+    int? weight,
     int? numberOfTimesToDrinkWaterDaily,
     int? weeklyWorkoutDays,
     TimeOfDay? sleepTime,

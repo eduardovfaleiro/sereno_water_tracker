@@ -15,7 +15,7 @@ class WaterDisplayView extends StatelessWidget {
     return Stack(
       children: [
         const Positioned.fill(
-          top: -500,
+          top: -650,
           child: Image(image: AssetImage('assets/images/water_background.jpg')),
         ),
         Container(
@@ -75,7 +75,7 @@ class WaterDisplayView extends StatelessWidget {
                           return const CircularButton(
                             // onTap: waterViewModel.createWaterContainer(waterContainerEntity),
                             color: Color(0xff4E9CC8),
-                            label: Text('250 ml', style: TextStyle(color: Colors.white)),
+                            label: Text('250 $VOLUME_UNIT_M', style: TextStyle(color: Colors.white)),
                             child: Icon(CommunityMaterialIcons.cup),
                           );
                         },
@@ -116,7 +116,10 @@ class WaterDataWidget extends StatelessWidget {
                 return const Text('Unavailable');
               },
               (amountOfWaterDrankToday) {
-                return Text('$amountOfWaterDrankToday ml');
+                return Text(
+                  '$amountOfWaterDrankToday ml',
+                  style: const TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF4E9CC8)),
+                );
               },
             );
           },
@@ -173,7 +176,7 @@ class _ProgressBarState extends State<ProgressBar> {
       builder: (context, snapshot) {
         var percentage = snapshot.data as Result<double>?;
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.data == null) {
           return const LinearProgressIndicator(value: 0);
         }
 

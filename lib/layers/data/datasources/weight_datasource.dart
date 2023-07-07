@@ -3,8 +3,8 @@ import 'package:hive/hive.dart';
 import '../../../core/core.dart';
 
 abstract interface class WeightDataSource {
-  Future<double> get();
-  Future<void> update(double weight);
+  Future<int> get();
+  Future<void> update(int weight);
 }
 
 class HiveWeightDataSourceImp implements WeightDataSource {
@@ -13,12 +13,12 @@ class HiveWeightDataSourceImp implements WeightDataSource {
   HiveWeightDataSourceImp(this._hiveInterface);
 
   @override
-  Future<double> get() async {
+  Future<int> get() async {
     return _hiveInterface.box(USER_DATA).get(WEIGHT);
   }
 
   @override
-  Future<void> update(double weight) {
+  Future<void> update(int weight) {
     return _hiveInterface.box(USER_DATA).put(WEIGHT, weight);
   }
 }

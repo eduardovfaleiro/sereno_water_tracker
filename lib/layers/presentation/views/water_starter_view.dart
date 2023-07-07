@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../../core/core.dart';
 import '../../../core/theme/themes.dart';
 import '../../../core/utils/functions/get_time_of_day_value.dart';
-import '../../../core/utils/number_utils.dart';
 import '../view_models/save_user_view_model.dart';
 import '../view_models/user_view_model.dart';
 import '../view_models/water_view_model.dart';
@@ -62,15 +61,15 @@ class WaterStarterView extends StatelessWidget {
                       InputCardWidget(
                         question: const MarkdownBody(data: "# What's your **weight**?"),
                         value: Text(
-                          '${NumberUtils(userEntityViewModel.weight).roundByDecimalsToString()} $MASS_UNIT_K',
+                          '${userEntityViewModel.weight} $MASS_UNIT_K',
                           style: const TextStyle(fontSize: FontSize.small1),
                         ),
                         slider: Slider(
-                          max: MAX_WEIGHT,
-                          min: MIN_WEIGHT,
-                          value: userEntityViewModel.weight,
+                          max: MAX_WEIGHT.toDouble(),
+                          min: MIN_WEIGHT.toDouble(),
+                          value: userEntityViewModel.weight.toDouble(),
                           onChanged: (value) {
-                            userEntityViewModel.updateWeight(value);
+                            userEntityViewModel.updateWeight(value.toInt());
                           },
                         ),
                       ),
@@ -280,12 +279,13 @@ class _DatePickerMessageState extends State<DatePickerMessage> {
         return Text(
           'From ${getTimeOfDayValue(userEntityViewModel.wakeUpTime!)} to '
           '${getTimeOfDayValue(userEntityViewModel.sleepTime!)}',
+          style: const TextStyle(fontSize: FontSize.small),
         );
       }
 
       return const Text(
         'Press to select time',
-        style: TextStyle(color: Color.fromARGB(255, 83, 137, 192)),
+        style: TextStyle(color: Color.fromARGB(255, 83, 137, 192), fontSize: FontSize.small),
       );
     });
   }

@@ -7,7 +7,7 @@ import '../../domain/repositories/user_repository.dart';
 import '../../domain/usecases/validate_user_entity_usecase.dart';
 
 abstract interface class SaveUserViewModel {
-  Future<Result<void>> updateWeight(double value);
+  Future<Result<void>> updateWeight(int value);
   Future<Result<void>> updateSleepTime(TimeOfDay value);
   Future<Result<void>> updateWakeUpTime(TimeOfDay value);
   Future<Result<void>> updateWeeklyWorkoutDays(int value);
@@ -21,7 +21,7 @@ class SaveUserViewModelImp implements SaveUserViewModel {
   SaveUserViewModelImp(this._userRepository, this._validateUserEntityUseCase);
 
   @override
-  Future<Result<void>> updateWeight(double weight) {
+  Future<Result<void>> updateWeight(int weight) {
     return _userRepository.updateWeight(weight);
   }
 

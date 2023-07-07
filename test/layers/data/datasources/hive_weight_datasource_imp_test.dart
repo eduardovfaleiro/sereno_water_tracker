@@ -19,11 +19,11 @@ void main() {
   });
 
   group('get', () {
-    double weight = 75;
+    int weight = 75;
 
     test('Should make call for hive to return the user\'s weight', () async {
       // arrange
-      when(() => mockBox.get(any())).thenAnswer((_) => weight);
+      when(() => mockBox.get(any())).thenAnswer((_) async => weight);
 
       // act
       var result = await dataSource.get();
@@ -39,7 +39,7 @@ void main() {
   });
 
   group('update', () {
-    double weight = 75;
+    int weight = 75;
 
     test('Should make call for hive to update the user\'s weight', () async {
       // arrange

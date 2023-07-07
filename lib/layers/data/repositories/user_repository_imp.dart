@@ -44,11 +44,23 @@ class UserRepositoryImp implements UserRepository {
   }
 
   @override
-  Future<Result<void>> updateWeight(double weight) async {
+  Future<Result<void>> updateWeight(int weight) async {
     // try {
     return Right(await _weightDataSource.update(weight));
     // } catch (error) {
     //   return Left(CacheFailure());
     // }
+  }
+
+  @override
+  Future<Result<int>> getWeight() {
+    // TODO: implement getWeight
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Result<int>> getWeeklyWorkoutDays() {
+    // TODO: implement getWeeklyWorkoutDays
+    throw UnimplementedError();
   }
 }
