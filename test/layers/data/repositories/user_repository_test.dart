@@ -9,6 +9,8 @@ import 'package:sereno_clean_architecture_solid/layers/data/datasources/weight_d
 import 'package:sereno_clean_architecture_solid/layers/data/repositories/user_repository_imp.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/repositories/user_repository.dart';
 
+import 'daily_goal_repository_test.dart';
+
 class MockWeightDataSource extends Mock implements WeightDataSource {}
 
 class MockWeeklyWorkoutDaysDataSource extends Mock implements WeeklyWorkoutDaysDataSource {}
@@ -22,6 +24,7 @@ void main() {
   late MockWeeklyWorkoutDaysDataSource mockWeeklyWorkoutDaysDataSource;
   late MockWakeUpTimeDataSource mockWakeUpTimeDataSource;
   late MockSleepTimeDataSource mockSleepTimeDataSource;
+  late MockDailyDrinkingGoalDataSource mockDailyDrinkingGoalDataSource;
   late UserRepository repository;
 
   setUp(() {
@@ -29,12 +32,14 @@ void main() {
     mockWeeklyWorkoutDaysDataSource = MockWeeklyWorkoutDaysDataSource();
     mockWakeUpTimeDataSource = MockWakeUpTimeDataSource();
     mockSleepTimeDataSource = MockSleepTimeDataSource();
+    mockDailyDrinkingGoalDataSource = MockDailyDrinkingGoalDataSource();
 
     repository = UserRepositoryImp(
       mockWeightDataSource,
       mockWeeklyWorkoutDaysDataSource,
       mockWakeUpTimeDataSource,
       mockSleepTimeDataSource,
+      mockDailyDrinkingGoalDataSource,
     );
 
     registerFallbackValue(const TimeOfDay(hour: 0, minute: 0));

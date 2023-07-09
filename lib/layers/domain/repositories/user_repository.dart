@@ -8,6 +8,7 @@ abstract interface class UserRepository {
   Future<Result<void>> updateSleepTime(TimeOfDay sleepTime);
   Future<Result<void>> updateWakeUpTime(TimeOfDay wakeUpTime);
   Future<Result<void>> updateWeeklyWorkoutDays(int weeklyWorkoutDays);
+  Future<Result<void>> updateDailyDrinkingGoal(int dailyDrinkingGoal);
   Future<Result<int>> getWeight();
   Future<Result<int>> getWeeklyWorkoutDays();
 }

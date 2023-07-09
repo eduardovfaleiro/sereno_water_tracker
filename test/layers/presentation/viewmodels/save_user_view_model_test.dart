@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/entities/user_entity.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/repositories/user_repository.dart';
+import 'package:sereno_clean_architecture_solid/layers/domain/usecases/calculate_daily_drinking_goal_usecase.dart';
 import 'package:sereno_clean_architecture_solid/layers/domain/usecases/validate_user_entity_usecase.dart';
 import 'package:sereno_clean_architecture_solid/layers/presentation/view_models/save_user_view_model.dart';
 
@@ -12,15 +13,24 @@ class MockUserRepository extends Mock implements UserRepository {}
 
 class MockValidateUserEntityUseCase extends Mock implements ValidateUserEntityUseCase {}
 
+class MockCalculateDailyDrinkingGoalUseCase extends Mock implements CalculateDailyDrinkingGoalUseCase {}
+
 void main() {
   late MockValidateUserEntityUseCase mockValidateUserEntityUseCase;
   late MockUserRepository mockUserRepository;
+  late MockCalculateDailyDrinkingGoalUseCase mockCalculateDailyDrinkingGoalUseCase;
   late SaveUserViewModel viewModel;
 
   setUp(() {
     mockValidateUserEntityUseCase = MockValidateUserEntityUseCase();
     mockUserRepository = MockUserRepository();
-    viewModel = SaveUserViewModelImp(mockUserRepository, mockValidateUserEntityUseCase);
+    mockCalculateDailyDrinkingGoalUseCase = MockCalculateDailyDrinkingGoalUseCase();
+
+    viewModel = SaveUserViewModelImp(
+      mockUserRepository,
+      mockValidateUserEntityUseCase,
+      mockCalculateDailyDrinkingGoalUseCase,
+    );
 
     registerFallbackValue(const TimeOfDay(hour: 0, minute: 0));
     registerFallbackValue(UserEntity());

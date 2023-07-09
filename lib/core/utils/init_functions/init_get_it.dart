@@ -19,6 +19,7 @@ import '../../../layers/domain/repositories/daily_drinking_frequency_repository.
 import '../../../layers/domain/repositories/daily_goal_repository.dart';
 import '../../../layers/domain/repositories/user_repository.dart';
 import '../../../layers/domain/repositories/water_container_repository.dart';
+import '../../../layers/domain/usecases/calculate_daily_drinking_goal_usecase.dart';
 import '../../../layers/domain/usecases/get_daily_drinking_goal_completion_in_percentage_usecase.dart';
 import '../../../layers/domain/usecases/validate_user_entity_usecase.dart';
 import '../../../layers/presentation/view_models/save_user_view_model.dart';
@@ -90,10 +91,14 @@ void initGetIt() {
   });
 
   getIt.registerLazySingleton<UserRepository>(() {
-    return UserRepositoryImp(getIt(), getIt(), getIt(), getIt());
+    return UserRepositoryImp(getIt(), getIt(), getIt(), getIt(), getIt());
   });
 
   // Usecases
+
+  getIt.registerLazySingleton<CalculateDailyDrinkingGoalUseCase>(() {
+    return CalculateDailyDrinkingGoalUseCaseImp(getIt());
+  });
 
   getIt.registerLazySingleton<ValidateUserEntityUseCase>(() {
     return ValidateUserEntityUseCaseImp();
@@ -106,7 +111,7 @@ void initGetIt() {
   // View models
 
   getIt.registerLazySingleton<SaveUserViewModel>(() {
-    return SaveUserViewModelImp(getIt(), getIt());
+    return SaveUserViewModelImp(getIt(), getIt(), getIt());
   });
 
   getIt.registerLazySingleton<UserEntityViewModel>(() {
