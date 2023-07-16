@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 import 'core/core.dart';
 import 'core/theme/themes.dart';
 import 'core/utils/init_functions/init_app.dart';
-import 'layers/presentation/view_models/user_view_model.dart';
-import 'layers/presentation/view_models/water_view_model.dart';
-import 'layers/presentation/views/water_display_view.dart';
-import 'layers/presentation/views/water_starter_view.dart';
+import 'water/presentation/view_models/user_view_model.dart';
+import 'water/presentation/view_models/water_view_model.dart';
+import 'water/presentation/views/water_display_view.dart';
+import 'water/presentation/views/water_starter_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +38,7 @@ class Sereno extends StatelessWidget {
       initialRoute: '/waterStarter',
       routes: {
         '/waterStarter': (context) => const WaterStarterView(),
-        '/waterDisplay': (_) => const WaterDisplayView(),
+        '/waterDisplay': (_) => WaterDisplayView(),
       },
       debugShowCheckedModeBanner: false,
       theme: Themes.dark,

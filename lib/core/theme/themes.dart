@@ -7,7 +7,7 @@ part 'constants/my_colors.dart';
 part 'constants/sizes.dart';
 part 'constants/spacing.dart';
 
-class Themes {
+abstract class Themes {
   static const TextTheme _textTheme = TextTheme(
     displayLarge: TextStyle(fontSize: 32.0),
     displayMedium: TextStyle(fontSize: 28.0),
@@ -26,6 +26,20 @@ class Themes {
 
   static const bool _useMaterial3 = true;
 
+  static final PopupMenuThemeData _popupMenuButtonTheme = PopupMenuThemeData(
+    color: MyColors.darkGrey,
+    position: PopupMenuPosition.under,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.borderRadius)),
+    textStyle: const TextStyle(color: MyColors.lightGrey, fontSize: FontSize.small3),
+    surfaceTintColor: Colors.transparent,
+    labelTextStyle: const MaterialStatePropertyAll(
+      TextStyle(
+        color: MyColors.lightGrey,
+        fontSize: FontSize.small1,
+      ),
+    ),
+  );
+
   static const AppBarTheme _appBarTheme = AppBarTheme(
     centerTitle: true,
     backgroundColor: Colors.transparent,
@@ -42,7 +56,7 @@ class Themes {
   );
 
   static const TimePickerThemeData _timePickerThemeData = TimePickerThemeData(
-    backgroundColor: Color(0xff0B131B),
+    backgroundColor: MyColors.darkBlue,
   );
 
   static const ElevatedButtonThemeData _elevatedButtonThemeData = ElevatedButtonThemeData(
@@ -89,9 +103,9 @@ class Themes {
     onErrorContainer: Color(0xFFFFDAD6),
     background: Colors.transparent,
     onBackground: Colors.black,
-    surface: Color.fromRGBO(68, 123, 174, .2), // TODO: was different color
-    onSurface: Color(0xFFC6C6CA),
-    surfaceVariant: Color.fromRGBO(190, 190, 190, .1), // TODO: was different color
+    surface: MyColors.darkGrey,
+    onSurface: MyColors.lightGrey,
+    surfaceVariant: Color.fromRGBO(190, 190, 190, .1),
     onSurfaceVariant: Color(0xFFC2C7CF),
     outline: Color(0xFF8C9199),
     onInverseSurface: Color.fromARGB(255, 39, 133, 228),
@@ -112,5 +126,6 @@ class Themes {
     inputDecorationTheme: _inputDecorationTheme,
     timePickerTheme: _timePickerThemeData,
     elevatedButtonTheme: _elevatedButtonThemeData,
+    popupMenuTheme: _popupMenuButtonTheme,
   );
 }
