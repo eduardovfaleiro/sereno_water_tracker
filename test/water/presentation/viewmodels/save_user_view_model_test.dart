@@ -53,7 +53,7 @@ void main() {
 
     test('Should return CacheFailure when call fails', () async {
       // arrange
-      when(() => mockUserRepository.updateWeight(weight)).thenAnswer((invocation) async => Left(CacheFailure()));
+      when(() => mockUserRepository.updateWeight(weight)).thenAnswer((invocation) async => Left(CacheFailure("Couldn't update weight")));
 
       // act
       var result = await viewModel.updateWeight(weight);
@@ -82,7 +82,7 @@ void main() {
 
     test('Should return CacheFailure when call fails', () async {
       // arrange
-      when(() => mockUserRepository.updateWeeklyWorkoutDays(weeklyWorkoutDays)).thenAnswer((invocation) async => Left(CacheFailure()));
+      when(() => mockUserRepository.updateWeeklyWorkoutDays(weeklyWorkoutDays)).thenAnswer((invocation) async => Left(CacheFailure("Couldn't update weekly workout days")));
 
       // act
       var result = await viewModel.updateWeeklyWorkoutDays(weeklyWorkoutDays);
@@ -111,7 +111,7 @@ void main() {
 
     test('Should return CacheFailure when call fails', () async {
       // arrange
-      when(() => mockUserRepository.updateWakeUpTime(wakeUpTime)).thenAnswer((invocation) async => Left(CacheFailure()));
+      when(() => mockUserRepository.updateWakeUpTime(wakeUpTime)).thenAnswer((invocation) async => Left(CacheFailure("Couldn't update wake up time")));
 
       // act
       var result = await viewModel.updateWakeUpTime(wakeUpTime);
@@ -139,7 +139,7 @@ void main() {
 
       test('Should return CacheFailure when call fails', () async {
         // arrange
-        when(() => mockUserRepository.updateSleepTime(sleepTime)).thenAnswer((invocation) async => Left(CacheFailure()));
+        when(() => mockUserRepository.updateSleepTime(sleepTime)).thenAnswer((invocation) async => Left(CacheFailure("Couldn't update sleeptime")));
 
         // act
         var result = await viewModel.updateSleepTime(sleepTime);
@@ -194,7 +194,7 @@ void main() {
       when(() => mockValidateUserEntityUseCase(any())).thenReturn(const Right(null));
 
       when(() => mockUserRepository.updateWeight(any())).thenAnswer((_) async => const Right(null));
-      when(() => mockUserRepository.updateSleepTime(any())).thenAnswer((_) async => Left(CacheFailure()));
+      when(() => mockUserRepository.updateSleepTime(any())).thenAnswer((_) async => Left(CacheFailure("Couldn't update sleeptime")));
       when(() => mockUserRepository.updateWakeUpTime(any())).thenAnswer((_) async => const Right(null));
       when(() => mockUserRepository.updateWeeklyWorkoutDays(any())).thenAnswer((_) async => const Right(null));
 

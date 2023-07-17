@@ -26,6 +26,11 @@ abstract class Themes {
 
   static const bool _useMaterial3 = true;
 
+  static final DialogTheme _dialogTheme = DialogTheme(
+    backgroundColor: MyColors.darkGrey,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.borderRadius)),
+  );
+
   static final PopupMenuThemeData _popupMenuButtonTheme = PopupMenuThemeData(
     color: MyColors.darkGrey,
     position: PopupMenuPosition.under,
@@ -56,7 +61,8 @@ abstract class Themes {
   );
 
   static const TimePickerThemeData _timePickerThemeData = TimePickerThemeData(
-    backgroundColor: MyColors.darkBlue,
+    backgroundColor: MyColors.darkGrey,
+    dialHandColor: MyColors.darkGrey,
   );
 
   static const ElevatedButtonThemeData _elevatedButtonThemeData = ElevatedButtonThemeData(
@@ -118,6 +124,7 @@ abstract class Themes {
   );
 
   static final ThemeData dark = ThemeData(
+    dialogTheme: _dialogTheme,
     sliderTheme: _sliderThemeData,
     useMaterial3: _useMaterial3,
     appBarTheme: _appBarTheme,

@@ -35,7 +35,7 @@ void main() {
     int weeklyWorkoutDays = 5;
 
     // arrange
-    when(() => mockUserRepository.getWeight()).thenAnswer((_) async => Left(CacheFailure()));
+    when(() => mockUserRepository.getWeight()).thenAnswer((_) async => Left(CacheFailure("Couldn't get weight")));
     when(() => mockUserRepository.getWeeklyWorkoutDays()).thenAnswer((_) async => Right(weeklyWorkoutDays));
 
     // act
@@ -51,7 +51,7 @@ void main() {
 
     // arrange
     when(() => mockUserRepository.getWeight()).thenAnswer((_) async => Right(weight));
-    when(() => mockUserRepository.getWeeklyWorkoutDays()).thenAnswer((_) async => Left(CacheFailure()));
+    when(() => mockUserRepository.getWeeklyWorkoutDays()).thenAnswer((_) async => Left(CacheFailure("Couldn't get weekly workout days")));
 
     // act
     var result = await useCase();

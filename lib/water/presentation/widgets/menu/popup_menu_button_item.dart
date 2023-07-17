@@ -31,6 +31,7 @@ class _PopupMenuButtonItemState extends State<PopupMenuButtonItem> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         InkWell(
           onTap: () => widget.onTap(),

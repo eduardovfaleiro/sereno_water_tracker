@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/core.dart';
 import '../../../../core/theme/themes.dart';
+import '../utils/dialogs.dart';
 import '../utils/menus.dart';
 import '../view_models/water_view_model.dart';
 import '../widgets/circular_button.dart';
@@ -13,36 +14,38 @@ class WaterDisplayView extends StatelessWidget {
 
   final _moreOptionsGlobalKey = GlobalKey();
 
-  final _moreOptionsItems = <PopupMenuEntry>[
-    PopupMenuItem(
-      onTap: () {},
-      child: const Row(
-        children: [
-          Icon(CommunityMaterialIcons.shape_polygon_plus, color: MyColors.lightGrey),
-          SizedBox(width: Spacing.small2),
-          Text('Add new container'),
-        ],
-      ),
-    ),
-    const PopupMenuItem(
-      child: Row(
-        children: [
-          Icon(CommunityMaterialIcons.water_plus_outline, color: MyColors.lightGrey),
-          SizedBox(width: Spacing.small2),
-          Text('Add specific amount'),
-        ],
-      ),
-    ),
-    const PopupMenuItem(
-      child: Row(
-        children: [
-          Icon(CommunityMaterialIcons.water_minus_outline, color: MyColors.lightGrey),
-          SizedBox(width: Spacing.small2),
-          Text('Remove specific amount'),
-        ],
-      ),
-    ),
-  ];
+  // final _moreOptionsItems = <PopupMenuEntry>[
+  //   PopupMenuItem(
+  //     onTap: () {
+  //       showDialog(context: context, builder: builder);
+  //     },
+  //     child: const Row(
+  //       children: [
+  //         Icon(CommunityMaterialIcons.shape_polygon_plus, color: MyColors.lightGrey),
+  //         SizedBox(width: Spacing.small2),
+  //         Text('Add new container'),
+  //       ],
+  //     ),
+  //   ),
+  //   const PopupMenuItem(
+  //     child: Row(
+  //       children: [
+  //         Icon(CommunityMaterialIcons.water_plus_outline, color: MyColors.lightGrey),
+  //         SizedBox(width: Spacing.small2),
+  //         Text('Add specific amount'),
+  //       ],
+  //     ),
+  //   ),
+  //   const PopupMenuItem(
+  //     child: Row(
+  //       children: [
+  //         Icon(CommunityMaterialIcons.water_minus_outline, color: MyColors.lightGrey),
+  //         SizedBox(width: Spacing.small2),
+  //         Text('Remove specific amount'),
+  //       ],
+  //     ),
+  //   ),
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +152,43 @@ class WaterDisplayView extends StatelessWidget {
                                   await Menus.normal(
                                     key: _moreOptionsGlobalKey,
                                     context: context,
-                                    items: _moreOptionsItems,
+                                    items: [
+                                      PopupMenuItem(
+                                        onTap: () async {
+                                          Future.delayed(Duration.zero, () {
+                                            Dialogs.normal(
+                                              child: const CreateWaterContainerWidget(),
+                                              context: context,
+                                            );
+                                          });
+                                        },
+                                        child: const Row(
+                                          children: [
+                                            Icon(CommunityMaterialIcons.shape_polygon_plus, color: MyColors.lightGrey),
+                                            SizedBox(width: Spacing.small2),
+                                            Text('Add new container'),
+                                          ],
+                                        ),
+                                      ),
+                                      const PopupMenuItem(
+                                        child: Row(
+                                          children: [
+                                            Icon(CommunityMaterialIcons.water_plus_outline, color: MyColors.lightGrey),
+                                            SizedBox(width: Spacing.small2),
+                                            Text('Add specific amount'),
+                                          ],
+                                        ),
+                                      ),
+                                      const PopupMenuItem(
+                                        child: Row(
+                                          children: [
+                                            Icon(CommunityMaterialIcons.water_minus_outline, color: MyColors.lightGrey),
+                                            SizedBox(width: Spacing.small2),
+                                            Text('Remove specific amount'),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   );
                                 },
                               ),
@@ -165,6 +204,43 @@ class WaterDisplayView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class CreateWaterContainerWidget extends StatelessWidget {
+  const CreateWaterContainerWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      icon: const Icon(CommunityMaterialIcons.shape_polygon_plus, size: Spacing.medium2),
+      title: const Align(
+        child: Text(
+          'Add new container',
+          style: TextStyle(
+            fontSize: FontSize.small2,
+            fontWeight: FontWeight.w500,
+            color: MyColors.lightGrey,
+          ),
+        ),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextFormField(
+            decoration: const InputDecoration(
+              label: Text('Description'),
+            ),
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+              label: Text('Amount'),
+              suffix: Text('ml'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
