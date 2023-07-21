@@ -43,13 +43,13 @@ void main() {
 
     test('Should return the amount of water drank today', () async {
       when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
-      when(() => mockBox.get(any())).thenAnswer((_) async => amountOfWaterDrankToday);
+      when(() => mockBox.get(any(), defaultValue: any(named: 'defaultValue'))).thenAnswer((_) async => amountOfWaterDrankToday);
 
       var result = await dataSource.get();
 
       verifyInOrder([
         () => mockHiveInterface.box(WATER_DATA),
-        () => mockBox.get(AMOUNT_OF_WATER_DRANK_TODAY),
+        () => mockBox.get(AMOUNT_OF_WATER_DRANK_TODAY, defaultValue: 0),
       ]);
 
       expect(result, amountOfWaterDrankToday);

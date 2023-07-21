@@ -45,6 +45,10 @@ abstract class Themes {
     ),
   );
 
+  static const SnackBarThemeData _snackBarThemeData = SnackBarThemeData(
+    backgroundColor: MyColors.darkGrey,
+  );
+
   static const AppBarTheme _appBarTheme = AppBarTheme(
     centerTitle: true,
     backgroundColor: Colors.transparent,
@@ -134,5 +138,6 @@ abstract class Themes {
     timePickerTheme: _timePickerThemeData,
     elevatedButtonTheme: _elevatedButtonThemeData,
     popupMenuTheme: _popupMenuButtonTheme,
+    snackBarTheme: _snackBarThemeData,
   );
 }

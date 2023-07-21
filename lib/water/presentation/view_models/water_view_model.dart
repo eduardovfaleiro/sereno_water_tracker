@@ -52,7 +52,9 @@ class WaterViewModelImp extends ChangeNotifier implements WaterViewModel {
 
   @override
   Future<Result<void>> updateAmountDrankToday(int amount) {
-    return _amountOfWaterDrankTodayRepository.update(amount).whenComplete(() => notifyListeners());
+    return _amountOfWaterDrankTodayRepository.update(amount).whenComplete(() {
+      notifyListeners();
+    });
   }
 
   @override

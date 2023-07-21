@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
-import 'package:sereno_clean_architecture_solid/core/utils/enums/icon_name.dart';
+import 'package:sereno_clean_architecture_solid/core/utils/enums/water_container_icon.dart';
 import 'package:sereno_clean_architecture_solid/water/data/datasources/water_container_datasource.dart';
 import 'package:sereno_clean_architecture_solid/water/data/dtos/water_container/water_container_dto.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/entities/water_container_entity.dart';
@@ -20,8 +20,26 @@ void main() {
   });
 
   group('create', () {
-    test("Should return the water container index if it's sucessfully added to the box", () async {
-      var waterContainerEntity = WaterContainerEntity(amount: 200, description: 'cup', iconName: IconName.cup);
+    /*
+      Future<int> create(WaterContainerEntity waterContainerEntity) {
+    var waterContainerDto = WaterContainerDto(
+      description: waterContainerEntity.description,
+      WaterContainerIcon: waterContainerEntity.WaterContainerIcon,
+      amount: waterContainerEntity.amount,
+    );
+
+    return _hiveInterface.box(WATER_CONTAINER).add(waterContainerDto);
+  }
+
+    */
+
+    test("Should return the water container index when it's sucessfully added to the box", () async {
+      var waterContainerEntity = const WaterContainerEntity(
+        amount: 200,
+        waterContainerIcon: WaterContainerIcon.cup,
+      );
+
+      var waterContainerDto = WaterContainerDto.fromEntity(waterContainerEntity);
 
       when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
       when(() => mockBox.add(any())).thenAnswer((_) async => 0);
@@ -30,7 +48,7 @@ void main() {
 
       verifyInOrder([
         () => mockHiveInterface.box(WATER_CONTAINER),
-        () => mockBox.add(waterContainerEntity),
+        () => mockBox.add(waterContainerDto),
       ]);
     });
   });
@@ -51,12 +69,12 @@ void main() {
 
   group('getAllContainers', () {
     var allWaterContainers = <WaterContainerDto>[
-      WaterContainerDto(id: 0, amount: 100, description: 'tea cup', iconName: IconName.cup),
-      WaterContainerDto(id: 1, amount: 200, description: 'normal cup', iconName: IconName.cup),
-      WaterContainerDto(id: 2, amount: 500, description: 'bottle', iconName: IconName.cup),
+      WaterContainerDto(amount: 100, waterContainerIcon: WaterContainerIcon.cup),
+      WaterContainerDto(amount: 200, waterContainerIcon: WaterContainerIcon.cup),
+      WaterContainerDto(amount: 500, waterContainerIcon: WaterContainerIcon.cup),
     ];
 
-    test('Should return all water containers if call to datasource is succesful', () async {
+    test('Should return all water containers when call to datasource is successful', () async {
       when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
       when(() => mockBox.values).thenReturn(allWaterContainers);
 
@@ -64,13 +82,15 @@ void main() {
 
       verifyInOrder([() => mockHiveInterface.box(WATER_CONTAINER), () => mockBox.values]);
 
-      expect(result, allWaterContainers);
+      List<WaterContainerEntity> allWaterContainersEntities = allWaterContainers.map((e) => e.toEntity()).toList();
+
+      expect(result, allWaterContainersEntities);
     });
   });
 
   group('get', () {
     test('Should return a water container', () async {
-      var waterContainerDto = WaterContainerDto(id: 0, amount: 200, description: 'cup', iconName: IconName.cup);
+      var waterContainerDto = WaterContainerDto(amount: 200, waterContainerIcon: WaterContainerIcon.cup);
 
       int id = 1;
       var mockBox = MockBox();

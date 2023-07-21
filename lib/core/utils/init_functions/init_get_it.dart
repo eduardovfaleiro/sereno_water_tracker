@@ -24,6 +24,7 @@ import '../../../water/domain/usecases/get_daily_drinking_goal_completion_in_per
 import '../../../water/domain/usecases/validate_user_entity_usecase.dart';
 import '../../../water/presentation/view_models/save_user_view_model.dart';
 import '../../../water/presentation/view_models/user_view_model.dart';
+import '../../../water/presentation/view_models/water_container_view_model.dart';
 import '../../../water/presentation/view_models/water_view_model.dart';
 import '../../core.dart';
 
@@ -120,5 +121,9 @@ void initGetIt() {
 
   getIt.registerLazySingleton<WaterViewModel>(() {
     return WaterViewModelImp(getIt(), getIt(), getIt(), getIt());
+  });
+
+  getIt.registerLazySingleton<WaterContainerViewModel>(() {
+    return WaterContainerViewModelImp(getIt());
   });
 }

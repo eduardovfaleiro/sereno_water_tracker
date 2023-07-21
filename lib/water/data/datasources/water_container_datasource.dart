@@ -9,7 +9,7 @@ abstract interface class WaterContainerDataSource {
   Future<void> create(WaterContainerEntity waterContainerEntity);
   Future<void> delete(int id);
   Future<void> update(WaterContainerDto waterContainerDto);
-  Future<List<WaterContainerDto>> getAllContainers();
+  Future<List<WaterContainerEntity>> getAllContainers();
 }
 
 class HiveWaterContainerDataSourceImp implements WaterContainerDataSource {
@@ -19,7 +19,9 @@ class HiveWaterContainerDataSourceImp implements WaterContainerDataSource {
 
   @override
   Future<int> create(WaterContainerEntity waterContainerEntity) {
-    return _hiveInterface.box(WATER_CONTAINER).add(waterContainerEntity);
+    var waterContainerDto = WaterContainerDto.fromEntity(waterContainerEntity);
+
+    return _hiveInterface.box(WATER_CONTAINER).add(waterContainerDto);
   }
 
   @override
@@ -33,13 +35,17 @@ class HiveWaterContainerDataSourceImp implements WaterContainerDataSource {
   }
 
   @override
-  Future<List<WaterContainerDto>> getAllContainers() async {
-    return _hiveInterface.box(WATER_CONTAINER).values.toList() as List<WaterContainerDto>;
+  Future<List<WaterContainerEntity>> getAllContainers() async {
+    var waterContainersDto = _hiveInterface.box(WATER_CONTAINER).values.toList();
+    var waterContainersEntities = waterContainersDto.map<WaterContainerEntity>((e) => e.toEntity()).toList();
+
+    return waterContainersEntities;
   }
 
   // TODO: test
   @override
-  Future<void> update(WaterContainerDto waterContainerDto) {
-    return _hiveInterface.box(WATER_CONTAINER).put(waterContainerDto.id, waterContainerDto);
+  Future<void> update(WaterContainerEntity waterContainerDto) {
+    throw UnimplementedError();
+    // return _hiveInterface.box(WATER_CONTAINER).put(waterContainerDto.id, waterContainerDto);
   }
 }

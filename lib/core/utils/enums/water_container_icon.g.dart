@@ -1,30 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'icon_name.dart';
+part of 'water_container_icon.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class IconNameAdapter extends TypeAdapter<IconName> {
+class WaterContainerIconAdapter extends TypeAdapter<WaterContainerIcon> {
   @override
   final int typeId = 2;
 
   @override
-  IconName read(BinaryReader reader) {
+  WaterContainerIcon read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return IconName.cup;
+        return WaterContainerIcon.cup;
+      case 1:
+        return WaterContainerIcon.bottle;
       default:
-        return IconName.cup;
+        return WaterContainerIcon.cup;
     }
   }
 
   @override
-  void write(BinaryWriter writer, IconName obj) {
+  void write(BinaryWriter writer, WaterContainerIcon obj) {
     switch (obj) {
-      case IconName.cup:
+      case WaterContainerIcon.cup:
         writer.writeByte(0);
+        break;
+      case WaterContainerIcon.bottle:
+        writer.writeByte(1);
         break;
     }
   }
@@ -35,7 +40,7 @@ class IconNameAdapter extends TypeAdapter<IconName> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is IconNameAdapter &&
+      other is WaterContainerIconAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

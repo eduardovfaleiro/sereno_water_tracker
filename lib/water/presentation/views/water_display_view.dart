@@ -1,18 +1,25 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/core.dart';
 import '../../../../core/theme/themes.dart';
+import '../../../core/utils/enums/water_container_icon.dart';
+import '../../domain/entities/water_container_entity.dart';
 import '../utils/dialogs.dart';
 import '../utils/menus.dart';
+import '../utils/snackbar_message.dart';
+import '../view_models/water_container_view_model.dart';
 import '../view_models/water_view_model.dart';
+import '../widgets/button.dart';
 import '../widgets/circular_button.dart';
+import '../widgets/icon_picker.dart';
 
 class WaterDisplayView extends StatelessWidget {
-  WaterDisplayView({super.key});
-
-  final _moreOptionsGlobalKey = GlobalKey();
+  const WaterDisplayView({super.key});
 
   // final _moreOptionsItems = <PopupMenuEntry>[
   //   PopupMenuItem(
@@ -119,83 +126,7 @@ class WaterDisplayView extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: Spacing.normal),
                       alignment: Alignment.topLeft,
                       height: MediaQuery.of(context).size.height * 0.2,
-                      child: Wrap(
-                        spacing: Spacing.small1,
-                        children: [
-                          const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircularButton(
-                                color: MyColors.lightGrey,
-                                label: Text('+250 $VOLUME_UNIT_M',
-                                    style: TextStyle(
-                                      color: MyColors.lightGrey,
-                                      fontSize: FontSize.small,
-                                      fontWeight: FontWeight.w500,
-                                    )),
-                                child: Icon(CommunityMaterialIcons.cup, color: MyColors.darkGrey),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CircularButton(
-                                key: _moreOptionsGlobalKey,
-                                color: MyColors.darkGrey,
-                                child: const Icon(
-                                  CommunityMaterialIcons.dots_vertical,
-                                  color: MyColors.lightGrey,
-                                ),
-                                onTap: () async {
-                                  await Menus.normal(
-                                    key: _moreOptionsGlobalKey,
-                                    context: context,
-                                    items: [
-                                      PopupMenuItem(
-                                        onTap: () async {
-                                          Future.delayed(Duration.zero, () {
-                                            Dialogs.normal(
-                                              child: const CreateWaterContainerWidget(),
-                                              context: context,
-                                            );
-                                          });
-                                        },
-                                        child: const Row(
-                                          children: [
-                                            Icon(CommunityMaterialIcons.shape_polygon_plus, color: MyColors.lightGrey),
-                                            SizedBox(width: Spacing.small2),
-                                            Text('Add new container'),
-                                          ],
-                                        ),
-                                      ),
-                                      const PopupMenuItem(
-                                        child: Row(
-                                          children: [
-                                            Icon(CommunityMaterialIcons.water_plus_outline, color: MyColors.lightGrey),
-                                            SizedBox(width: Spacing.small2),
-                                            Text('Add specific amount'),
-                                          ],
-                                        ),
-                                      ),
-                                      const PopupMenuItem(
-                                        child: Row(
-                                          children: [
-                                            Icon(CommunityMaterialIcons.water_minus_outline, color: MyColors.lightGrey),
-                                            SizedBox(width: Spacing.small2),
-                                            Text('Remove specific amount'),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                      child: WaterContainerWidget(),
                     ),
                   ],
                 ),
@@ -208,37 +139,276 @@ class WaterDisplayView extends StatelessWidget {
   }
 }
 
-class CreateWaterContainerWidget extends StatelessWidget {
-  const CreateWaterContainerWidget({super.key});
+class AddCustomWaterAmountWidget extends StatelessWidget {
+  AddCustomWaterAmountWidget({super.key});
+
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  final WaterViewModel _waterViewModel = getIt<WaterViewModel>();
+
+  int _amount = 0;
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      icon: const Icon(CommunityMaterialIcons.shape_polygon_plus, size: Spacing.medium2),
-      title: const Align(
-        child: Text(
-          'Add new container',
-          style: TextStyle(
-            fontSize: FontSize.small2,
-            fontWeight: FontWeight.w500,
-            color: MyColors.lightGrey,
+    return Form(
+      key: _formKey,
+      child: AlertDialog(
+        icon: const Icon(CommunityMaterialIcons.water_plus_outline, size: Spacing.medium2),
+        title: const Align(
+          child: Text(
+            'Add custom amount',
+            style: TextStyle(
+              fontSize: FontSize.small2,
+              fontWeight: FontWeight.w500,
+              color: MyColors.lightGrey,
+            ),
           ),
         ),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.7,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                decoration: const InputDecoration(
+                  label: Text('Amount'),
+                  suffix: Text('ml'),
+                ),
+                onChanged: (value) {
+                  _amount = int.tryParse(value) ?? 0;
+                },
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Amount shouldn\'t be empty.';
+                  if (value == '0') return 'Amount shouldn\'t be zero.';
+
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  await _waterViewModel.getAmountDrankToday().then((result) {
+                    result.fold((failure) {
+                      SnackBarMessage.normal(context: context, text: failure.message);
+                    }, (success) async {
+                      int amountDrankToday = success;
+                      int updatedAmountDrankToday = amountDrankToday + _amount;
+
+                      await _waterViewModel.updateAmountDrankToday(updatedAmountDrankToday).whenComplete(() {
+                        Navigator.pop(context);
+
+                        SnackBarMessage.undo(
+                            context: context,
+                            text: 'Added $_amount ml',
+                            onPressed: () async {
+                              updatedAmountDrankToday -= _amount;
+
+                              await _waterViewModel.updateAmountDrankToday(updatedAmountDrankToday);
+                            });
+                      });
+                    });
+                  });
+                }
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(color: MyColors.darkGrey),
+              ),
+            ),
+          ),
+        ],
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
-            decoration: const InputDecoration(
-              label: Text('Description'),
+    );
+  }
+}
+
+class RemoveCustomWaterAmountWidget extends StatelessWidget {
+  RemoveCustomWaterAmountWidget({super.key});
+
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  final WaterViewModel waterViewModel = getIt<WaterViewModel>();
+
+  int _amount = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: AlertDialog(
+        icon: const Icon(CommunityMaterialIcons.water_minus_outline, size: Spacing.medium2),
+        title: const Align(
+          child: Text(
+            'Remove custom amount',
+            style: TextStyle(
+              fontSize: FontSize.small2,
+              fontWeight: FontWeight.w500,
+              color: MyColors.lightGrey,
             ),
           ),
-          TextFormField(
-            decoration: const InputDecoration(
-              label: Text('Amount'),
-              suffix: Text('ml'),
+        ),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.7,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                decoration: const InputDecoration(
+                  label: Text('Amount'),
+                  suffix: Text('ml'),
+                ),
+                onChanged: (value) {
+                  _amount = int.tryParse(value) ?? 0;
+                },
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Amount shouldn\'t be empty.';
+                  if (value == '0') return 'Amount shouldn\'t be zero.';
+
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  await waterViewModel.getAmountDrankToday().then((result) {
+                    result.fold((failure) {
+                      SnackBarMessage.normal(context: context, text: failure.message);
+                    }, (success) async {
+                      int amountDrankToday = success;
+                      int updatedAmountDrankToday = amountDrankToday - _amount;
+
+                      await waterViewModel.updateAmountDrankToday(updatedAmountDrankToday).whenComplete(() {
+                        Navigator.pop(context);
+
+                        SnackBarMessage.undo(
+                            context: context,
+                            text: 'Removed $_amount ml',
+                            onPressed: () async {
+                              updatedAmountDrankToday += _amount;
+
+                              await waterViewModel.updateAmountDrankToday(updatedAmountDrankToday);
+                            });
+                      });
+                    });
+                  });
+                }
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(color: MyColors.darkGrey),
+              ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class CreateWaterContainerWidget extends StatelessWidget {
+  CreateWaterContainerWidget({super.key});
+
+  final GlobalKey<FormState> _formKey = GlobalKey();
+
+  final String _description = '';
+  int _amount = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: AlertDialog(
+        icon: const Icon(CommunityMaterialIcons.shape_polygon_plus, size: Spacing.medium2),
+        title: const Align(
+          child: Text(
+            'Add new container',
+            style: TextStyle(
+              fontSize: FontSize.small2,
+              fontWeight: FontWeight.w500,
+              color: MyColors.lightGrey,
+            ),
+          ),
+        ),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.7,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                decoration: const InputDecoration(
+                  label: Text('Amount'),
+                  suffix: Text('ml'),
+                ),
+                onChanged: (value) {
+                  _amount = int.parse(value);
+                },
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Amount shouldn\'t be empty.';
+                  if (value == '0') return 'Amount shouldn\'t be zero.';
+
+                  return null;
+                },
+              ),
+              Container(
+                  color: Colors.amber,
+                  width: 50,
+                  height: 50,
+                  child: InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const IconPicker(icons: [
+                          Icons.water,
+                          Icons.leave_bags_at_home,
+                        ]),
+                      );
+                    },
+                  )),
+            ],
+          ),
+        ),
+        actions: [
+          SizedBox(
+              width: double.infinity,
+              child: Button.ok(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    var waterContainerEntity = WaterContainerEntity(
+                      waterContainerIcon: WaterContainerIcon.cup,
+                      amount: _amount,
+                    );
+
+                    await getIt<WaterContainerViewModel>().create(waterContainerEntity).then((value) {
+                      Navigator.pop(context);
+
+                      value.fold((failure) {
+                        SnackBarMessage.normal(context: context, text: failure.message);
+                      }, (success) {
+                        SnackBarMessage.undo(context: context, text: 'Container created', onPressed: () {});
+                      });
+                    });
+                  }
+                },
+              )),
         ],
       ),
     );
@@ -261,17 +431,23 @@ class WaterDataWidget extends StatelessWidget {
           future: value,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text('Loading...');
+              return const Text(
+                'Loading...',
+                style: TextStyle(color: MyColors.lightBlue),
+              );
             }
 
             return snapshot.data!.fold(
               (failure) {
-                return const Text('Unavailable');
+                return const Text(
+                  'Unavailable',
+                  style: TextStyle(color: MyColors.lightBlue),
+                );
               },
               (amountOfWaterDrankToday) {
                 return Text(
                   '$amountOfWaterDrankToday ml',
-                  style: const TextStyle(color: Color(0xFF4E9CC8)),
+                  style: const TextStyle(color: MyColors.lightBlue),
                 );
               },
             );
@@ -303,37 +479,6 @@ class DurationWidget extends StatelessWidget {
   }
 }
 
-class BackgroundImageWithGradient extends StatelessWidget {
-  const BackgroundImageWithGradient({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      children: [
-        const Positioned.fill(
-          top: -500,
-          child: Image(image: AssetImage('assets/images/water_background.jpg')),
-        ),
-        Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment(0, 0.05),
-              colors: [Colors.transparent, Color.fromARGB(255, 0, 0, 0), Color.fromARGB(255, 0, 0, 0)],
-            ),
-          ),
-        ),
-        Opacity(
-          opacity: 0.5,
-          child: Container(
-            color: Colors.black,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class ProgressBar extends StatefulWidget {
   final Future<Result<double>> value;
 
@@ -356,6 +501,136 @@ class _ProgressBarState extends State<ProgressBar> {
 
         return LinearProgressIndicator(
           value: percentage!.fold((failure) => 0, (success) => success),
+        );
+      },
+    );
+  }
+}
+
+class WaterContainerWidget extends StatelessWidget {
+  WaterContainerWidget({super.key});
+
+  final GlobalKey _moreOptionsGlobalKey = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<WaterContainerViewModel>(
+      builder: (context, waterContainerViewModel, _) {
+        return FutureBuilder(
+          future: waterContainerViewModel.getAllContainers(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const SizedBox();
+            }
+
+            return snapshot.data!.fold((failure) {
+              SnackBarMessage.normal(context: context, text: 'Couldn\'t get water containers');
+              return const SizedBox();
+            }, (success) {
+              var waterContainers = success;
+
+              return Wrap(
+                spacing: Spacing.small1,
+                children: [
+                  ...List.generate(
+                    waterContainers.length,
+                    (index) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CircularButton(
+                            color: MyColors.lightGrey,
+                            label: Text(
+                              '+${waterContainers[index].amount} $VOLUME_UNIT_M',
+                              style: const TextStyle(
+                                color: MyColors.lightGrey,
+                                fontSize: FontSize.small,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            child: const Icon(CommunityMaterialIcons.cup, color: MyColors.darkGrey),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircularButton(
+                        key: _moreOptionsGlobalKey,
+                        color: MyColors.darkGrey,
+                        child: const Icon(
+                          CommunityMaterialIcons.dots_vertical,
+                          color: MyColors.lightGrey,
+                        ),
+                        onTap: () async {
+                          await Menus.normal(
+                            key: _moreOptionsGlobalKey,
+                            context: context,
+                            items: [
+                              PopupMenuItem(
+                                onTap: () async {
+                                  await Future.delayed(Duration.zero, () {
+                                    Dialogs.normal(
+                                      child: CreateWaterContainerWidget(),
+                                      context: context,
+                                    );
+                                  });
+                                },
+                                child: const Row(
+                                  children: [
+                                    Icon(CommunityMaterialIcons.shape_polygon_plus, color: MyColors.lightGrey),
+                                    SizedBox(width: Spacing.small2),
+                                    Text('Add new container'),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem(
+                                onTap: () async {
+                                  await Future.delayed(Duration.zero, () {
+                                    Dialogs.normal(
+                                      context: context,
+                                      child: AddCustomWaterAmountWidget(),
+                                    );
+                                  });
+                                },
+                                child: const Row(
+                                  children: [
+                                    Icon(CommunityMaterialIcons.water_plus_outline, color: MyColors.lightGrey),
+                                    SizedBox(width: Spacing.small2),
+                                    Text('Add custom amount'),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem(
+                                onTap: () async {
+                                  await Future.delayed(Duration.zero, () {
+                                    Dialogs.normal(
+                                      context: context,
+                                      child: RemoveCustomWaterAmountWidget(),
+                                    );
+                                  });
+                                },
+                                child: const Row(
+                                  children: [
+                                    Icon(CommunityMaterialIcons.water_minus_outline, color: MyColors.lightGrey),
+                                    SizedBox(width: Spacing.small2),
+                                    Text('Remove custom amount'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            });
+          },
         );
       },
     );

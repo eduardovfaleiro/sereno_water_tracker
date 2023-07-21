@@ -26,7 +26,7 @@ class HiveAmountOfWaterDrankTodayDataSourceImp implements AmountOfWaterDrankToda
 
   @override
   Future<int> get() async {
-    return _hiveInterface.box(WATER_DATA).get(AMOUNT_OF_WATER_DRANK_TODAY);
+    return _hiveInterface.box(WATER_DATA).get(AMOUNT_OF_WATER_DRANK_TODAY, defaultValue: 0);
   }
 
   @override

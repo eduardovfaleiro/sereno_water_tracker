@@ -2,12 +2,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../water/data/dtos/water_container/water_container_dto.dart';
 import '../../core.dart';
-import '../enums/icon_name.dart';
+import '../enums/water_container_icon.dart';
 
 Future<void> initHive() async {
   await Hive.initFlutter();
 
-  Hive.registerAdapter(IconNameAdapter());
+  Hive.registerAdapter(WaterContainerIconAdapter());
   Hive.registerAdapter(WaterContainerDtoAdapter());
 
   await Hive.openBox(WATER_CONTAINER);

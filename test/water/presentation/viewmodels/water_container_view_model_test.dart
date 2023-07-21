@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:sereno_clean_architecture_solid/core/utils/enums/icon_name.dart';
+import 'package:sereno_clean_architecture_solid/core/utils/enums/water_container_icon.dart';
 import 'package:sereno_clean_architecture_solid/water/data/dtos/water_container/water_container_dto.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/entities/water_container_entity.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/repositories/water_container_repository.dart';
@@ -15,18 +15,15 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(
-      WaterContainerEntity(
-        description: 'test',
-        iconName: IconName.cup,
+      const WaterContainerEntity(
+        waterContainerIcon: WaterContainerIcon.cup,
         amount: 0,
       ),
     );
 
     registerFallbackValue(
       WaterContainerDto(
-        id: 0,
-        description: 'test',
-        iconName: IconName.cup,
+        waterContainerIcon: WaterContainerIcon.cup,
         amount: 0,
       ),
     );
@@ -34,9 +31,9 @@ void main() {
 
   group('getAllContainers', () {
     var containers = <WaterContainerEntity>[
-      WaterContainerEntity(amount: 200, description: 'cup', iconName: IconName.cup),
-      WaterContainerEntity(amount: 500, description: 'bottle', iconName: IconName.cup),
-      WaterContainerEntity(amount: 600, description: 'bigger bottle', iconName: IconName.cup),
+      const WaterContainerEntity(amount: 200, waterContainerIcon: WaterContainerIcon.cup),
+      const WaterContainerEntity(amount: 500, waterContainerIcon: WaterContainerIcon.cup),
+      const WaterContainerEntity(amount: 600, waterContainerIcon: WaterContainerIcon.cup),
     ];
 
     test('Should return all water containers', () async {
@@ -56,9 +53,8 @@ void main() {
   });
 
   group('create', () {
-    var waterContainerEntity = WaterContainerEntity(
-      description: 'test',
-      iconName: IconName.cup,
+    var waterContainerEntity = const WaterContainerEntity(
+      waterContainerIcon: WaterContainerIcon.cup,
       amount: 0,
     );
 
@@ -79,9 +75,7 @@ void main() {
 
   group('update', () {
     var waterContainerDto = WaterContainerDto(
-      id: 0,
-      description: 'test',
-      iconName: IconName.cup,
+      waterContainerIcon: WaterContainerIcon.cup,
       amount: 0,
     );
 

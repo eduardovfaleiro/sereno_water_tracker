@@ -17,34 +17,24 @@ class WaterContainerDtoAdapter extends TypeAdapter<WaterContainerDto> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return WaterContainerDto(
-      id: fields[3] as int,
-      description: fields[0] as String,
-      iconName: fields[1] as IconName,
-      amount: fields[2] as int,
+      waterContainerIcon: fields[0] as dynamic,
+      amount: fields[1] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, WaterContainerDto obj) {
     writer
-      ..writeByte(4)
-      ..writeByte(0)
-      ..write(obj.description)
-      ..writeByte(1)
-      ..write(obj.iconName)
       ..writeByte(2)
-      ..write(obj.amount)
-      ..writeByte(3)
-      ..write(obj.id);
+      ..writeByte(0)
+      ..write(obj.waterContainerIcon)
+      ..writeByte(1)
+      ..write(obj.amount);
   }
 
   @override
   int get hashCode => typeId.hashCode;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is WaterContainerDtoAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+  bool operator ==(Object other) => identical(this, other) || other is WaterContainerDtoAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }
