@@ -49,6 +49,8 @@ abstract class Themes {
     backgroundColor: MyColors.darkGrey,
   );
 
+  static const IconThemeData iconThemeData = IconThemeData(color: MyColors.lightGrey);
+
   static const AppBarTheme _appBarTheme = AppBarTheme(
     centerTitle: true,
     backgroundColor: Colors.transparent,

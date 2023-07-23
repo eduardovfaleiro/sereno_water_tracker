@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../core/core.dart';
-import '../entities/user_entity.dart';
+import '../../../../core/core.dart';
+import '../../entities/user_entity.dart';
 
 abstract interface class ValidateUserEntityUseCase {
   Result<void> call(UserEntity userEntity);

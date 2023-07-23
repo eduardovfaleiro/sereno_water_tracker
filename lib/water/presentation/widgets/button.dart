@@ -7,7 +7,7 @@ abstract class Button {
     required VoidCallback onPressed,
   }) {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: () => onPressed(),
       child: const Text(
         'OK',
         style: TextStyle(color: MyColors.darkGrey),

@@ -1,3 +1,4 @@
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
@@ -5,18 +6,35 @@ import 'package:sereno_clean_architecture_solid/core/utils/enums/water_container
 import 'package:sereno_clean_architecture_solid/water/data/datasources/water_container_datasource.dart';
 import 'package:sereno_clean_architecture_solid/water/data/dtos/water_container/water_container_dto.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/entities/water_container_entity.dart';
+import 'package:sereno_clean_architecture_solid/water/domain/usecases/converters/convert_water_container_dto_to_entity_usecase.dart';
+import 'package:sereno_clean_architecture_solid/water/domain/usecases/converters/convert_water_container_entity_to_dto_usecase.dart';
 
 import '../../../mocks.dart';
+
+class MockConvertWaterContainerEntityToDtoUseCase extends Mock implements ConvertWaterContainerEntityToDtoUseCase {}
+
+class MockConvertWaterContainerDtoToEntityUseCase extends Mock implements ConvertWaterContainerDtoToEntityUseCase {}
 
 void main() {
   late MockBox mockBox;
   late MockHiveInterface mockHiveInterface;
   late WaterContainerDataSource dataSource;
+  late MockConvertWaterContainerEntityToDtoUseCase mockConvertWaterContainerEntityToDtoUseCase;
+  late MockConvertWaterContainerDtoToEntityUseCase mockConvertWaterContainerDtoToEntityUseCase;
 
   setUp(() {
     mockBox = MockBox();
     mockHiveInterface = MockHiveInterface();
-    dataSource = HiveWaterContainerDataSourceImp(mockHiveInterface);
+    mockConvertWaterContainerEntityToDtoUseCase = MockConvertWaterContainerEntityToDtoUseCase();
+    mockConvertWaterContainerDtoToEntityUseCase = MockConvertWaterContainerDtoToEntityUseCase();
+    dataSource = HiveWaterContainerDataSourceImp(
+      mockHiveInterface,
+      mockConvertWaterContainerEntityToDtoUseCase,
+      mockConvertWaterContainerDtoToEntityUseCase,
+    );
+
+    registerFallbackValue(const WaterContainerEntity(icon: CommunityMaterialIcons.cup_water, amount: 0));
+    registerFallbackValue(WaterContainerDto(waterContainerIcon: WaterContainerIcon.cup, amount: 0));
   });
 
   group('create', () {
@@ -36,15 +54,18 @@ void main() {
     test("Should return the water container index when it's sucessfully added to the box", () async {
       var waterContainerEntity = const WaterContainerEntity(
         amount: 200,
-        waterContainerIcon: WaterContainerIcon.cup,
+        icon: CommunityMaterialIcons.cup,
       );
 
-      var waterContainerDto = WaterContainerDto.fromEntity(waterContainerEntity);
+      var waterContainerDto = WaterContainerDto(amount: 200, waterContainerIcon: WaterContainerIcon.cup);
 
       when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
       when(() => mockBox.add(any())).thenAnswer((_) async => 0);
+      when(() => mockConvertWaterContainerEntityToDtoUseCase(any())).thenReturn(waterContainerDto);
 
       await dataSource.create(waterContainerEntity);
+
+      verify(() => mockConvertWaterContainerEntityToDtoUseCase(waterContainerEntity));
 
       verifyInOrder([
         () => mockHiveInterface.box(WATER_CONTAINER),
@@ -68,21 +89,34 @@ void main() {
   });
 
   group('getAllContainers', () {
-    var allWaterContainers = <WaterContainerDto>[
+    var allWaterContainersDtos = <WaterContainerDto>[
       WaterContainerDto(amount: 100, waterContainerIcon: WaterContainerIcon.cup),
       WaterContainerDto(amount: 200, waterContainerIcon: WaterContainerIcon.cup),
       WaterContainerDto(amount: 500, waterContainerIcon: WaterContainerIcon.cup),
     ];
 
+    var allWaterContainersEntities = <WaterContainerEntity>[
+      const WaterContainerEntity(amount: 100, icon: CommunityMaterialIcons.cup_water),
+      const WaterContainerEntity(amount: 200, icon: CommunityMaterialIcons.cup_water),
+      const WaterContainerEntity(amount: 500, icon: CommunityMaterialIcons.cup_water),
+    ];
+
     test('Should return all water containers when call to datasource is successful', () async {
       when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
-      when(() => mockBox.values).thenReturn(allWaterContainers);
+      when(() => mockBox.values).thenReturn(allWaterContainersDtos);
+
+      for (int i = 0; i < allWaterContainersEntities.length; i++) {
+        when(() => mockConvertWaterContainerDtoToEntityUseCase(allWaterContainersDtos[i])).thenReturn(allWaterContainersEntities[i]);
+      }
 
       var result = await dataSource.getAllContainers();
 
-      verifyInOrder([() => mockHiveInterface.box(WATER_CONTAINER), () => mockBox.values]);
+      verify(() => mockConvertWaterContainerDtoToEntityUseCase(any()));
 
-      List<WaterContainerEntity> allWaterContainersEntities = allWaterContainers.map((e) => e.toEntity()).toList();
+      verifyInOrder([
+        () => mockHiveInterface.box(WATER_CONTAINER),
+        () => mockBox.values,
+      ]);
 
       expect(result, allWaterContainersEntities);
     });

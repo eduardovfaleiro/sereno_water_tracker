@@ -5,7 +5,7 @@ import '../../../core/core.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/user_repository.dart';
 import '../../domain/usecases/calculate_daily_drinking_goal_usecase.dart';
-import '../../domain/usecases/validate_user_entity_usecase.dart';
+import '../../domain/usecases/validators/validate_user_entity_usecase.dart';
 
 abstract interface class SaveUserViewModel {
   Future<Result<void>> updateWeight(int value);

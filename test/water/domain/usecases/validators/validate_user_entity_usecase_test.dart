@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/entities/user_entity.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/usecases/validate_user_entity_usecase.dart';
+import 'package:sereno_clean_architecture_solid/water/domain/usecases/validators/validate_user_entity_usecase.dart';
 
 void main() {
   late ValidateUserEntityUseCase useCase;

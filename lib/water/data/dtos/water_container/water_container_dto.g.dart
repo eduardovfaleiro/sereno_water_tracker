@@ -17,7 +17,7 @@ class WaterContainerDtoAdapter extends TypeAdapter<WaterContainerDto> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return WaterContainerDto(
-      waterContainerIcon: fields[0] as dynamic,
+      waterContainerIcon: fields[0] as WaterContainerIcon,
       amount: fields[1] as int,
     );
   }
@@ -36,5 +36,9 @@ class WaterContainerDtoAdapter extends TypeAdapter<WaterContainerDto> {
   int get hashCode => typeId.hashCode;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is WaterContainerDtoAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WaterContainerDtoAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

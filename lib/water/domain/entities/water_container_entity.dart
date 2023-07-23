@@ -1,13 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import '../../../core/utils/enums/water_container_icon.dart';
+import 'package:flutter/material.dart';
 
 class WaterContainerEntity {
-  final WaterContainerIcon waterContainerIcon;
+  final IconData icon;
   final int amount;
 
   const WaterContainerEntity({
-    required this.waterContainerIcon,
+    required this.icon,
     required this.amount,
   });
 
@@ -15,9 +15,9 @@ class WaterContainerEntity {
   bool operator ==(covariant WaterContainerEntity other) {
     if (identical(this, other)) return true;
 
-    return other.waterContainerIcon == waterContainerIcon && other.amount == amount;
+    return other.icon == icon && other.amount == amount;
   }
 
   @override
-  int get hashCode => waterContainerIcon.hashCode ^ amount.hashCode;
+  int get hashCode => icon.hashCode ^ amount.hashCode;
 }

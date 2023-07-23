@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/core.dart';
 import '../../../../core/theme/themes.dart';
-import '../../../core/utils/enums/water_container_icon.dart';
 import '../../domain/entities/water_container_entity.dart';
 import '../utils/dialogs.dart';
 import '../utils/menus.dart';
@@ -16,7 +15,7 @@ import '../view_models/water_container_view_model.dart';
 import '../view_models/water_view_model.dart';
 import '../widgets/button.dart';
 import '../widgets/circular_button.dart';
-import '../widgets/icon_picker.dart';
+import '../widgets/icon_picker/icon_picker_field.dart';
 
 class WaterDisplayView extends StatelessWidget {
   const WaterDisplayView({super.key});
@@ -326,8 +325,8 @@ class CreateWaterContainerWidget extends StatelessWidget {
 
   final GlobalKey<FormState> _formKey = GlobalKey();
 
-  final String _description = '';
   int _amount = 0;
+  IconData? _selectedIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -368,21 +367,11 @@ class CreateWaterContainerWidget extends StatelessWidget {
                   return null;
                 },
               ),
-              Container(
-                  color: Colors.amber,
-                  width: 50,
-                  height: 50,
-                  child: InkWell(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => const IconPicker(icons: [
-                          Icons.water,
-                          Icons.leave_bags_at_home,
-                        ]),
-                      );
-                    },
-                  )),
+              const SizedBox(height: Spacing.small1),
+              IconPickerField(onOk: (_) {}, icons: const [
+                CommunityMaterialIcons.cup_water,
+                CommunityMaterialIcons.bottle_soda_classic,
+              ]),
             ],
           ),
         ),
@@ -393,7 +382,7 @@ class CreateWaterContainerWidget extends StatelessWidget {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     var waterContainerEntity = WaterContainerEntity(
-                      waterContainerIcon: WaterContainerIcon.cup,
+                      icon: _selectedIcon!,
                       amount: _amount,
                     );
 

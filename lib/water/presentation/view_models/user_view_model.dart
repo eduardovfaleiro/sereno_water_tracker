@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/user_entity.dart';
-import '../../domain/usecases/validate_user_entity_usecase.dart';
+import '../../domain/usecases/validators/validate_user_entity_usecase.dart';
 
 class UserEntityViewModel extends ChangeNotifier {
   final ValidateUserEntityUseCase _validateUserEntityUseCase;

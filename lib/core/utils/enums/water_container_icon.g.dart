@@ -17,6 +17,8 @@ class WaterContainerIconAdapter extends TypeAdapter<WaterContainerIcon> {
         return WaterContainerIcon.cup;
       case 1:
         return WaterContainerIcon.bottle;
+      case 2:
+        return WaterContainerIcon.test;
       default:
         return WaterContainerIcon.cup;
     }
@@ -30,6 +32,9 @@ class WaterContainerIconAdapter extends TypeAdapter<WaterContainerIcon> {
         break;
       case WaterContainerIcon.bottle:
         writer.writeByte(1);
+        break;
+      case WaterContainerIcon.test:
+        writer.writeByte(2);
         break;
     }
   }

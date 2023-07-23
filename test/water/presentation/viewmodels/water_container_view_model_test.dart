@@ -1,3 +1,4 @@
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -16,7 +17,7 @@ void main() {
   setUpAll(() {
     registerFallbackValue(
       const WaterContainerEntity(
-        waterContainerIcon: WaterContainerIcon.cup,
+        icon: CommunityMaterialIcons.cup,
         amount: 0,
       ),
     );
@@ -31,9 +32,9 @@ void main() {
 
   group('getAllContainers', () {
     var containers = <WaterContainerEntity>[
-      const WaterContainerEntity(amount: 200, waterContainerIcon: WaterContainerIcon.cup),
-      const WaterContainerEntity(amount: 500, waterContainerIcon: WaterContainerIcon.cup),
-      const WaterContainerEntity(amount: 600, waterContainerIcon: WaterContainerIcon.cup),
+      const WaterContainerEntity(amount: 200, icon: CommunityMaterialIcons.cup),
+      const WaterContainerEntity(amount: 500, icon: CommunityMaterialIcons.cup),
+      const WaterContainerEntity(amount: 600, icon: CommunityMaterialIcons.cup),
     ];
 
     test('Should return all water containers', () async {
@@ -54,7 +55,7 @@ void main() {
 
   group('create', () {
     var waterContainerEntity = const WaterContainerEntity(
-      waterContainerIcon: WaterContainerIcon.cup,
+      icon: CommunityMaterialIcons.cup,
       amount: 0,
     );
 
@@ -74,8 +75,8 @@ void main() {
   });
 
   group('update', () {
-    var waterContainerDto = WaterContainerDto(
-      waterContainerIcon: WaterContainerIcon.cup,
+    var waterContainerEntity = const WaterContainerEntity(
+      icon: CommunityMaterialIcons.cup,
       amount: 0,
     );
 
@@ -84,10 +85,10 @@ void main() {
       when(() => mockWaterContainerRepository.update(any())).thenAnswer((_) async => const Right(null));
 
       // act
-      var result = await viewModel.update(waterContainerDto);
+      var result = await viewModel.update(waterContainerEntity);
 
       // assert
-      verify(() => mockWaterContainerRepository.update(waterContainerDto));
+      verify(() => mockWaterContainerRepository.update(waterContainerEntity));
 
       expect(result, const Right(null));
     });

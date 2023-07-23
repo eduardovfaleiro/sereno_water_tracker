@@ -1,9 +1,8 @@
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:sereno_clean_architecture_solid/core/utils/enums/water_container_icon.dart';
 import 'package:sereno_clean_architecture_solid/water/data/datasources/water_container_datasource.dart';
-import 'package:sereno_clean_architecture_solid/water/data/dtos/water_container/water_container_dto.dart';
 import 'package:sereno_clean_architecture_solid/water/data/repositories/water_container_repository_imp.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/entities/water_container_entity.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/repositories/water_container_repository.dart';
@@ -20,21 +19,24 @@ void main() {
   });
 
   setUpAll(() {
-    registerFallbackValue(const WaterContainerEntity(amount: 200, waterContainerIcon: WaterContainerIcon.cup));
+    registerFallbackValue(const WaterContainerEntity(amount: 200, icon: CommunityMaterialIcons.cup));
   });
 
   group('get', () {
     int id = 1;
-    var waterContainerDto = WaterContainerDto(amount: 200, waterContainerIcon: WaterContainerIcon.cup);
+    var waterContainerEntity = const WaterContainerEntity(
+      icon: CommunityMaterialIcons.cup_water,
+      amount: 200,
+    );
 
     test('Should return a water container when call to datasource is sucessful', () async {
-      when(() => mockWaterContainerDataSource.get(any())).thenAnswer((_) async => waterContainerDto);
+      when(() => mockWaterContainerDataSource.get(any())).thenAnswer((_) async => waterContainerEntity);
 
       var result = await repository.get(id);
 
       verify(() => mockWaterContainerDataSource.get(id));
 
-      expect(result, Right(waterContainerDto));
+      expect(result, Right(waterContainerEntity));
     });
 
     // test('Should return a CacheFailure when call to datasource fails', () async {
@@ -50,10 +52,10 @@ void main() {
   });
 
   group('getAllContainers', () {
-    var allWaterContainers = <WaterContainerDto>[
-      WaterContainerDto(amount: 100, waterContainerIcon: WaterContainerIcon.cup),
-      WaterContainerDto(amount: 200, waterContainerIcon: WaterContainerIcon.cup),
-      WaterContainerDto(amount: 500, waterContainerIcon: WaterContainerIcon.cup),
+    var allWaterContainers = <WaterContainerEntity>[
+      const WaterContainerEntity(amount: 100, icon: CommunityMaterialIcons.cup),
+      const WaterContainerEntity(amount: 200, icon: CommunityMaterialIcons.cup),
+      const WaterContainerEntity(amount: 500, icon: CommunityMaterialIcons.cup),
     ];
 
     test('Should return all water containers if call to datasource is succesful', () async {
@@ -78,7 +80,7 @@ void main() {
 
   group('create', () {
     int id = 1;
-    var waterContainerEntity = const WaterContainerEntity(amount: 200, waterContainerIcon: WaterContainerIcon.cup);
+    var waterContainerEntity = const WaterContainerEntity(amount: 200, icon: CommunityMaterialIcons.cup);
 
     test('Should return an int when call to datasource is successful', () async {
       when(() => mockWaterContainerDataSource.create(any())).thenAnswer((_) async => id);

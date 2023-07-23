@@ -4,6 +4,11 @@ abstract class Failure {
   final String message;
 
   Failure(this.message);
+
+  @override
+  String toString() {
+    return message.toString();
+  }
 }
 
 class CacheFailure extends Failure {
@@ -12,4 +17,8 @@ class CacheFailure extends Failure {
 
 class ValidationFailure extends Failure {
   ValidationFailure(super.message);
+}
+
+class IconNotFoundFailure extends Failure {
+  IconNotFoundFailure(super.message);
 }

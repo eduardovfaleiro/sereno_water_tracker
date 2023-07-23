@@ -6,7 +6,7 @@ import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/entities/user_entity.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/repositories/user_repository.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/usecases/calculate_daily_drinking_goal_usecase.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/usecases/validate_user_entity_usecase.dart';
+import 'package:sereno_clean_architecture_solid/water/domain/usecases/validators/validate_user_entity_usecase.dart';
 import 'package:sereno_clean_architecture_solid/water/presentation/view_models/save_user_view_model.dart';
 
 class MockUserRepository extends Mock implements UserRepository {}

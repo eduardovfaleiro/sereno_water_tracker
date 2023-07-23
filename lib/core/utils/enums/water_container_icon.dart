@@ -9,4 +9,7 @@ enum WaterContainerIcon {
 
   @HiveField(1)
   bottle,
+
+  @HiveField(2)
+  test,
 }

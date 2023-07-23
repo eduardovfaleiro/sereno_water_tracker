@@ -20,8 +20,12 @@ import '../../../water/domain/repositories/daily_goal_repository.dart';
 import '../../../water/domain/repositories/user_repository.dart';
 import '../../../water/domain/repositories/water_container_repository.dart';
 import '../../../water/domain/usecases/calculate_daily_drinking_goal_usecase.dart';
+import '../../../water/domain/usecases/converters/convert_icon_data_to_water_container_icon_usecase.dart.dart';
+import '../../../water/domain/usecases/converters/convert_water_container_dto_to_entity_usecase.dart';
+import '../../../water/domain/usecases/converters/convert_water_container_entity_to_dto_usecase.dart';
+import '../../../water/domain/usecases/converters/convert_water_container_icon_to_icon_data_usecase.dart';
 import '../../../water/domain/usecases/get_daily_drinking_goal_completion_in_percentage_usecase.dart';
-import '../../../water/domain/usecases/validate_user_entity_usecase.dart';
+import '../../../water/domain/usecases/validators/validate_user_entity_usecase.dart';
 import '../../../water/presentation/view_models/save_user_view_model.dart';
 import '../../../water/presentation/view_models/user_view_model.dart';
 import '../../../water/presentation/view_models/water_container_view_model.dart';
@@ -58,7 +62,7 @@ void initGetIt() {
   });
 
   getIt.registerLazySingleton<WaterContainerDataSource>(() {
-    return HiveWaterContainerDataSourceImp(getIt());
+    return HiveWaterContainerDataSourceImp(getIt(), getIt(), getIt());
   });
 
   getIt.registerLazySingleton<DailyDrinkingGoalDataSource>(() {
@@ -107,6 +111,22 @@ void initGetIt() {
 
   getIt.registerLazySingleton<GetDailyDrinkingGoalCompletedPercentageUseCase>(() {
     return GetDailyDrinkingGoalCompletedPercentageUseCaseImp(getIt(), getIt());
+  });
+
+  getIt.registerLazySingleton<ConvertIconDataToWaterContainerIconUseCase>(() {
+    return ConvertIconDataToWaterContainerIconUseCaseImp();
+  });
+
+  getIt.registerLazySingleton<ConvertWaterContainerIconToIconDataUseCase>(() {
+    return ConvertWaterContainerIconToIconDataUseCaseImp();
+  });
+
+  getIt.registerLazySingleton<ConvertWaterContainerDtoToEntityUseCase>(() {
+    return ConvertWaterContainerDtoToEntityUseCaseImp(getIt());
+  });
+
+  getIt.registerLazySingleton<ConvertWaterContainerEntityToDtoUseCase>(() {
+    return ConvertWaterContainerEntityToDtoUseCaseImp(getIt());
   });
 
   // View models

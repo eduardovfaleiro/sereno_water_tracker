@@ -4,7 +4,6 @@ import '../../../core/core.dart';
 import '../../domain/entities/water_container_entity.dart';
 import '../../domain/repositories/water_container_repository.dart';
 import '../datasources/water_container_datasource.dart';
-import '../dtos/water_container/water_container_dto.dart';
 
 class WaterContainerRepositoryImp implements WaterContainerRepository {
   final WaterContainerDataSource _waterContainerDataSource;
@@ -22,10 +21,10 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
   }
 
   @override
-  Future<Result<WaterContainerDto>> get(int id) async {
-    var waterContainerDto = await _waterContainerDataSource.get(id);
+  Future<Result<WaterContainerEntity>> get(int id) async {
+    var waterContainerEntity = await _waterContainerDataSource.get(id);
 
-    return Right(waterContainerDto);
+    return Right(waterContainerEntity);
   }
 
   @override
@@ -35,7 +34,7 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
 
   // TODO: test
   @override
-  Future<Result<void>> update(WaterContainerDto waterContainerDto) async {
-    return Right(await _waterContainerDataSource.update(waterContainerDto));
+  Future<Result<void>> update(WaterContainerEntity waterContainerEntity) async {
+    return Right(await _waterContainerDataSource.update(waterContainerEntity));
   }
 }
