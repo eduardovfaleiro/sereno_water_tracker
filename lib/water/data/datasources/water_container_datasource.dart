@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 
 import '../../../core/core.dart';
+import '../../../core/error/exceptions.dart';
 import '../../domain/entities/water_container_entity.dart';
 import '../../domain/usecases/converters/convert_water_container_dto_to_entity_usecase.dart';
 import '../../domain/usecases/converters/convert_water_container_entity_to_dto_usecase.dart';
@@ -9,7 +10,7 @@ import '../dtos/water_container/water_container_dto.dart';
 abstract interface class WaterContainerDataSource {
   Future<WaterContainerEntity> get(int id);
   Future<void> create(WaterContainerEntity waterContainerEntity);
-  Future<void> delete(int id);
+  Future<void> delete(WaterContainerEntity waterContainerEntity);
   Future<void> update(WaterContainerEntity waterContainerEntity);
   Future<List<WaterContainerEntity>> getAllContainers();
 }
@@ -33,8 +34,18 @@ class HiveWaterContainerDataSourceImp implements WaterContainerDataSource {
   }
 
   @override
-  Future<void> delete(int id) {
-    return _hiveInterface.box(WATER_CONTAINER).delete(id);
+  Future<void> delete(WaterContainerEntity waterContainerEntity) async {
+    List<WaterContainerEntity> waterContainers = await getAllContainers();
+
+    int index = () {
+      for (int i = 0; i < waterContainers.length; i++) {
+        if (waterContainers[i] == waterContainerEntity) return i;
+      }
+
+      throw WaterContainerNotFoundException("Couldn't delete waterContainerEntity because it was not found");
+    }();
+
+    return _hiveInterface.box(WATER_CONTAINER).delete(index);
   }
 
   @override

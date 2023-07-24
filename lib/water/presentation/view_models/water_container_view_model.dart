@@ -8,7 +8,7 @@ abstract interface class WaterContainerViewModel extends ChangeNotifier {
   Future<Result<void>> create(WaterContainerEntity waterContainerEntity);
   Future<Result<void>> update(WaterContainerEntity waterContainerEntity);
   Future<Result<List<WaterContainerEntity>>> getAllContainers();
-  Future<Result<void>> delete(int id);
+  Future<Result<void>> delete(WaterContainerEntity waterContainerEntity);
 }
 
 class WaterContainerViewModelImp extends ChangeNotifier implements WaterContainerViewModel {
@@ -22,8 +22,8 @@ class WaterContainerViewModelImp extends ChangeNotifier implements WaterContaine
   }
 
   @override
-  Future<Result<void>> delete(int id) {
-    return _waterContainerRepository.delete(id);
+  Future<Result<void>> delete(WaterContainerEntity waterContainerEntity) {
+    return _waterContainerRepository.delete(waterContainerEntity);
   }
 
   @override

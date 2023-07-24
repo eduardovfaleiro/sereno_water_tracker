@@ -14,7 +14,7 @@ class ConvertIconDataToWaterContainerIconUseCaseImp implements ConvertIconDataTo
     switch (icon) {
       case CommunityMaterialIcons.cup_water:
         return WaterContainerIcon.cup;
-      case CommunityMaterialIcons.bottle_soda:
+      case CommunityMaterialIcons.bottle_soda_classic:
         return WaterContainerIcon.bottle;
       default:
         throw IconNotFoundException("Icon not mapped to WaterContainerIcon");

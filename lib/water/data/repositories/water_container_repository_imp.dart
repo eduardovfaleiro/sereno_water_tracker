@@ -16,8 +16,8 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
   }
 
   @override
-  Future<Result<void>> delete(int id) async {
-    return Right(_waterContainerDataSource.delete(id));
+  Future<Result<void>> delete(WaterContainerEntity waterContainerEntity) async {
+    return Right(_waterContainerDataSource.delete(waterContainerEntity));
   }
 
   @override

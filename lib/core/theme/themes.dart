@@ -43,6 +43,7 @@ abstract class Themes {
         fontSize: FontSize.small1,
       ),
     ),
+    shadowColor: Colors.transparent,
   );
 
   static const SnackBarThemeData _snackBarThemeData = SnackBarThemeData(

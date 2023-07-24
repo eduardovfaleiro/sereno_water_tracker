@@ -28,7 +28,7 @@ class IconPickerField extends StatefulWidget implements IconPicker {
 }
 
 class _IconPickerFieldState extends State<IconPickerField> {
-  final IconData _defaultIcon = CommunityMaterialIcons.image_plus;
+  final IconData _defaultIcon = CommunityMaterialIcons.cup_water;
   late IconData _selectedIcon;
 
   @override
@@ -68,9 +68,9 @@ class _IconPickerFieldState extends State<IconPickerField> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              _selectedIcon == _defaultIcon ? 'Select icon' : 'Icon selected',
-              style: const TextStyle(fontSize: FontSize.small2),
+            const Text(
+              'Select icon',
+              style: TextStyle(fontSize: FontSize.small2),
             ),
             Icon(_selectedIcon, color: MyColors.lightGrey),
           ],

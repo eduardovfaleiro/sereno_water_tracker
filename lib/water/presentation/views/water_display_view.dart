@@ -16,6 +16,7 @@ import '../view_models/water_view_model.dart';
 import '../widgets/button.dart';
 import '../widgets/circular_button.dart';
 import '../widgets/icon_picker/icon_picker_field.dart';
+import '../widgets/menu/popup_menu_button_item.dart';
 
 class WaterDisplayView extends StatelessWidget {
   const WaterDisplayView({super.key});
@@ -125,7 +126,7 @@ class WaterDisplayView extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: Spacing.normal),
                       alignment: Alignment.topLeft,
                       height: MediaQuery.of(context).size.height * 0.2,
-                      child: WaterContainerWidget(),
+                      child: const WaterContainerWidget(),
                     ),
                   ],
                 ),
@@ -368,10 +369,14 @@ class CreateWaterContainerWidget extends StatelessWidget {
                 },
               ),
               const SizedBox(height: Spacing.small1),
-              IconPickerField(onOk: (_) {}, icons: const [
-                CommunityMaterialIcons.cup_water,
-                CommunityMaterialIcons.bottle_soda_classic,
-              ]),
+              IconPickerField(
+                  onOk: (selectedIcon) {
+                    _selectedIcon = selectedIcon;
+                  },
+                  icons: const [
+                    CommunityMaterialIcons.cup_water,
+                    CommunityMaterialIcons.bottle_soda_classic,
+                  ]),
             ],
           ),
         ),
@@ -380,7 +385,8 @@ class CreateWaterContainerWidget extends StatelessWidget {
               width: double.infinity,
               child: Button.ok(
                 onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
+                  // TODO: maybe create a "WaterContainerEntityViewModel" (?)
+                  if (_formKey.currentState!.validate() && _selectedIcon != null) {
                     var waterContainerEntity = WaterContainerEntity(
                       icon: _selectedIcon!,
                       amount: _amount,
@@ -496,9 +502,14 @@ class _ProgressBarState extends State<ProgressBar> {
   }
 }
 
-class WaterContainerWidget extends StatelessWidget {
-  WaterContainerWidget({super.key});
+class WaterContainerWidget extends StatefulWidget {
+  const WaterContainerWidget({super.key});
 
+  @override
+  State<WaterContainerWidget> createState() => _WaterContainerWidgetState();
+}
+
+class _WaterContainerWidgetState extends State<WaterContainerWidget> {
   final GlobalKey _moreOptionsGlobalKey = GlobalKey();
 
   @override
@@ -516,18 +527,60 @@ class WaterContainerWidget extends StatelessWidget {
               SnackBarMessage.normal(context: context, text: 'Couldn\'t get water containers');
               return const SizedBox();
             }, (success) {
-              var waterContainers = success;
+              List<WaterContainerEntity> waterContainers = success;
 
               return Wrap(
-                spacing: Spacing.small1,
+                spacing: Spacing.small2,
+                runSpacing: Spacing.small2,
                 children: [
                   ...List.generate(
                     waterContainers.length,
                     (index) {
+                      final globalKey = GlobalKey();
+
                       return Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           CircularButton(
+                            key: globalKey,
+                            onLongPress: () async {
+                              await Menus.buttons(
+                                key: globalKey,
+                                items: [
+                                  PopupMenuButtonItem(
+                                    onTap: () {},
+                                    label: const Text('Delete',
+                                        style: TextStyle(
+                                          fontSize: FontSize.normal,
+                                          color: MyColors.lightBlue,
+                                        )),
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      size: Spacing.medium,
+                                      color: MyColors.lightBlue,
+                                    ),
+                                    borderRadius: const BorderRadius.horizontal(left: Radius.circular(Sizes.borderRadius)),
+                                  ),
+                                  PopupMenuButtonItem(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    label: const Text('Remove',
+                                        style: TextStyle(
+                                          fontSize: FontSize.normal,
+                                          color: MyColors.lightBlue,
+                                        )),
+                                    icon: const Icon(
+                                      CommunityMaterialIcons.water_minus,
+                                      size: Spacing.medium,
+                                      color: MyColors.lightBlue,
+                                    ),
+                                    borderRadius: const BorderRadius.horizontal(right: Radius.circular(Sizes.borderRadius)),
+                                  ),
+                                ],
+                                context: context,
+                              );
+                            },
                             color: MyColors.lightGrey,
                             label: Text(
                               '+${waterContainers[index].amount} $VOLUME_UNIT_M',
@@ -537,7 +590,7 @@ class WaterContainerWidget extends StatelessWidget {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            child: const Icon(CommunityMaterialIcons.cup, color: MyColors.darkGrey),
+                            child: Icon(waterContainers[index].icon, color: MyColors.darkGrey),
                           ),
                         ],
                       );

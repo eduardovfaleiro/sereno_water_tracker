@@ -12,3 +12,14 @@ class IconNotFoundException implements Exception {
     return message.toString();
   }
 }
+
+class WaterContainerNotFoundException implements Exception {
+  final String message;
+
+  WaterContainerNotFoundException(this.message);
+
+  @override
+  String toString() {
+    return message.toString();
+  }
+}

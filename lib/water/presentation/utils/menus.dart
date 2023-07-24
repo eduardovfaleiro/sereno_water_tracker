@@ -24,7 +24,7 @@ abstract class Menus {
       clipBehavior: Clip.hardEdge,
       constraints: const BoxConstraints.tightForFinite(),
       context: context,
-      position: RelativeRect.fromLTRB(x, y - h + Spacing.normal, x, y),
+      position: RelativeRect.fromLTRB(x, y - h + Spacing.small3, x, y),
       items: [PopupMenuWrap(items: items)],
     );
   }
