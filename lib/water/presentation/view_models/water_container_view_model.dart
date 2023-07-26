@@ -23,7 +23,7 @@ class WaterContainerViewModelImp extends ChangeNotifier implements WaterContaine
 
   @override
   Future<Result<void>> delete(WaterContainerEntity waterContainerEntity) {
-    return _waterContainerRepository.delete(waterContainerEntity);
+    return _waterContainerRepository.delete(waterContainerEntity).whenComplete(() => notifyListeners());
   }
 
   @override

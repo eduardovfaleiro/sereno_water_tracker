@@ -95,17 +95,17 @@ void main() {
   });
 
   group('delete', () {
-    int id = 0;
+    var waterContainerEntity = const WaterContainerEntity(amount: 200, icon: CommunityMaterialIcons.cup_water);
 
-    test('Should delete waterContainer according to the id', () async {
+    test('Should delete waterContainer', () async {
       // arrange
       when(() => mockWaterContainerRepository.delete(any())).thenAnswer((_) async => const Right(null));
 
       // act
-      var result = await viewModel.delete(id);
+      var result = await viewModel.delete(waterContainerEntity);
 
       // assert
-      verify(() => mockWaterContainerRepository.delete(id));
+      verify(() => mockWaterContainerRepository.delete(waterContainerEntity));
 
       expect(result, const Right(null));
     });

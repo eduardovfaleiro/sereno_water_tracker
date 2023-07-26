@@ -21,13 +21,6 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
   }
 
   @override
-  Future<Result<WaterContainerEntity>> get(int id) async {
-    var waterContainerEntity = await _waterContainerDataSource.get(id);
-
-    return Right(waterContainerEntity);
-  }
-
-  @override
   Future<Result<List<WaterContainerEntity>>> getAllContainers() async {
     return Right(await _waterContainerDataSource.getAllContainers());
   }

@@ -6,9 +6,9 @@ import '../../domain/entities/water_container_entity.dart';
 import '../../domain/usecases/converters/convert_water_container_dto_to_entity_usecase.dart';
 import '../../domain/usecases/converters/convert_water_container_entity_to_dto_usecase.dart';
 import '../dtos/water_container/water_container_dto.dart';
+import 'get_all_water_containers_datasource.dart';
 
 abstract interface class WaterContainerDataSource {
-  Future<WaterContainerEntity> get(int id);
   Future<void> create(WaterContainerEntity waterContainerEntity);
   Future<void> delete(WaterContainerEntity waterContainerEntity);
   Future<void> update(WaterContainerEntity waterContainerEntity);
@@ -17,6 +17,7 @@ abstract interface class WaterContainerDataSource {
 
 class HiveWaterContainerDataSourceImp implements WaterContainerDataSource {
   final HiveInterface _hiveInterface;
+  final GetAllWaterContainersDataSource _getAllWaterContainersDataSource;
   final ConvertWaterContainerEntityToDtoUseCase _convertWaterContainerEntityToDtoUseCase;
   final ConvertWaterContainerDtoToEntityUseCase _convertWaterContainerDtoToEntityUseCase;
 
@@ -24,6 +25,7 @@ class HiveWaterContainerDataSourceImp implements WaterContainerDataSource {
     this._hiveInterface,
     this._convertWaterContainerEntityToDtoUseCase,
     this._convertWaterContainerDtoToEntityUseCase,
+    this._getAllWaterContainersDataSource,
   );
 
   @override
@@ -35,7 +37,7 @@ class HiveWaterContainerDataSourceImp implements WaterContainerDataSource {
 
   @override
   Future<void> delete(WaterContainerEntity waterContainerEntity) async {
-    List<WaterContainerEntity> waterContainers = await getAllContainers();
+    List<WaterContainerEntity> waterContainers = await _getAllWaterContainersDataSource();
 
     int index = () {
       for (int i = 0; i < waterContainers.length; i++) {
@@ -49,28 +51,23 @@ class HiveWaterContainerDataSourceImp implements WaterContainerDataSource {
   }
 
   @override
-  Future<WaterContainerEntity> get(int id) async {
-    WaterContainerEntity waterContainerEntity = _convertWaterContainerDtoToEntityUseCase(
-      _hiveInterface.box(WATER_CONTAINER).getAt(id),
-    );
-
-    return waterContainerEntity;
-  }
-
-  @override
   Future<List<WaterContainerEntity>> getAllContainers() async {
-    var waterContainersDto = _hiveInterface.box(WATER_CONTAINER).values.toList();
-    var waterContainersEntities = waterContainersDto.map<WaterContainerEntity>((e) {
-      return _convertWaterContainerDtoToEntityUseCase(e);
-    }).toList();
-
-    return waterContainersEntities;
+    return _getAllWaterContainersDataSource();
   }
 
   // TODO: test
   @override
-  Future<void> update(WaterContainerEntity waterContainerEntity) {
-    throw UnimplementedError();
-    // return _hiveInterface.box(WATER_CONTAINER).put(waterContainerDto.id, waterContainerDto);
+  Future<void> update(WaterContainerEntity waterContainerEntity) async {
+    List<WaterContainerEntity> waterContainers = await _getAllWaterContainersDataSource();
+
+    int index = () {
+      for (int i = 0; i < waterContainers.length; i++) {
+        if (waterContainers[i] == waterContainerEntity) return i;
+      }
+
+      throw WaterContainerNotFoundException("Couldn't update waterContainerEntity because it was not found");
+    }();
+
+    return _hiveInterface.box(WATER_CONTAINER).put(index, waterContainerEntity);
   }
 }

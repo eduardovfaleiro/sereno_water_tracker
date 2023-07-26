@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import '../../../water/data/datasources/amount_of_water_drank_today_datasource.dart';
 import '../../../water/data/datasources/daily_drinking_frequency_datasource.dart';
 import '../../../water/data/datasources/daily_goal_datasource.dart';
+import '../../../water/data/datasources/get_all_water_containers_datasource.dart';
 import '../../../water/data/datasources/sleep_time_datasource.dart';
 import '../../../water/data/datasources/wake_up_time_datasource.dart';
 import '../../../water/data/datasources/water_container_datasource.dart';
@@ -49,6 +50,10 @@ void initGetIt() {
     return HiveSleepTimeDataSourceImp(getIt());
   });
 
+  getIt.registerLazySingleton<GetAllWaterContainersDataSource>(() {
+    return HiveGetAllWaterContainersDataSourceImp(getIt(), getIt());
+  });
+
   getIt.registerLazySingleton<WakeUpTimeDataSource>(() {
     return HiveWakeUpTimeDataSourceImp(getIt());
   });
@@ -62,7 +67,7 @@ void initGetIt() {
   });
 
   getIt.registerLazySingleton<WaterContainerDataSource>(() {
-    return HiveWaterContainerDataSourceImp(getIt(), getIt(), getIt());
+    return HiveWaterContainerDataSourceImp(getIt(), getIt(), getIt(), getIt());
   });
 
   getIt.registerLazySingleton<DailyDrinkingGoalDataSource>(() {

@@ -27,3 +27,5 @@ const int MIN_NUMBER_OF_TIMES_TO_DRINK_A_DAY = 1;
 const int MIN_DAILY_DRINKING_GOAL = 1;
 
 final GetIt getIt = GetIt.I;
+const IconData TEST_ICON = CommunityMaterialIcons.cup_water;
+const WaterContainerIcon TEST_WATER_CONTAINER_ICON = WaterContainerIcon.cup;

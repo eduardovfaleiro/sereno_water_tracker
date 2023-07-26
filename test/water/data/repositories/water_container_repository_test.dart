@@ -22,35 +22,6 @@ void main() {
     registerFallbackValue(const WaterContainerEntity(amount: 200, icon: CommunityMaterialIcons.cup));
   });
 
-  group('get', () {
-    int id = 1;
-    var waterContainerEntity = const WaterContainerEntity(
-      icon: CommunityMaterialIcons.cup_water,
-      amount: 200,
-    );
-
-    test('Should return a water container when call to datasource is sucessful', () async {
-      when(() => mockWaterContainerDataSource.get(any())).thenAnswer((_) async => waterContainerEntity);
-
-      var result = await repository.get(id);
-
-      verify(() => mockWaterContainerDataSource.get(id));
-
-      expect(result, Right(waterContainerEntity));
-    });
-
-    // test('Should return a CacheFailure when call to datasource fails', () async {
-    //   when(() => mockWaterContainerDataSource.get(any())).thenThrow(CacheException());
-
-    //   var result = await repository.get(id);
-    //   var expectedResult = result.fold((l) => l, (r) => null);
-
-    //   verify(() => mockWaterContainerDataSource.get(id));
-
-    //   expect(expectedResult, isA<CacheFailure>());
-    // });
-  });
-
   group('getAllContainers', () {
     var allWaterContainers = <WaterContainerEntity>[
       const WaterContainerEntity(amount: 100, icon: CommunityMaterialIcons.cup),
