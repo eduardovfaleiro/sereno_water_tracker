@@ -1,6 +1,6 @@
 // ignore_for_file: must_be_immutable
 
-part of water_display_view;
+part of water_view;
 
 class CreateWaterContainerWidget extends StatelessWidget {
   CreateWaterContainerWidget({super.key});

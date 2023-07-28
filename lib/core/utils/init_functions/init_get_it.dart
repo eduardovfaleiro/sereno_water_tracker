@@ -26,7 +26,9 @@ import '../../../water/domain/usecases/converters/convert_water_container_dto_to
 import '../../../water/domain/usecases/converters/convert_water_container_entity_to_dto_usecase.dart';
 import '../../../water/domain/usecases/converters/convert_water_container_icon_to_icon_data_usecase.dart';
 import '../../../water/domain/usecases/get_daily_drinking_goal_completion_in_percentage_usecase.dart';
+import '../../../water/domain/usecases/should_add_water_usecase.dart';
 import '../../../water/domain/usecases/validators/validate_user_entity_usecase.dart';
+import '../../../water/presentation/controllers/water_controller.dart';
 import '../../../water/presentation/view_models/save_user_view_model.dart';
 import '../../../water/presentation/view_models/user_view_model.dart';
 import '../../../water/presentation/view_models/water_container_view_model.dart';
@@ -106,6 +108,13 @@ void initGetIt() {
 
   // Usecases
 
+  getIt.registerLazySingleton<ShouldAddWaterUseCase>(() {
+    return ShouldAddWaterUseCaseImp(
+      amountOfWaterDrankTodayRepository: getIt(),
+      dailyDrinkingGoalRepository: getIt(),
+    );
+  });
+
   getIt.registerLazySingleton<CalculateDailyDrinkingGoalUseCase>(() {
     return CalculateDailyDrinkingGoalUseCaseImp(getIt());
   });
@@ -132,6 +141,12 @@ void initGetIt() {
 
   getIt.registerLazySingleton<ConvertWaterContainerEntityToDtoUseCase>(() {
     return ConvertWaterContainerEntityToDtoUseCaseImp(getIt());
+  });
+
+  // Controllers
+
+  getIt.registerFactory<WaterController>(() {
+    return WaterController(getIt());
   });
 
   // View models

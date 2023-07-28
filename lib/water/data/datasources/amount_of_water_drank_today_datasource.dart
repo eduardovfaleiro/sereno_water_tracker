@@ -5,7 +5,7 @@ import '../../../core/core.dart';
 abstract interface class AmountOfWaterDrankTodayDataSource {
   Future<int> get();
   Future<void> update(int amount);
-  Future<void> subtract(int amount);
+  Future<void> remove(int amount);
   Future<void> addUp(int amount);
 }
 
@@ -30,8 +30,11 @@ class HiveAmountOfWaterDrankTodayDataSourceImp implements AmountOfWaterDrankToda
   }
 
   @override
-  Future<void> subtract(int amount) {
-    throw UnimplementedError();
+  Future<void> remove(int amount) async {
+    int amountOfWaterDrankToday = _hiveInterface.box(WATER_DATA).get(AMOUNT_OF_WATER_DRANK_TODAY);
+    int amountOfWaterDrankTodayRemoved = amountOfWaterDrankToday - amount;
+
+    await _hiveInterface.box(WATER_DATA).put(AMOUNT_OF_WATER_DRANK_TODAY, amountOfWaterDrankTodayRemoved);
   }
 
   // TODO: test method

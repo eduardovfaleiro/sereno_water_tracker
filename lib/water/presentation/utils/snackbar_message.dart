@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/core.dart';
+
 abstract class SnackBarMessage {
   static void undo({
     required BuildContext context,
@@ -23,6 +25,14 @@ abstract class SnackBarMessage {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(text),
+      ),
+    );
+  }
+
+  static void error(Failure failure, {required BuildContext context}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(failure.message),
       ),
     );
   }

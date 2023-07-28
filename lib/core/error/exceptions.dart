@@ -23,3 +23,5 @@ class WaterContainerNotFoundException implements Exception {
     return message.toString();
   }
 }
+
+class LeftException implements Exception {}

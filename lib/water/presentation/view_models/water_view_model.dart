@@ -13,6 +13,8 @@ abstract interface class WaterViewModel extends ChangeNotifier {
   Future<Result<double>> getDailyGoalCompletedPercentage();
 
   Future<Result<void>> updateAmountDrankToday(int amount);
+  Future<Result<void>> addUpAmountDrankToday(int amount);
+  Future<Result<void>> removeAmountDrankToday(int amount);
   Future<Result<void>> updateDailyDrinkingGoal(int amount);
   Future<Result<void>> updateNumberOfTimesToDrinkDaily(int times);
 }
@@ -65,5 +67,18 @@ class WaterViewModelImp extends ChangeNotifier implements WaterViewModel {
   @override
   Future<Result<void>> updateNumberOfTimesToDrinkDaily(int times) {
     return _numberOfTimesToDrinkWaterDailyRepository.update(times).whenComplete(() => notifyListeners());
+  }
+
+  // test
+  @override
+  Future<Result<void>> addUpAmountDrankToday(int amount) async {
+    return await _amountOfWaterDrankTodayRepository.addUp(amount).whenComplete(() {
+      notifyListeners();
+    });
+  }
+
+  @override
+  Future<Result<void>> removeAmountDrankToday(int amount) async {
+    return _amountOfWaterDrankTodayRepository.remove(amount).whenComplete(() => notifyListeners());
   }
 }

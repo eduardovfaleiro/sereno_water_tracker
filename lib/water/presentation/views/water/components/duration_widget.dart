@@ -1,4 +1,4 @@
-part of water_display_view;
+part of water_view;
 
 class DurationWidget extends StatelessWidget {
   final String text;

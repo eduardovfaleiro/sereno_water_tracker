@@ -7,8 +7,8 @@ import 'core/utils/init_functions/init_app.dart';
 import 'water/presentation/view_models/user_view_model.dart';
 import 'water/presentation/view_models/water_container_view_model.dart';
 import 'water/presentation/view_models/water_view_model.dart';
-import 'water/presentation/views/water_display/water_display_view.dart';
-import 'water/presentation/views/water_starter_view.dart';
+import 'water/presentation/views/water/water_view.dart';
+import 'water/presentation/views/water_form_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,8 +41,8 @@ class Sereno extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/waterStarter',
       routes: {
-        '/waterStarter': (context) => const WaterStarterView(),
-        '/waterDisplay': (_) => const WaterDisplayView(),
+        '/waterStarter': (context) => const WaterFormView(),
+        '/waterDisplay': (_) => WaterView(),
       },
       debugShowCheckedModeBanner: false,
       theme: Themes.dark,

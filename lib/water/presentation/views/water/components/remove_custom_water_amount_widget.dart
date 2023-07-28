@@ -1,12 +1,12 @@
 // ignore_for_file: must_be_immutable
 
-part of water_display_view;
+part of water_view;
 
-class AddCustomWaterAmountWidget extends StatelessWidget {
-  AddCustomWaterAmountWidget({super.key});
+class RemoveCustomWaterAmountWidget extends StatelessWidget {
+  RemoveCustomWaterAmountWidget({super.key});
 
   final GlobalKey<FormState> _formKey = GlobalKey();
-  final WaterViewModel _waterViewModel = getIt<WaterViewModel>();
+  final WaterViewModel waterViewModel = getIt<WaterViewModel>();
 
   int _amount = 0;
 
@@ -15,10 +15,10 @@ class AddCustomWaterAmountWidget extends StatelessWidget {
     return Form(
       key: _formKey,
       child: AlertDialog(
-        icon: const Icon(CommunityMaterialIcons.water_plus_outline, size: Spacing.medium2),
+        icon: const Icon(CommunityMaterialIcons.water_minus_outline, size: Spacing.medium2),
         title: const Align(
           child: Text(
-            'Add custom amount',
+            'Remove custom amount',
             style: TextStyle(
               fontSize: FontSize.small2,
               fontWeight: FontWeight.w500,
@@ -58,23 +58,23 @@ class AddCustomWaterAmountWidget extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  await _waterViewModel.getAmountDrankToday().then((result) {
+                  await waterViewModel.getAmountDrankToday().then((result) {
                     result.fold((failure) {
                       SnackBarMessage.normal(context: context, text: failure.message);
                     }, (success) async {
                       int amountDrankToday = success;
-                      int updatedAmountDrankToday = amountDrankToday + _amount;
+                      int updatedAmountDrankToday = amountDrankToday - _amount;
 
-                      await _waterViewModel.updateAmountDrankToday(updatedAmountDrankToday).whenComplete(() {
+                      await waterViewModel.updateAmountDrankToday(updatedAmountDrankToday).whenComplete(() {
                         Navigator.pop(context);
 
                         SnackBarMessage.undo(
                             context: context,
-                            text: 'Added $_amount ml',
+                            text: 'Removed $_amount ml',
                             onPressed: () async {
-                              updatedAmountDrankToday -= _amount;
+                              updatedAmountDrankToday += _amount;
 
-                              await _waterViewModel.updateAmountDrankToday(updatedAmountDrankToday);
+                              await waterViewModel.updateAmountDrankToday(updatedAmountDrankToday);
                             });
                       });
                     });

@@ -12,8 +12,8 @@ import '../view_models/user_view_model.dart';
 
 part '../../../core/utils/functions/show_time_picker_waking_hours.dart';
 
-class WaterStarterView extends StatelessWidget {
-  const WaterStarterView({super.key});
+class WaterFormView extends StatelessWidget {
+  const WaterFormView({super.key});
 
   @override
   Widget build(BuildContext context) {

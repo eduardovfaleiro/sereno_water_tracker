@@ -24,4 +24,9 @@ class AmountOfWaterDrankTodayRepositoryImp implements AmountOfWaterDrankTodayRep
   Future<Result<void>> update(int amount) async {
     return Right(await _amountOfWaterDrankTodayDataSource.update(amount));
   }
+
+  @override
+  Future<Result<void>> remove(int amount) async {
+    return Right(await _amountOfWaterDrankTodayDataSource.remove(amount));
+  }
 }

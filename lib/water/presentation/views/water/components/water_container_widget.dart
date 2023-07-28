@@ -1,4 +1,4 @@
-part of water_display_view;
+part of water_view;
 
 class WaterContainerWidget extends StatefulWidget {
   const WaterContainerWidget({super.key});
@@ -35,11 +35,18 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
                     waterContainers.length,
                     (index) {
                       final globalKey = GlobalKey();
+                      final waterContainer = waterContainers[index];
 
                       return Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           CircularButton(
+                            onTap: () {
+                              getIt<WaterController>().handleContainerTap(
+                                context: context,
+                                amount: waterContainer.amount,
+                              );
+                            },
                             key: globalKey,
                             onLongPress: () async {
                               await Menus.buttons(
@@ -47,25 +54,10 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
                                 items: [
                                   PopupMenuButtonItem(
                                     onTap: () {
-                                      waterContainerViewModel.delete(waterContainers[index]).then((result) {
-                                        result.fold((failure) {
-                                          SnackBarMessage.normal(context: context, text: failure.message);
-                                        }, (success) {
-                                          SnackBarMessage.undo(
-                                            context: context,
-                                            text: 'Container deleted',
-                                            onPressed: () {
-                                              waterContainerViewModel.create(waterContainers[index]).then((result) {
-                                                result.fold((failure) {
-                                                  SnackBarMessage.normal(context: context, text: 'Couldn\'t recreate container');
-                                                }, (_) {});
-                                              });
-                                            },
-                                          );
-                                        });
-                                      });
-
-                                      Navigator.pop(context);
+                                      getIt<WaterController>().handleContainerDelete(
+                                        context: context,
+                                        waterContainerEntity: waterContainer,
+                                      );
                                     },
                                     label: const Text('Delete',
                                         style: TextStyle(
@@ -80,18 +72,11 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
                                     borderRadius: const BorderRadius.horizontal(left: Radius.circular(Sizes.borderRadius)),
                                   ),
                                   PopupMenuButtonItem(
-                                    onTap: () async {
-                                      int amountDrankToday;
-                                      var result = await getIt<WaterViewModel>().getAmountDrankToday().then((value) {
-                                        value.fold((failure) {
-                                          SnackBarMessage.normal(context: context, text: 'Couldn\'t get amount drank today');
-                                          return failure;
-                                        }, (success) {});
-                                      });
-
-                                      getIt<WaterViewModel>().updateAmountDrankToday(waterContainers[index].amount);
-
-                                      Navigator.pop(context);
+                                    onTap: () {
+                                      getIt<WaterController>().handleContainerRemoveWaterDrank(
+                                        context: context,
+                                        amount: waterContainer.amount,
+                                      );
                                     },
                                     label: const Text('Remove',
                                         style: TextStyle(

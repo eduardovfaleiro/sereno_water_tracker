@@ -1,6 +1,6 @@
 // ignore_for_file: must_be_immutable
 
-library water_display_view;
+library water_view;
 
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../../../../core/core.dart';
 import '../../../../../core/theme/themes.dart';
 import '../../../domain/entities/water_container_entity.dart';
+import '../../controllers/water_controller.dart';
 import '../../utils/dialogs.dart';
 import '../../utils/menus.dart';
 import '../../utils/snackbar_message.dart';
@@ -28,8 +29,10 @@ part 'components/remove_custom_water_amount_widget.dart';
 part 'components/water_container_widget.dart';
 part 'components/water_data_widget.dart';
 
-class WaterDisplayView extends StatelessWidget {
-  const WaterDisplayView({super.key});
+class WaterView extends StatelessWidget {
+  WaterView({super.key});
+
+  final WaterController controller = getIt<WaterController>();
 
   @override
   Widget build(BuildContext context) {
@@ -80,12 +83,12 @@ class WaterDisplayView extends StatelessWidget {
                         children: [
                           WaterDataWidget(
                             'Water drank today',
-                            waterViewModel.getAmountDrankToday(),
+                            controller.data.amountDrankToday,
                           ),
                           const SizedBox(height: Spacing.small3),
                           ProgressBarWidget(waterViewModel.getDailyGoalCompletedPercentage()),
                           const SizedBox(height: Spacing.small3),
-                          WaterDataWidget('Daily goal', waterViewModel.getDailyDrinkingGoal()),
+                          WaterDataWidget('Daily goal', controller.data.dailyGoal),
                         ],
                       ),
                     ),
@@ -102,7 +105,10 @@ class WaterDisplayView extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: Spacing.normal),
                       alignment: Alignment.topLeft,
-                      child: const WaterContainerWidget(),
+                      child: const AnimatedSwitcher(
+                        duration: Duration(seconds: 1),
+                        child: WaterContainerWidget(),
+                      ),
                     ),
                   ],
                 ),

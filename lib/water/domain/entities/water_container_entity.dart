@@ -20,4 +20,14 @@ class WaterContainerEntity {
 
   @override
   int get hashCode => icon.hashCode ^ amount.hashCode;
+
+  WaterContainerEntity copyWith({
+    IconData? icon,
+    int? amount,
+  }) {
+    return WaterContainerEntity(
+      icon: icon ?? this.icon,
+      amount: amount ?? this.amount,
+    );
+  }
 }

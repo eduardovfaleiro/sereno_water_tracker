@@ -47,7 +47,7 @@ class HiveWaterContainerDataSourceImp implements WaterContainerDataSource {
       throw WaterContainerNotFoundException("Couldn't delete waterContainerEntity because it was not found");
     }();
 
-    return _hiveInterface.box(WATER_CONTAINER).delete(index);
+    return _hiveInterface.box(WATER_CONTAINER).deleteAt(index);
   }
 
   @override
