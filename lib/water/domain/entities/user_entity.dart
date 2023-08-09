@@ -2,34 +2,49 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
+import 'sleep_habit_entity.dart';
 
 class UserEntity {
-  final int weight;
-  final int numberOfTimesToDrinkWaterDaily;
-  final int weeklyWorkoutDays;
-  final TimeOfDay? sleepTime;
-  final TimeOfDay? wakeUpTime;
+  int weight;
+  int weeklyWorkoutDays;
+  TimeOfDay sleeptime;
+  TimeOfDay wakeUpTime;
 
   UserEntity({
-    this.weight = MIN_WEIGHT,
-    this.numberOfTimesToDrinkWaterDaily = 1,
-    this.weeklyWorkoutDays = 0,
-    this.sleepTime,
-    this.wakeUpTime,
+    required this.weight,
+    required this.weeklyWorkoutDays,
+    required this.sleeptime,
+    required this.wakeUpTime,
   });
+
+  factory UserEntity.normal() {
+    return UserEntity(
+      weight: DEFAULT_WEIGHT,
+      weeklyWorkoutDays: DEFAULT_WEEKLY_WORKOUT_DAYS,
+      sleeptime: DEFAULT_SLEEPTIME,
+      wakeUpTime: DEFAULT_WAKE_UP_TIME,
+    );
+  }
+
+  set sleepHabit(SleepHabitEntity value) {
+    sleeptime = value.sleeptime;
+    wakeUpTime = value.wakeUpTime;
+  }
+
+  SleepHabitEntity get sleepHabit {
+    return SleepHabitEntity(wakeUpTime: wakeUpTime, sleeptime: sleeptime);
+  }
 
   UserEntity copyWith({
     int? weight,
-    int? numberOfTimesToDrinkWaterDaily,
     int? weeklyWorkoutDays,
-    TimeOfDay? sleepTime,
+    TimeOfDay? sleeptime,
     TimeOfDay? wakeUpTime,
   }) {
     return UserEntity(
       weight: weight ?? this.weight,
-      numberOfTimesToDrinkWaterDaily: numberOfTimesToDrinkWaterDaily ?? this.numberOfTimesToDrinkWaterDaily,
       weeklyWorkoutDays: weeklyWorkoutDays ?? this.weeklyWorkoutDays,
-      sleepTime: sleepTime ?? this.sleepTime,
+      sleeptime: sleeptime ?? this.sleeptime,
       wakeUpTime: wakeUpTime ?? this.wakeUpTime,
     );
   }

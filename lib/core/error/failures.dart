@@ -1,6 +1,6 @@
 part of core;
 
-abstract class Failure {
+class Failure {
   final String message;
 
   Failure(this.message);
@@ -21,4 +21,13 @@ class ValidationFailure extends Failure {
 
 class IconNotFoundFailure extends Failure {
   IconNotFoundFailure(super.message);
+}
+
+class TypeFailure implements Failure {
+  final Error error;
+
+  TypeFailure(this.error);
+
+  @override
+  String get message => error.toString();
 }

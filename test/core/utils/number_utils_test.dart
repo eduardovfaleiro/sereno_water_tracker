@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sereno_clean_architecture_solid/core/utils/number_utils.dart';
+import 'package:sereno_clean_architecture_solid/core/functions/number_utils.dart';
 
 void main() {
   group('roundByDecimalsToString', () {

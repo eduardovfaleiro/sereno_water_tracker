@@ -28,6 +28,13 @@ abstract class Themes {
 
   static final DialogTheme _dialogTheme = DialogTheme(
     backgroundColor: MyColors.darkGrey,
+    alignment: Alignment.center,
+    elevation: 1.5,
+    titleTextStyle: const TextStyle(
+      color: MyColors.lightGrey1,
+      fontWeight: FontWeight.bold,
+      fontSize: FontSize.small2,
+    ),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.borderRadius)),
   );
 
@@ -54,7 +61,7 @@ abstract class Themes {
 
   static const AppBarTheme _appBarTheme = AppBarTheme(
     centerTitle: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.black,
     titleTextStyle: TextStyle(
       fontSize: FontSize.small2,
       fontWeight: FontWeight.w500,
@@ -74,7 +81,11 @@ abstract class Themes {
 
   static const ElevatedButtonThemeData _elevatedButtonThemeData = ElevatedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: MaterialStatePropertyAll<Color>(Color.fromARGB(255, 78, 176, 200)),
+      backgroundColor: MaterialStatePropertyAll<Color>(MyColors.lightBlue),
+      textStyle: MaterialStatePropertyAll(TextStyle(
+        fontWeight: FontWeight.w500,
+        fontSize: FontSize.small1,
+      )),
     ),
   );
 
@@ -114,7 +125,7 @@ abstract class Themes {
     errorContainer: Color(0xFF93000A),
     onError: Color(0xFF690005),
     onErrorContainer: Color(0xFFFFDAD6),
-    background: Colors.transparent,
+    background: Colors.black,
     onBackground: Colors.black,
     surface: MyColors.darkGrey,
     onSurface: MyColors.lightGrey,
