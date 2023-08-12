@@ -1,9 +1,9 @@
 import 'package:hive/hive.dart';
 import '../../water/data/datasources/user_datasource.dart';
 import '../../water/data/datasources/water_datasource.dart';
-import '../../water/data/datasources/water_drank_today_datasource.dart';
 import '../../water/data/repositories/user_repository.dart';
 import '../../water/data/repositories/water_repository.dart';
+import '../../water/domain/services/time_to_drink_service.dart';
 import '../../water/domain/usecases/calculate_water_data_usecase.dart';
 import '../../water/domain/usecases/validate_session_usecase.dart';
 import '../../water/presentation/controllers/water_controller.dart';
@@ -26,10 +26,6 @@ void initGetIt() {
     return HiveWaterDataSource(getIt());
   });
 
-  getIt.registerLazySingleton<WaterDrankTodayDataSource>(() {
-    return HiveWaterDrankTodayDataSource(getIt());
-  });
-
   // Repositories
 
   getIt.registerLazySingleton<WaterRepository>(() {
@@ -50,6 +46,12 @@ void initGetIt() {
     return ValidateSessionUseCaseImp(getIt(), getIt());
   });
 
+  // Services
+
+  getIt.registerLazySingleton<TimeToDrinkAgainServiceImp>(() {
+    return TimeToDrinkAgainServiceImp(getIt());
+  });
+
   // Controllers
 
   getIt.registerLazySingleton<WaterFormController>(() {
@@ -57,6 +59,6 @@ void initGetIt() {
   });
 
   getIt.registerLazySingleton<WaterController>(() {
-    return WaterController(getIt());
+    return WaterController(getIt(), getIt());
   });
 }

@@ -7,6 +7,7 @@ import '../../../../core/theme/themes.dart';
 import '../../../domain/entities/water_container_entity.dart';
 import '../../controllers/water_controller.dart';
 import '../../widgets/gradient_container.dart';
+import '../../widgets/timer.dart';
 
 class WaterView extends StatelessWidget {
   const WaterView({super.key});
@@ -108,15 +109,15 @@ class WaterView extends StatelessWidget {
                             style: const TextStyle(color: MyColors.lightBlue)),
                       ),
                       const SizedBox(height: Spacing.small1),
-                      const _InfoBar(
-                        icon: Icon(
+                      _InfoBar(
+                        icon: const Icon(
                           Icons.timer,
                           color: Color(0xff7E9BBA),
                           size: Spacing.normal,
                         ),
-                        backgroundColor: Color(0xff233444),
+                        backgroundColor: const Color(0xff233444),
                         leftText: 'Beber novamente em',
-                        rightText: Text('2h 20min', style: TextStyle(color: Color.fromARGB(255, 134, 188, 241))),
+                        rightText: TimerWidget(stream: controller.startTimerToDrink()),
                       ),
                       const SizedBox(height: Spacing.medium),
                       Container(
@@ -129,22 +130,24 @@ class WaterView extends StatelessWidget {
                           child: Row(children: [
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.1,
-                              child: Expanded(
-                                child: ListView(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    _ContainerButton(
-                                      container: const WaterContainerEntity(amount: 200, assetName: 'cup.svg'),
-                                      onTap: () {},
-                                    ),
-                                    const SizedBox(width: Spacing.small3),
-                                    _ContainerButton(
-                                      container: const WaterContainerEntity(amount: 500, assetName: 'bottle.svg'),
-                                      onTap: () {},
-                                    ),
-                                  ],
-                                ),
+                              child: ListView(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                children: [
+                                  _ContainerButton(
+                                    container: const WaterContainerEntity(amount: 200, assetName: 'cup.svg'),
+                                    onTap: () {
+                                      controller.addDrankToday(amount: 200, context: context);
+                                    },
+                                  ),
+                                  const SizedBox(width: Spacing.small3),
+                                  _ContainerButton(
+                                    container: const WaterContainerEntity(amount: 500, assetName: 'bottle.svg'),
+                                    onTap: () {
+                                      controller.addDrankToday(amount: 500, context: context);
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
                           ]),
@@ -165,7 +168,7 @@ class WaterView extends StatelessWidget {
 class _InfoBar extends StatelessWidget {
   final Color backgroundColor;
   final String leftText;
-  final Text rightText;
+  final Widget rightText;
   final Icon icon;
 
   const _InfoBar({
@@ -217,7 +220,7 @@ class _ContainerButton extends StatelessWidget {
       children: [
         InkWell(
           borderRadius: BorderRadius.circular(90),
-          onTap: () {},
+          onTap: () => onTap(),
           child: Ink(
             decoration: BoxDecoration(
               color: MyColors.lightGrey,
