@@ -1,41 +1,40 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/theme/themes.dart';
 import '../../utils/dialogs.dart';
-import 'icon_picker.dart';
+import 'svg_picker.dart';
 
-class IconPickerField extends StatefulWidget implements IconPicker {
+class SvgPickerField extends StatefulWidget implements SvgPicker {
   @override
-  final IconData? selectedIcon;
-
-  @override
-  final List<IconData> icons;
+  final String? selectedSvg;
 
   @override
-  final Function(IconData?) onOk;
+  final List<String> svgs;
 
-  const IconPickerField({
+  @override
+  final Function(String?) onOk;
+
+  const SvgPickerField({
     Key? key,
-    this.selectedIcon,
-    required this.icons,
+    this.selectedSvg,
+    required this.svgs,
     required this.onOk,
   }) : super(key: key);
 
   @override
-  State<IconPickerField> createState() => _IconPickerFieldState();
+  State<SvgPickerField> createState() => _SvgPickerFieldState();
 }
 
-class _IconPickerFieldState extends State<IconPickerField> {
-  final IconData _defaultIcon = CommunityMaterialIcons.cup_water;
-  late IconData _selectedIcon;
+class _SvgPickerFieldState extends State<SvgPickerField> {
+  final String _defaultSvg = 'cup.svg';
+  late String _selectedSvg;
 
   @override
   void initState() {
     super.initState();
 
-    _selectedIcon = widget.selectedIcon ?? _defaultIcon;
+    _selectedSvg = widget.selectedSvg ?? _defaultSvg;
   }
 
   @override
@@ -44,14 +43,14 @@ class _IconPickerFieldState extends State<IconPickerField> {
       onTap: () {
         Dialogs.normal(
           context: context,
-          child: IconPicker(
-              icons: widget.icons,
-              selectedIcon: _selectedIcon,
-              onOk: (selectedIcon) {
+          child: SvgPicker(
+              svgs: widget.svgs,
+              selectedSvg: _selectedSvg,
+              onOk: (selectedSvg) {
                 setState(() {
-                  _selectedIcon = selectedIcon ?? _defaultIcon;
+                  _selectedSvg = selectedSvg ?? _defaultSvg;
 
-                  widget.onOk(selectedIcon);
+                  widget.onOk(_selectedSvg);
                 });
               }),
         );
@@ -69,10 +68,15 @@ class _IconPickerFieldState extends State<IconPickerField> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
-              'Select icon',
+              'Selecione o ícone',
               style: TextStyle(fontSize: FontSize.small2),
             ),
-            Icon(_selectedIcon, color: MyColors.lightGrey),
+            SvgPicture.asset(
+              'assets/images/$_selectedSvg',
+              height: Spacing.medium1,
+              width: Spacing.medium1,
+              colorFilter: const ColorFilter.mode(MyColors.lightGrey, BlendMode.srcIn),
+            ),
           ],
         ),
       ),

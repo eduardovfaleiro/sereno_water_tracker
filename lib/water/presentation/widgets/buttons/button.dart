@@ -8,6 +8,15 @@ abstract class Button {
     required VoidCallback onPressed,
   }) {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Sizes.buttonBorderRadius),
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: Spacing.small2,
+          horizontal: Spacing.small2,
+        ),
+      ),
       onPressed: () => onPressed(),
       child: const Text(
         'OK',

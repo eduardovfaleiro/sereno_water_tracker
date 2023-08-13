@@ -4,7 +4,6 @@ import '../../controllers/water_controller.dart';
 import '../../utils/dialogs.dart';
 import '../../utils/snackbar_message.dart';
 import '../../widgets/buttons/button.dart';
-import '../../widgets/dialogs/confirm_dialog.dart';
 import 'daily_frequency_water_form.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'weekly_workout_days_water_form.dart';
@@ -128,9 +127,10 @@ class _WaterFormViewState extends State<WaterFormView> {
                           child: showFinishButton
                               ? _Button(
                                   onPressed: () async {
-                                    await Dialogs.normal(
-                                      context: context,
-                                      child: ConfirmDialog(
+                                    await Dialogs.confirm(
+                                        context: context,
+                                        text: 'Você poderá mudar essas alterações no futuro.',
+                                        title: 'Salvar',
                                         onNo: () => Navigator.pop(context),
                                         onYes: () {
                                           controller.saveData(context).then((value) async {
@@ -145,9 +145,7 @@ class _WaterFormViewState extends State<WaterFormView> {
                                               });
                                             });
                                           });
-                                        },
-                                      ),
-                                    );
+                                        });
                                   },
                                   text: 'Finalizar',
                                   suffixIcon: null,

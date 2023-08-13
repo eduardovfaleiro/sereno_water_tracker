@@ -5,8 +5,10 @@ import '../../../../core/theme/themes.dart';
 class CircularButton extends StatelessWidget {
   final Widget child;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
   final Widget? label;
   final Color backgroundColor;
+  final EdgeInsets contentPadding;
 
   const CircularButton({
     super.key,
@@ -14,6 +16,8 @@ class CircularButton extends StatelessWidget {
     required this.onTap,
     this.label,
     this.backgroundColor = MyColors.lightGrey,
+    this.contentPadding = const EdgeInsets.all(Spacing.small2),
+    this.onLongPress,
   });
 
   @override
@@ -23,12 +27,15 @@ class CircularButton extends StatelessWidget {
         InkWell(
           borderRadius: BorderRadius.circular(90),
           onTap: () => onTap(),
-          child: Ink(
+          onLongPress: () {
+            if (onLongPress != null) onLongPress!();
+          },
+          child: Container(
               decoration: BoxDecoration(
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(90),
               ),
-              padding: const EdgeInsets.all(Spacing.small2),
+              padding: contentPadding,
               child: child),
         ),
         if (label != null)

@@ -8,6 +8,7 @@ import '../../water/data/repositories/water_repository.dart';
 import '../../water/domain/services/time_to_drink_service.dart';
 import '../../water/domain/usecases/calculate_water_data_usecase.dart';
 import '../../water/domain/usecases/validate_session_usecase.dart';
+import '../../water/presentation/controllers/water_container_controller.dart';
 import '../../water/presentation/controllers/water_controller.dart';
 import '../../water/presentation/controllers/water_form_controller.dart';
 import '../core.dart';
@@ -69,6 +70,10 @@ void initGetIt() {
   });
 
   getIt.registerLazySingleton<WaterController>(() {
-    return WaterController(getIt(), getIt(), getIt());
+    return WaterController(getIt(), getIt());
+  });
+
+  getIt.registerLazySingleton<WaterContainerController>(() {
+    return WaterContainerController(getIt());
   });
 }

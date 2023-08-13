@@ -1,13 +1,28 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/themes.dart';
 import '../buttons/button.dart';
 
 class ConfirmDialog extends StatelessWidget {
+  final String title;
+  final String text;
+
   final VoidCallback onNo;
   final VoidCallback onYes;
 
-  const ConfirmDialog({super.key, required this.onNo, required this.onYes});
+  final String? confirmText;
+  final String? cancelText;
+
+  const ConfirmDialog({
+    Key? key,
+    required this.title,
+    required this.text,
+    required this.onNo,
+    required this.onYes,
+    this.confirmText,
+    this.cancelText,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +30,10 @@ class ConfirmDialog extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       actionsPadding: EdgeInsets.zero,
       buttonPadding: EdgeInsets.zero,
-      title: const Center(child: Text('Salvar dados?')),
-      content: const Padding(
-        padding: EdgeInsets.symmetric(vertical: Spacing.small1),
-        child: Text('Você poderá mudar essas alterações.'),
+      title: Center(child: Text(title)),
+      content: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Spacing.small1),
+        child: Text(text),
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.borderRadius)),
       actions: [
@@ -30,11 +45,17 @@ class ConfirmDialog extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Button.cancel(onPressed: () => onNo(), text: 'Ainda não'),
+                  child: Button.cancel(onPressed: () => onNo(), text: cancelText ?? 'Ainda não'),
                 ),
                 const SizedBox(width: Spacing.small),
                 Expanded(
-                  child: Button.confirm(onPressed: () => onYes(), text: 'Sim, continuar'),
+                  child: Button.confirm(
+                      onPressed: () {
+                        onYes();
+
+                        Navigator.pop(context);
+                      },
+                      text: confirmText ?? 'Sim, continuar'),
                 ),
               ],
             ),

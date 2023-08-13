@@ -41,3 +41,5 @@ final GetIt getIt = GetIt.I;
 const IconData TEST_ICON = CommunityMaterialIcons.cup_water;
 
 bool isLoading = false;
+
+List<String> CONTAINER_ASSETS = ['cup.svg', 'bottle.svg', 'cup_of_tea.svg', 'gallon.svg'];

@@ -1,37 +1,37 @@
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/theme/themes.dart';
 import '../buttons/button.dart';
 
-class IconPicker extends StatefulWidget {
-  final IconData? selectedIcon;
-  final List<IconData> icons;
-  final Function(IconData?) onOk;
+class SvgPicker extends StatefulWidget {
+  final String? selectedSvg;
+  final List<String> svgs;
+  final Function(String?) onOk;
 
-  const IconPicker({super.key, this.selectedIcon, required this.icons, required this.onOk});
+  const SvgPicker({super.key, this.selectedSvg, required this.svgs, required this.onOk});
 
   @override
-  State<IconPicker> createState() => _IconPickerState();
+  State<SvgPicker> createState() => _SvgPickerState();
 }
 
-class _IconPickerState extends State<IconPicker> {
-  IconData? _selectedIcon;
+class _SvgPickerState extends State<SvgPicker> {
+  String? _selectedSvg;
 
   @override
   void initState() {
     super.initState();
 
-    _selectedIcon ??= widget.selectedIcon;
+    _selectedSvg ??= widget.selectedSvg;
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      icon: const Icon(CommunityMaterialIcons.image_plus, size: Spacing.medium2),
+      // icon: const Icon(CommunityMaterialIcons.shape_polygon_plus, size: Spacing.medium2),
       title: const Align(
         child: Text(
-          'Select an icon',
+          'Selecione o ícone',
           style: TextStyle(
             fontSize: FontSize.small2,
             fontWeight: FontWeight.w500,
@@ -42,27 +42,32 @@ class _IconPickerState extends State<IconPicker> {
       content: Padding(
         padding: const EdgeInsets.symmetric(vertical: Spacing.small2),
         child: Wrap(
-          spacing: Spacing.small1,
+          spacing: Spacing.small2,
           children: List.generate(
-            widget.icons.length,
+            widget.svgs.length,
             (index) {
-              IconData icon = widget.icons[index];
+              String svg = widget.svgs[index];
 
               return InkWell(
                 onTap: () {
                   setState(() {
-                    _selectedIcon = icon;
+                    _selectedSvg = svg;
                   });
                 },
                 borderRadius: BorderRadius.circular(Sizes.borderRadius),
-                child: (_selectedIcon == icon)
+                child: (_selectedSvg == svg)
                     ? Ink(
                         padding: const EdgeInsets.all(Spacing.small1),
                         decoration: BoxDecoration(
                           color: MyColors.lightBlue,
                           borderRadius: BorderRadius.circular(Sizes.borderRadius),
                         ),
-                        child: Icon(widget.icons[index], size: Spacing.medium2, color: MyColors.darkBlue),
+                        child: SvgPicture.asset(
+                          'assets/images/$svg',
+                          width: Spacing.medium2,
+                          height: Spacing.medium2,
+                          colorFilter: const ColorFilter.mode(MyColors.darkBlue, BlendMode.srcIn),
+                        ),
                       )
                     : Ink(
                         padding: const EdgeInsets.all(Spacing.small1),
@@ -70,7 +75,12 @@ class _IconPickerState extends State<IconPicker> {
                           color: const Color.fromARGB(255, 34, 34, 39),
                           borderRadius: BorderRadius.circular(Spacing.small3),
                         ),
-                        child: Icon(widget.icons[index], size: Spacing.medium2, color: MyColors.lightGrey),
+                        child: SvgPicture.asset(
+                          'assets/images/$svg',
+                          width: Spacing.medium2,
+                          height: Spacing.medium2,
+                          colorFilter: const ColorFilter.mode(MyColors.lightGrey, BlendMode.srcIn),
+                        ),
                       ),
               );
             },
@@ -81,7 +91,7 @@ class _IconPickerState extends State<IconPicker> {
         SizedBox(
           width: double.infinity,
           child: Button.ok(onPressed: () {
-            widget.onOk(_selectedIcon);
+            widget.onOk(_selectedSvg);
 
             Navigator.pop(context);
           }),
