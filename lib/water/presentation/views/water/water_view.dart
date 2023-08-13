@@ -6,11 +6,14 @@ import 'package:provider/provider.dart';
 import '../../../../core/theme/themes.dart';
 import '../../../domain/entities/water_container_entity.dart';
 import '../../controllers/water_controller.dart';
+import '../../widgets/buttons/circular_button.dart';
 import '../../widgets/gradient_container.dart';
 import '../../widgets/timer.dart';
 
 class WaterView extends StatelessWidget {
-  const WaterView({super.key});
+  WaterView({super.key});
+
+  final _moreOptionsKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -126,31 +129,45 @@ class WaterView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(Sizes.borderRadius),
                         ),
                         padding: const EdgeInsets.all(Spacing.normal),
-                        child: SingleChildScrollView(
-                          child: Row(children: [
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.1,
-                              child: ListView(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  _ContainerButton(
-                                    container: const WaterContainerEntity(amount: 200, assetName: 'cup.svg'),
-                                    onTap: () {
-                                      controller.addDrankToday(amount: 200, context: context);
-                                    },
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.1,
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: List.generate(controller.waterContainers.length, (i) {
+                                      return Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          _ContainerButton(
+                                            container: controller.waterContainers[i],
+                                            onTap: () {
+                                              controller.addDrankToday(
+                                                amount: controller.waterContainers[i].amount,
+                                                context: context,
+                                              );
+                                            },
+                                          ),
+                                          if (controller.waterContainers.length != i) const SizedBox(width: 16)
+                                        ],
+                                      );
+                                    }),
                                   ),
-                                  const SizedBox(width: Spacing.small3),
-                                  _ContainerButton(
-                                    container: const WaterContainerEntity(amount: 500, assetName: 'bottle.svg'),
-                                    onTap: () {
-                                      controller.addDrankToday(amount: 500, context: context);
-                                    },
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ]),
+                              CircularButton(
+                                backgroundColor: MyColors.darkBlue,
+                                key: _moreOptionsKey,
+                                onTap: () {},
+                                child: const Icon(CupertinoIcons.ellipsis_vertical),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -216,30 +233,17 @@ class _ContainerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        InkWell(
-          borderRadius: BorderRadius.circular(90),
-          onTap: () => onTap(),
-          child: Ink(
-            decoration: BoxDecoration(
-              color: MyColors.lightGrey,
-              borderRadius: BorderRadius.circular(90),
-            ),
-            padding: const EdgeInsets.all(Spacing.small2),
-            child: SvgPicture.asset(
-              'assets/images/${container.assetName}',
-              height: Spacing.medium1,
-              width: Spacing.medium1,
-            ),
-          ),
-        ),
-        const SizedBox(height: Spacing.small),
-        Text(
-          '${container.amount}ml',
-          style: const TextStyle(color: MyColors.lightGrey, fontWeight: FontWeight.w500),
-        )
-      ],
+    return CircularButton(
+      onTap: () => onTap(),
+      label: Text(
+        '${container.amount}ml',
+        style: const TextStyle(color: MyColors.lightGrey, fontWeight: FontWeight.w500),
+      ),
+      child: SvgPicture.asset(
+        'assets/images/${container.assetName}',
+        height: Spacing.medium1,
+        width: Spacing.medium1,
+      ),
     );
   }
 }

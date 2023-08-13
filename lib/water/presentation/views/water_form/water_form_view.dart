@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../controllers/water_controller.dart';
 import '../../utils/dialogs.dart';
 import '../../utils/snackbar_message.dart';
-import '../../widgets/button.dart';
+import '../../widgets/buttons/button.dart';
 import '../../widgets/dialogs/confirm_dialog.dart';
 import 'daily_frequency_water_form.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';

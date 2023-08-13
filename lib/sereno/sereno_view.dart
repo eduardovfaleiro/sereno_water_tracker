@@ -47,7 +47,7 @@ class _SerenoViewState extends State<SerenoView> {
       initialRoute: _initialRoute,
       routes: {
         '/waterForm': (context) => const WaterFormView(),
-        '/water': (_) => const WaterView(),
+        '/water': (_) => WaterView(),
       },
       debugShowCheckedModeBanner: false,
       theme: Themes.dark,

@@ -1,7 +1,9 @@
 import 'package:hive/hive.dart';
 import '../../water/data/datasources/user_datasource.dart';
+import '../../water/data/datasources/water_container_datasource.dart';
 import '../../water/data/datasources/water_datasource.dart';
 import '../../water/data/repositories/user_repository.dart';
+import '../../water/data/repositories/water_container_repository.dart';
 import '../../water/data/repositories/water_repository.dart';
 import '../../water/domain/services/time_to_drink_service.dart';
 import '../../water/domain/usecases/calculate_water_data_usecase.dart';
@@ -26,10 +28,18 @@ void initGetIt() {
     return HiveWaterDataSource(getIt());
   });
 
+  getIt.registerLazySingleton<WaterContainerDataSource>(() {
+    return HiveWaterContainerDataSource(getIt());
+  });
+
   // Repositories
 
   getIt.registerLazySingleton<WaterRepository>(() {
     return WaterRepositoryImp(getIt());
+  });
+
+  getIt.registerLazySingleton<WaterContainerRepository>(() {
+    return WaterContainerRepositoryImp(getIt());
   });
 
   getIt.registerLazySingleton<UserRepository>(() {
@@ -59,6 +69,6 @@ void initGetIt() {
   });
 
   getIt.registerLazySingleton<WaterController>(() {
-    return WaterController(getIt(), getIt());
+    return WaterController(getIt(), getIt(), getIt());
   });
 }

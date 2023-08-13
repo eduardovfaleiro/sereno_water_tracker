@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/themes.dart';
-import '../button.dart';
+import '../buttons/button.dart';
 
 class ConfirmDialog extends StatelessWidget {
   final VoidCallback onNo;

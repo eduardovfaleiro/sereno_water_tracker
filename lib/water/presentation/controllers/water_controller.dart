@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/core.dart';
+import '../../data/repositories/water_container_repository.dart';
 import '../../data/repositories/water_repository.dart';
+import '../../domain/entities/water_container_entity.dart';
 import '../../domain/entities/water_data_entity.dart';
 import '../../domain/services/time_to_drink_service.dart';
 import '../utils/snackbar_message.dart';
@@ -12,11 +15,13 @@ class WaterController extends ChangeNotifier {
   bool isLoading = false;
 
   final TimeToDrinkAgainServiceImp _timeToDrinkAgainServiceImp;
+  final WaterContainerRepository _waterContainerRepository;
   final WaterRepository _waterRepository;
 
-  WaterController(this._waterRepository, this._timeToDrinkAgainServiceImp);
+  WaterController(this._waterRepository, this._timeToDrinkAgainServiceImp, this._waterContainerRepository);
 
   late WaterDataEntity waterData;
+  List<WaterContainerEntity> waterContainers = [];
 
   Future<void> init() async {
     isLoading = true;
@@ -26,6 +31,11 @@ class WaterController extends ChangeNotifier {
     if (waterDataResult is Failure) throw Exception();
 
     waterData = waterDataResult.copyWith();
+
+    final waterContainers = await getResult(_waterContainerRepository.getAll());
+    if (waterContainers is Failure) throw Exception();
+
+    this.waterContainers = waterContainers;
 
     isLoading = false;
 
@@ -56,5 +66,13 @@ class WaterController extends ChangeNotifier {
     waterData.drankToday += amount;
 
     notifyListeners();
+  }
+
+  Future<Result<List<WaterContainerEntity>>> getAll() async {
+    final getAllWaterContainersResult = await getResult(_waterContainerRepository.getAll());
+
+    if (getAllWaterContainersResult is Failure) return Left(getAllWaterContainersResult);
+
+    return Right(getAllWaterContainersResult);
   }
 }

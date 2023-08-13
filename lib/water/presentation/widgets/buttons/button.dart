@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/themes.dart';
+import '../../../../core/theme/themes.dart';
 
 abstract class Button {
   static Widget ok({
