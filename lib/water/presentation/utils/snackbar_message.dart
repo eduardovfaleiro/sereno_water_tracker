@@ -12,7 +12,7 @@ abstract class SnackBarMessage {
       SnackBar(
           content: Text(text),
           action: SnackBarAction(
-            label: 'Undo',
+            label: 'Desfazer',
             onPressed: onPressed,
           )),
     );

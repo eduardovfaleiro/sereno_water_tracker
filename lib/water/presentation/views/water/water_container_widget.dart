@@ -10,8 +10,10 @@ import '../../../../core/core.dart';
 import '../../../../core/theme/themes.dart';
 import '../../../domain/entities/water_container_entity.dart';
 import '../../controllers/water_container_controller.dart';
+import '../../controllers/water_controller.dart';
 import '../../utils/bottom_sheets.dart';
-import '../../utils/menus.dart';
+import '../../utils/dialogs.dart';
+import '../../utils/snackbar_message.dart';
 import '../../widgets/buttons/button.dart';
 import '../../widgets/buttons/circular_button.dart';
 import '../../widgets/my_text_fields.dart';
@@ -63,11 +65,14 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
                     itemBuilder: (context, i) {
+                      final globalKey = GlobalKey();
+
                       return Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const SizedBox(width: Spacing.small3),
                           _ContainerButton(
+                            key: globalKey,
                             container: controller.waterContainers[i],
                             onLongPress: () {},
                             onTap: () {
@@ -105,96 +110,11 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
                         backgroundColor: MyColors.darkGrey,
                         key: _moreOptionsKey,
                         onTap: () {
-                          Menus.normal(
-                            key: _moreOptionsKey,
+                          BottomSheets.items(
                             items: [
-                              PopupMenuItem(
-                                onTap: () {
-                                  Future.delayed(Duration.zero, () async {
-                                    final formKey = GlobalKey<FormState>();
-                                    String? assetName;
-                                    int? amount;
-
-                                    BottomSheets.normal(
-                                      context: context,
-                                      title: 'Criar novo recipiente',
-                                      content: Form(
-                                        key: formKey,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: Spacing.small2,
-                                            vertical: Spacing.medium,
-                                          ),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                                            children: [
-                                              SvgPickerField(
-                                                svgs: CONTAINER_ASSETS,
-                                                onOk: (value) {
-                                                  assetName = value!;
-                                                },
-                                              ),
-                                              const SizedBox(height: Spacing.small1),
-                                              DigitOnlyTextField(
-                                                label: 'Tamanho',
-                                                autofocus: true,
-                                                onChanged: (value) {
-                                                  amount = value;
-                                                },
-                                                validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'Insira um tamanho.';
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                              const SizedBox(height: Spacing.small2),
-                                              Button.ok(onPressed: () {
-                                                if (formKey.currentState!.validate()) {
-                                                  controller.add(
-                                                    WaterContainerEntity(
-                                                      assetName: assetName!,
-                                                      amount: amount!,
-                                                    ),
-                                                  );
-                                                }
-
-                                                Navigator.pop(context);
-                                              }),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  });
-                                },
-                                child: const Row(
-                                  children: [
-                                    Icon(CommunityMaterialIcons.shape_polygon_plus),
-                                    SizedBox(width: Spacing.small2),
-                                    Text('Criar novo recipiente')
-                                  ],
-                                ),
-                              ),
-                              const PopupMenuItem(
-                                child: Row(
-                                  children: [
-                                    Icon(CommunityMaterialIcons.water_plus_outline),
-                                    SizedBox(width: Spacing.small2),
-                                    Text('Adicionar quantidade customizada')
-                                  ],
-                                ),
-                              ),
-                              const PopupMenuItem(
-                                child: Row(
-                                  children: [
-                                    Icon(CommunityMaterialIcons.water_minus_outline),
-                                    SizedBox(width: Spacing.small2),
-                                    Text('Remover quantidade customizada')
-                                  ],
-                                ),
-                              ),
+                              _getAddWaterContainerItemTile(context),
+                              _getAddCustomAmount(context),
+                              _getRemoveCustomAmount(context),
                             ],
                             context: context,
                           );
@@ -213,12 +133,289 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
   }
 }
 
+BottomSheetItemTile _getAddWaterContainerItemTile(BuildContext context) {
+  return BottomSheetItemTile(
+    onTap: () {
+      Navigator.pop(context);
+
+      final formKey = GlobalKey<FormState>();
+      String? assetName;
+      int? amount;
+
+      BottomSheets.normal(
+        context: context,
+        title: 'Criar novo recipiente',
+        content: Form(
+          key: formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Spacing.small2,
+              vertical: Spacing.medium,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SvgPickerField(
+                  svgs: CONTAINER_ASSETS,
+                  onOk: (value) {
+                    assetName = value!;
+                  },
+                ),
+                const SizedBox(height: Spacing.small1),
+                DigitOnlyTextField(
+                  suffix: 'ml',
+                  label: 'Tamanho',
+                  autofocus: true,
+                  onChanged: (value) {
+                    amount = value;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Insira um tamanho.';
+                    }
+
+                    return null;
+                  },
+                ),
+                const SizedBox(height: Spacing.small2),
+                Button.ok(
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      context.read<WaterContainerController>().add(
+                            WaterContainerEntity(
+                              assetName: assetName!,
+                              amount: amount!,
+                            ),
+                          );
+
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+    icon: CommunityMaterialIcons.shape_polygon_plus,
+    label: 'Criar novo recipiente',
+  );
+}
+
+BottomSheetItemTile _getRemoveCustomAmount(BuildContext context) {
+  return BottomSheetItemTile(
+    onTap: () {
+      Navigator.pop(context);
+
+      final formKey = GlobalKey<FormState>();
+      int? amount;
+
+      BottomSheets.normal(
+        context: context,
+        title: 'Remover quantidade customizada',
+        content: Form(
+          key: formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Spacing.small2,
+              vertical: Spacing.medium,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                DigitOnlyTextField(
+                  suffix: 'ml',
+                  label: 'Quantidade',
+                  autofocus: true,
+                  onChanged: (value) {
+                    amount = value;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Insira uma quantidade.';
+                    }
+
+                    return null;
+                  },
+                ),
+                const SizedBox(height: Spacing.small2),
+                Button.ok(
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      if (amount! >= 3500) {
+                        await Dialogs.confirm(
+                          title: 'Remover quantidade?',
+                          text: 'Esta quantidade excede 3500ml',
+                          onYes: () => context.read<WaterController>().removeDrankToday(
+                                amount: amount!,
+                                context: context,
+                              ),
+                          onNo: () => Navigator.pop(context),
+                          cancelText: 'Cancelar',
+                          confirmText: 'Sim, remover',
+                          context: context,
+                        );
+
+                        SnackBarMessage.undo(
+                          context: context,
+                          text: '${amount!} ml removido',
+                          onPressed: () async {
+                            await context.read<WaterController>().addDrankToday(
+                                  amount: amount!,
+                                  context: context,
+                                );
+                          },
+                        );
+
+                        Navigator.pop(context);
+                        return;
+                      }
+
+                      await context.read<WaterController>().removeDrankToday(
+                            amount: amount!,
+                            context: context,
+                          );
+
+                      SnackBarMessage.undo(
+                        context: context,
+                        text: '${amount!} ml removido',
+                        onPressed: () async {
+                          await context.read<WaterController>().addDrankToday(
+                                amount: amount!,
+                                context: context,
+                              );
+                        },
+                      );
+
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+    icon: CommunityMaterialIcons.water_minus_outline,
+    label: 'Remover quantidade customizada',
+  );
+}
+
+BottomSheetItemTile _getAddCustomAmount(BuildContext context) {
+  return BottomSheetItemTile(
+    onTap: () {
+      Navigator.pop(context);
+
+      final formKey = GlobalKey<FormState>();
+      int? amount;
+
+      BottomSheets.normal(
+        context: context,
+        title: 'Adicionar quantidade customizada',
+        content: Form(
+          key: formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Spacing.small2,
+              vertical: Spacing.medium,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                DigitOnlyTextField(
+                  suffix: 'ml',
+                  label: 'Quantidade',
+                  autofocus: true,
+                  onChanged: (value) {
+                    amount = value;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Insira uma quantidade.';
+                    }
+
+                    return null;
+                  },
+                ),
+                const SizedBox(height: Spacing.small2),
+                Button.ok(
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      if (amount! >= 3500) {
+                        await Dialogs.confirm(
+                          title: 'Adicionar quantidade?',
+                          text: 'Esta quantidade excede 3500ml',
+                          onYes: () async {
+                            await context.read<WaterController>().addDrankToday(
+                                  amount: amount!,
+                                  context: context,
+                                );
+                          },
+                          onNo: () => Navigator.pop(context),
+                          cancelText: 'Cancelar',
+                          confirmText: 'Sim, adicionar',
+                          context: context,
+                        );
+
+                        SnackBarMessage.undo(
+                          context: context,
+                          text: '${amount!} ml adicionado',
+                          onPressed: () async {
+                            await context.read<WaterController>().removeDrankToday(
+                                  amount: amount!,
+                                  context: context,
+                                );
+                          },
+                        );
+
+                        Navigator.pop(context);
+                        return;
+                      }
+
+                      await context.read<WaterController>().addDrankToday(
+                            amount: amount!,
+                            context: context,
+                          );
+
+                      SnackBarMessage.undo(
+                        context: context,
+                        text: '${amount!} ml adicionado',
+                        onPressed: () async {
+                          await context.read<WaterController>().removeDrankToday(
+                                amount: amount!,
+                                context: context,
+                              );
+                        },
+                      );
+
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+    icon: CommunityMaterialIcons.water_plus_outline,
+    label: 'Adicionar quantidade customizada',
+  );
+}
+
 class _ContainerButton extends StatelessWidget {
   final WaterContainerEntity container;
   final VoidCallback onTap;
   final VoidCallback onLongPress;
 
   const _ContainerButton({
+    // ignore: unused_element
+    super.key,
     required this.container,
     required this.onTap,
     required this.onLongPress,

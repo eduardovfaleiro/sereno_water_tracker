@@ -35,6 +35,10 @@ abstract class Themes {
       fontWeight: FontWeight.bold,
       fontSize: FontSize.small2,
     ),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.buttonBorderRadius)),
+  );
+
+  static final BottomSheetThemeData _bottomSheetThemeData = BottomSheetThemeData(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.borderRadius)),
   );
 
@@ -153,5 +157,6 @@ abstract class Themes {
     elevatedButtonTheme: _elevatedButtonThemeData,
     popupMenuTheme: _popupMenuButtonTheme,
     snackBarTheme: _snackBarThemeData,
+    bottomSheetTheme: _bottomSheetThemeData,
   );
 }

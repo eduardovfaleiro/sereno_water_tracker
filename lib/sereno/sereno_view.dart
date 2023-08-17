@@ -6,6 +6,7 @@ import '../core/theme/themes.dart';
 import '../water/domain/entities/user_entity.dart';
 import '../water/presentation/controllers/water_controller.dart';
 import '../water/presentation/controllers/water_form_controller.dart';
+import '../water/presentation/views/home/home_view.dart';
 import '../water/presentation/views/water/water_view.dart';
 import '../water/presentation/views/water_form/water_form_view.dart';
 
@@ -23,7 +24,7 @@ class _SerenoViewState extends State<SerenoView> {
   void initState() {
     super.initState();
 
-    if (_initialRoute == '/water') {
+    if (_initialRoute == '/home') {
       context.read<WaterController>().init();
     } else {
       context.read<WaterFormController>().init(
@@ -35,7 +36,7 @@ class _SerenoViewState extends State<SerenoView> {
 
   String get _initialRoute {
     if (widget.isSessionValid) {
-      return '/water';
+      return '/home';
     }
 
     return '/waterForm';
@@ -48,6 +49,7 @@ class _SerenoViewState extends State<SerenoView> {
       routes: {
         '/waterForm': (context) => const WaterFormView(),
         '/water': (_) => const WaterView(),
+        '/home': (_) => const HomeView(),
       },
       debugShowCheckedModeBanner: false,
       theme: Themes.dark,

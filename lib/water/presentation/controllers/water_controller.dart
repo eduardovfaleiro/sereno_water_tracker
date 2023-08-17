@@ -42,6 +42,8 @@ class WaterController extends ChangeNotifier {
         drinkAgainIn = nextTimeToDrink.difference(DateTime.now());
         yield drinkAgainIn;
       }
+
+      nextTimeToDrink = await getResult(_timeToDrinkAgainServiceImp.getNext());
     }
   }
 
@@ -54,6 +56,19 @@ class WaterController extends ChangeNotifier {
     }
 
     waterData.drankToday += amount;
+
+    notifyListeners();
+  }
+
+  Future<void> removeDrankToday({required int amount, required BuildContext context}) async {
+    final drankTodayResult = await _waterRepository.removeDrankToday(amount);
+
+    if (drankTodayResult is Failure) {
+      SnackBarMessage.error(drankTodayResult as Failure, context: context);
+      return;
+    }
+
+    waterData.drankToday -= amount;
 
     notifyListeners();
   }

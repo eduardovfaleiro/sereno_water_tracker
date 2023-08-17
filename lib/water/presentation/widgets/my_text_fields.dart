@@ -22,6 +22,7 @@ class DigitOnlyTextField extends StatelessWidget {
     return TextFormField(
       autofocus: autofocus,
       keyboardType: const TextInputType.numberWithOptions(),
+      keyboardAppearance: Brightness.dark,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       validator: (value) {
         if (validator != null) {

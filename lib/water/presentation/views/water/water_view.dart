@@ -37,7 +37,7 @@ class WaterView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const SizedBox(height: Spacing.big),
+                    const SizedBox(height: Spacing.medium2),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: Spacing.medium, horizontal: Spacing.normal),
                       child: Center(
@@ -78,6 +78,9 @@ class WaterView extends StatelessWidget {
                               child: CircularProgressIndicator(
                                 value: controller.waterData.drankTodayPercentage,
                                 strokeWidth: Spacing.small1,
+                                color: controller.waterData.drankTodayPercentage > 1
+                                    ? const Color.fromARGB(255, 158, 206, 255)
+                                    : MyColors.lightBlue,
                               ),
                             ),
                           ],
@@ -181,10 +184,16 @@ class _InfoBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 icon,
                 const SizedBox(width: Spacing.small2),
-                Text(leftText, style: const TextStyle(color: MyColors.lightGrey))
+                Text(
+                  leftText,
+                  softWrap: true,
+                  style: const TextStyle(color: MyColors.lightGrey),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ],
             ),
             rightText,
