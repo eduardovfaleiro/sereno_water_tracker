@@ -28,10 +28,10 @@ class _WaterFormViewState extends State<WaterFormView> {
   void initState() {
     super.initState();
 
+    final controller = context.read<WaterFormController>();
+
     _showGoBackButton = ValueNotifier(false);
     _showFinishButton = ValueNotifier(false);
-
-    final controller = context.read<WaterFormController>();
 
     controller.pageController.addListener(() {
       _showGoBackButton.value = controller.pageController.page! > 0.5;
@@ -137,11 +137,8 @@ class _WaterFormViewState extends State<WaterFormView> {
                                             value.fold((failure) {
                                               SnackBarMessage.error(failure, context: context);
                                             }, (success) {
-                                              SnackBarMessage.normal(
-                                                  context: context, text: 'Data saved successfully!');
-
                                               context.read<WaterController>().init().whenComplete(() {
-                                                Navigator.pushNamed(context, '/water');
+                                                Navigator.pushNamed(context, '/home');
                                               });
                                             });
                                           });

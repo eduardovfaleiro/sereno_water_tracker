@@ -11,6 +11,7 @@ import '../../water/domain/usecases/validate_session_usecase.dart';
 import '../../water/presentation/controllers/water_container_controller.dart';
 import '../../water/presentation/controllers/water_controller.dart';
 import '../../water/presentation/controllers/water_form_controller.dart';
+import '../../water/presentation/controllers/water_settings_controller.dart';
 import '../core.dart';
 
 void initGetIt() {
@@ -75,5 +76,9 @@ void initGetIt() {
 
   getIt.registerLazySingleton<WaterContainerController>(() {
     return WaterContainerController(getIt());
+  });
+
+  getIt.registerLazySingleton<WaterSettingsController>(() {
+    return WaterSettingsController(getIt(), getIt());
   });
 }

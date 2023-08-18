@@ -16,7 +16,11 @@ class WaterFormController extends ChangeNotifier {
   final UserRepository _userRepository;
   final WaterRepository _waterRepository;
 
-  WaterFormController(this._userRepository, this._waterRepository, this._calculateWaterDataUseCase);
+  late bool isLoading;
+
+  WaterFormController(this._userRepository, this._waterRepository, this._calculateWaterDataUseCase) {
+    isLoading = false;
+  }
 
   late UserEntity user;
   late int dailyDrinkingFrequency;
@@ -24,6 +28,8 @@ class WaterFormController extends ChangeNotifier {
   final pageController = PageController();
 
   Future<void> init({UserEntity? userEntity, int? dailyDrinkingFrequency}) async {
+    isLoading = true;
+
     if (userEntity != null) {
       user = userEntity.copyWith();
     } else {
@@ -66,6 +72,8 @@ class WaterFormController extends ChangeNotifier {
 
       this.dailyDrinkingFrequency = dailyDrinkingFrequencyResult;
     }
+
+    isLoading = false;
   }
 
   void setWeight(int value) {

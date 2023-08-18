@@ -9,6 +9,7 @@ import 'water/presentation/controllers/water_controller.dart';
 import 'water/presentation/controllers/water_form_controller.dart';
 
 import 'core/core.dart';
+import 'water/presentation/controllers/water_settings_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +37,9 @@ void main() async {
         ),
         ChangeNotifierProvider<WaterContainerController>(
           create: (context) => getIt<WaterContainerController>(),
+        ),
+        ChangeNotifierProvider<WaterSettingsController>(
+          create: (context) => getIt<WaterSettingsController>(),
         ),
       ],
       child: SerenoView(isSessionValid: isSessionValid),

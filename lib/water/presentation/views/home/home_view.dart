@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../settings/settings_view.dart';
 import '../water/water_view.dart';
-import '../water_form/water_form_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -14,7 +14,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final List<Widget> _pages = [
     const WaterView(),
-    const WaterFormView(),
+    const SettingsView(),
   ];
 
   int _selectedPage = 0;
@@ -24,6 +24,7 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       body: _pages[_selectedPage],
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedPage,
         onTap: (index) {
           setState(() {
             _selectedPage = index;
