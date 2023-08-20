@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../core/core.dart';
 import '../core/theme/themes.dart';
 import '../water/domain/entities/user_entity.dart';
-import '../water/presentation/controllers/water_controller.dart';
 import '../water/presentation/controllers/water_form_controller.dart';
 import '../water/presentation/views/home/home_view.dart';
 import '../water/presentation/views/settings/settings_view.dart';
@@ -26,9 +25,7 @@ class _SerenoViewState extends State<SerenoView> {
   void initState() {
     super.initState();
 
-    if (_initialRoute == '/home') {
-      context.read<WaterController>().init();
-    } else {
+    if (_initialRoute == '/waterForm') {
       context.read<WaterFormController>().init(
             userEntity: UserEntity.normal(),
             dailyDrinkingFrequency: DEFAULT_DAILY_DRINKING_FREQUENCY,

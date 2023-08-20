@@ -24,8 +24,8 @@ abstract class Dialogs {
   static Future<void> confirm({
     required String title,
     required String text,
-    required VoidCallback onYes,
-    required VoidCallback onNo,
+    required Function() onYes,
+    required Function() onNo,
     required BuildContext context,
     String? confirmText,
     String? cancelText,
@@ -37,8 +37,14 @@ abstract class Dialogs {
         return ConfirmDialog(
           title: title,
           text: text,
-          onNo: onNo,
-          onYes: onYes,
+          onNo: () async {
+            await onNo();
+            return false;
+          },
+          onYes: () async {
+            await onYes();
+            return true;
+          },
           confirmText: confirmText,
           cancelText: cancelText,
         );

@@ -2,8 +2,13 @@ import 'package:flutter/cupertino.dart';
 
 class TimerWidget extends StatelessWidget {
   final Stream<Duration> stream;
+  final Duration defaultTime;
 
-  const TimerWidget({super.key, required this.stream});
+  const TimerWidget({
+    super.key,
+    required this.stream,
+    this.defaultTime = Duration.zero,
+  });
 
   String getText({required Duration duration}) {
     if (duration.inSeconds < 60) {
@@ -26,7 +31,7 @@ class TimerWidget extends StatelessWidget {
       stream: stream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Text('00:00');
+          return Text(getText(duration: defaultTime));
         }
 
         return Text(getText(duration: snapshot.data!));

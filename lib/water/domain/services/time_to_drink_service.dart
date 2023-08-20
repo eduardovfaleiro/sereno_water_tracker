@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import '../../../core/core.dart';
 import '../../data/repositories/water_repository.dart';
 
-abstract class TimeToDrinkService {
+abstract class TimeToDrinkAgainService {
   Future<Result<DateTime>> getNext();
   Future<String> getDrinkAgainInStr();
   Future<Duration> getDrinkAgainIn();
 }
 
-class TimeToDrinkAgainServiceImp implements TimeToDrinkService {
+class TimeToDrinkAgainServiceImp implements TimeToDrinkAgainService {
   final WaterRepository _waterRepository;
 
   TimeToDrinkAgainServiceImp(this._waterRepository);
@@ -29,7 +29,7 @@ class TimeToDrinkAgainServiceImp implements TimeToDrinkService {
       (timeOfDay) {
         final timeToDrink = now.copyWith(hour: timeOfDay.hour, minute: timeOfDay.minute);
 
-        if (now.isAfter(timeToDrink)) {
+        if (now.isSameOrAfter(timeToDrink)) {
           return timeToDrink.addDays(1);
         }
 

@@ -14,25 +14,6 @@ class SleepHabitWaterForm extends StatefulWidget {
 }
 
 class _SleepHabitWaterFormState extends State<SleepHabitWaterForm> {
-  late int _wakeUpHour;
-  late int _wakeUpMin;
-
-  late int _sleepHour;
-  late int _sleepMin;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final controller = context.read<WaterFormController>();
-
-    _wakeUpHour = controller.user.wakeUpTime.hour;
-    _wakeUpMin = controller.user.wakeUpTime.minute;
-
-    _sleepHour = controller.user.sleeptime.hour;
-    _sleepMin = controller.user.sleeptime.minute;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<WaterFormController>(
@@ -72,14 +53,10 @@ class _SleepHabitWaterFormState extends State<SleepHabitWaterForm> {
                   icon: CupertinoIcons.sun_max,
                   initialTime: controller.user.wakeUpTime,
                   onHourChanged: (value) {
-                    _wakeUpHour = value;
-
-                    controller.setWakeUpTime(TimeOfDay(hour: _wakeUpHour, minute: _wakeUpMin));
+                    controller.setWakeUpTime(value);
                   },
                   onMinuteChanged: (value) {
-                    _wakeUpMin = value;
-
-                    controller.setWakeUpTime(TimeOfDay(hour: _wakeUpHour, minute: _wakeUpMin));
+                    controller.setWakeUpTime(value);
                   },
                 ),
               ),
@@ -107,14 +84,10 @@ class _SleepHabitWaterFormState extends State<SleepHabitWaterForm> {
                   initialTime: controller.user.sleeptime,
                   icon: CupertinoIcons.moon,
                   onHourChanged: (value) {
-                    _sleepHour = value;
-
-                    controller.setSleeptime(TimeOfDay(hour: _sleepHour, minute: _sleepMin));
+                    controller.setSleeptime(value);
                   },
                   onMinuteChanged: (value) {
-                    _sleepMin = value;
-
-                    controller.setSleeptime(TimeOfDay(hour: _sleepHour, minute: _sleepMin));
+                    controller.setSleeptime(value);
                   },
                 ),
               ),

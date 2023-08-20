@@ -8,6 +8,7 @@ abstract class SnackBarMessage {
     required String text,
     required VoidCallback onPressed,
   }) async {
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(text),
@@ -22,6 +23,7 @@ abstract class SnackBarMessage {
     required BuildContext context,
     required String text,
   }) {
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(text),

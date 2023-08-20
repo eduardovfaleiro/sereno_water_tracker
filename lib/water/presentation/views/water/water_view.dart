@@ -5,12 +5,38 @@ import 'package:provider/provider.dart';
 import '../../../../core/theme/themes.dart';
 import '../../controllers/water_controller.dart';
 import '../../utils/dialogs.dart';
+import '../../utils/snackbar_message.dart';
 import '../../widgets/gradient_container.dart';
-import '../../widgets/timer.dart';
 import 'water_container_widget.dart';
 
-class WaterView extends StatelessWidget {
+class WaterView extends StatefulWidget {
   const WaterView({super.key});
+
+  @override
+  State<WaterView> createState() => _WaterViewState();
+}
+
+class _WaterViewState extends State<WaterView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<WaterController>().init();
+  }
+
+  String getText({required Duration duration}) {
+    if (duration.inSeconds < 60) {
+      if (duration.inSeconds == 1) {
+        return '${duration.inSeconds} segundo';
+      }
+
+      return '${duration.inSeconds} segundos';
+    }
+
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +146,12 @@ class WaterView extends StatelessWidget {
                           ),
                           backgroundColor: const Color(0xff233444),
                           leftText: 'Beber novamente em',
-                          rightText: TimerWidget(stream: controller.startTimerToDrink()),
+                          rightText: ValueListenableBuilder(
+                            valueListenable: controller.timerToDrinkService.timeToDrink,
+                            builder: (context, timeToDrink, _) {
+                              return Text(getText(duration: timeToDrink));
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -131,7 +162,7 @@ class WaterView extends StatelessWidget {
                       child: WaterContainerWidget(
                         onContainerTap: (amount) async {
                           if (amount > 3500) {
-                            return await Dialogs.confirm(
+                            await Dialogs.confirm(
                               title: 'Adicionar quantidade?',
                               text: 'Este recipiente excede 3500 ml',
                               onYes: () => controller.addDrankToday(amount: amount, context: context),
@@ -140,9 +171,22 @@ class WaterView extends StatelessWidget {
                               confirmText: 'Sim, adicionar',
                               context: context,
                             );
+
+                            return;
                           }
 
-                          controller.addDrankToday(amount: amount, context: context);
+                          await controller.addDrankToday(amount: amount, context: context);
+
+                          SnackBarMessage.undo(
+                            context: context,
+                            text: '$amount ml adicionado',
+                            onPressed: () async {
+                              controller.removeDrankToday(
+                                amount: amount,
+                                context: context,
+                              );
+                            },
+                          );
                         },
                       )),
                 ],

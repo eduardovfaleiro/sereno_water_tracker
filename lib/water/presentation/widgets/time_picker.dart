@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/themes.dart';
 
-class TimePicker extends StatelessWidget {
+class TimePicker extends StatefulWidget {
   final bool loopHour;
   final int maxHours;
   final int minHours;
   final TimeOfDay initialTime;
   final IconData? icon;
-  final void Function(int) onHourChanged;
-  final void Function(int) onMinuteChanged;
+  final void Function(TimeOfDay) onHourChanged;
+  final void Function(TimeOfDay) onMinuteChanged;
 
   const TimePicker({
     super.key,
@@ -22,6 +22,22 @@ class TimePicker extends StatelessWidget {
     required this.onMinuteChanged,
     this.loopHour = false,
   });
+
+  @override
+  State<TimePicker> createState() => _TimePickerState();
+}
+
+class _TimePickerState extends State<TimePicker> {
+  late int _hour;
+  late int _minute;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _hour = widget.initialTime.hour;
+    _minute = widget.initialTime.minute;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,15 +60,22 @@ class TimePicker extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: CupertinoPicker(
                 magnification: 1.05,
-                scrollController: FixedExtentScrollController(initialItem: initialTime.hour),
+                scrollController: FixedExtentScrollController(initialItem: widget.initialTime.hour),
                 selectionOverlay: null,
                 offAxisFraction: -0.3,
                 onSelectedItemChanged: (value) {
-                  onHourChanged(value);
+                  _hour = value;
+
+                  final updatedTimeOfDay = TimeOfDay(
+                    hour: _hour,
+                    minute: _minute,
+                  );
+
+                  widget.onHourChanged(updatedTimeOfDay);
                 },
                 itemExtent: 35,
                 diameterRatio: 0.8,
-                children: List.generate(maxHours, (index) {
+                children: List.generate(widget.maxHours, (index) {
                   return Center(child: Text(index.toString().padLeft(2, '0')));
                 }),
               ),
@@ -61,13 +84,20 @@ class TimePicker extends StatelessWidget {
               width: Spacing.huge,
               alignment: Alignment.centerLeft,
               child: CupertinoPicker(
-                scrollController: FixedExtentScrollController(initialItem: initialTime.minute),
+                scrollController: FixedExtentScrollController(initialItem: widget.initialTime.minute),
                 selectionOverlay: null,
                 magnification: 1.05,
                 offAxisFraction: 0.3,
                 diameterRatio: 0.8,
                 onSelectedItemChanged: (value) {
-                  onMinuteChanged(value);
+                  _minute = value;
+
+                  final updatedTimeOfDay = TimeOfDay(
+                    hour: _hour,
+                    minute: _minute,
+                  );
+
+                  widget.onMinuteChanged(updatedTimeOfDay);
                 },
                 itemExtent: 35,
                 children: List.generate(
@@ -80,13 +110,13 @@ class TimePicker extends StatelessWidget {
                 ),
               ),
             ),
-            if (icon != null)
+            if (widget.icon != null)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(width: Spacing.small3),
-                  Icon(icon),
+                  Icon(widget.icon),
                 ],
               ),
           ],

@@ -11,16 +11,13 @@ import '../../domain/usecases/calculate_water_data_usecase.dart';
 import '../utils/snackbar_message.dart';
 
 class WaterFormController extends ChangeNotifier {
-  final CalculateWaterDataUseCase _calculateWaterDataUseCase;
-
   final UserRepository _userRepository;
   final WaterRepository _waterRepository;
+  final CalculateWaterDataUseCase _calculateWaterDataUseCase;
 
-  late bool isLoading;
+  bool isLoading = false;
 
-  WaterFormController(this._userRepository, this._waterRepository, this._calculateWaterDataUseCase) {
-    isLoading = false;
-  }
+  WaterFormController(this._userRepository, this._waterRepository, this._calculateWaterDataUseCase);
 
   late UserEntity user;
   late int dailyDrinkingFrequency;

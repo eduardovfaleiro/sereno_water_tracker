@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../settings/settings_view.dart';
-import '../water/water_view.dart';
+import '../../controllers/home_controller.dart';
+import '../../controllers/water_settings_controller.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -12,37 +13,54 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final List<Widget> _pages = [
-    const WaterView(),
-    const SettingsView(),
-  ];
-
-  int _selectedPage = 0;
+  @override
+  void initState() {
+    super.initState();
+    context.read<HomeController>().init();
+    context.read<WaterSettingsController>().init();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_selectedPage],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedPage,
-        onTap: (index) {
-          setState(() {
-            _selectedPage = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            label: 'Água',
-            icon: Icon(CupertinoIcons.drop),
-            activeIcon: Icon(CupertinoIcons.drop_fill),
+    return Consumer<HomeController>(
+      builder: (context, controller, _) {
+        return Scaffold(
+          body: PageView(
+            controller: controller.pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            onPageChanged: (page) {
+              setState(() {
+                controller.selectedPage = page;
+              });
+            },
+            children: controller.pages,
           ),
-          BottomNavigationBarItem(
-            label: 'Configurações',
-            icon: Icon(CupertinoIcons.gear),
-            activeIcon: Icon(CupertinoIcons.gear_alt_fill),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: controller.selectedPage,
+            onTap: (index) {
+              setState(() {
+                controller.pageController.animateToPage(
+                  index,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInOut,
+                );
+              });
+            },
+            items: const [
+              BottomNavigationBarItem(
+                label: 'Água',
+                icon: Icon(CupertinoIcons.drop),
+                activeIcon: Icon(CupertinoIcons.drop_fill),
+              ),
+              BottomNavigationBarItem(
+                label: 'Configurações',
+                icon: Icon(CupertinoIcons.gear),
+                activeIcon: Icon(CupertinoIcons.gear_alt_fill),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

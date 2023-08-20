@@ -95,3 +95,52 @@ abstract class Button {
     );
   }
 }
+
+class CancelButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String text;
+
+  const CancelButton({
+    super.key,
+    required this.onPressed,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {},
+      child: CupertinoButton(
+        pressedOpacity: null,
+        child: Text(
+          text,
+          style: const TextStyle(color: Color.fromARGB(255, 224, 73, 65)),
+        ),
+        onPressed: () => onPressed(),
+      ),
+    );
+  }
+}
+
+class ConfirmButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String text;
+
+  const ConfirmButton({
+    super.key,
+    required this.onPressed,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {},
+      child: CupertinoButton(
+        pressedOpacity: null,
+        onPressed: () => onPressed(),
+        child: Text(text),
+      ),
+    );
+  }
+}

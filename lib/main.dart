@@ -4,6 +4,7 @@ import 'core/functions/validate_session.dart';
 import 'core/init_functions/init_app.dart';
 import 'sereno/sereno_view.dart';
 import 'water/domain/entities/user_entity.dart';
+import 'water/presentation/controllers/home_controller.dart';
 import 'water/presentation/controllers/water_container_controller.dart';
 import 'water/presentation/controllers/water_controller.dart';
 import 'water/presentation/controllers/water_form_controller.dart';
@@ -40,6 +41,9 @@ void main() async {
         ),
         ChangeNotifierProvider<WaterSettingsController>(
           create: (context) => getIt<WaterSettingsController>(),
+        ),
+        ChangeNotifierProvider<HomeController>(
+          create: (context) => getIt<HomeController>(),
         ),
       ],
       child: SerenoView(isSessionValid: isSessionValid),

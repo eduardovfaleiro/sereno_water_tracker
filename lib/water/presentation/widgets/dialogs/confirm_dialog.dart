@@ -8,8 +8,8 @@ class ConfirmDialog extends StatelessWidget {
   final String title;
   final String text;
 
-  final VoidCallback onNo;
-  final VoidCallback onYes;
+  final Function() onNo;
+  final Function() onYes;
 
   final String? confirmText;
   final String? cancelText;
@@ -39,13 +39,19 @@ class ConfirmDialog extends StatelessWidget {
       actions: [
         Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Divider(height: 0, thickness: 1, color: MyColors.darkGrey1),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Button.cancel(onPressed: () => onNo(), text: cancelText ?? 'Ainda não'),
+                  child: Button.cancel(
+                    onPressed: () {
+                      onNo();
+                    },
+                    text: cancelText ?? 'Ainda não',
+                  ),
                 ),
                 const SizedBox(width: Spacing.small),
                 Expanded(
