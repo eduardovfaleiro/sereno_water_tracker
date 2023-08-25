@@ -13,15 +13,6 @@ class IconNotFoundException implements Exception {
   }
 }
 
-class WaterContainerNotFoundException implements Exception {
-  final String message;
-
-  WaterContainerNotFoundException(this.message);
-
-  @override
-  String toString() {
-    return message.toString();
-  }
-}
+class WaterContainerNotFoundException implements Exception {}
 
 class LeftException implements Exception {}

@@ -4,6 +4,7 @@ import 'core/functions/validate_session.dart';
 import 'core/init_functions/init_app.dart';
 import 'sereno/sereno_view.dart';
 import 'water/domain/entities/user_entity.dart';
+import 'water/domain/services/reset_data_with_timer_service.dart';
 import 'water/presentation/controllers/home_controller.dart';
 import 'water/presentation/controllers/water_container_controller.dart';
 import 'water/presentation/controllers/water_controller.dart';
@@ -16,6 +17,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await initApp();
+
+  getIt<ResetDataWithTimerService>().startWater();
   bool isSessionValid = await validateSession();
 
   if (isSessionValid) {

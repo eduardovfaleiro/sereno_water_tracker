@@ -7,6 +7,7 @@ import '../datasources/water_container_datasource.dart';
 abstract class WaterContainerRepository {
   Future<Result<List<WaterContainerEntity>>> getAll();
   Future<Result<void>> add(WaterContainerEntity value);
+  Future<Result<void>> remove(WaterContainerEntity value);
 }
 
 class WaterContainerRepositoryImp implements WaterContainerRepository {
@@ -23,5 +24,11 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
   @override
   Future<Result<void>> add(WaterContainerEntity value) async {
     return Right(await _waterContainerDataSource.add(value));
+  }
+
+  // TODO: test
+  @override
+  Future<Result<void>> remove(WaterContainerEntity value) async {
+    return Right(await _waterContainerDataSource.remove(value));
   }
 }

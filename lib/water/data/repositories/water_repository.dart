@@ -12,6 +12,7 @@ abstract class WaterRepository {
   Future<Result<double>> getDrankTodayPercentage();
   Future<Result<WaterDataEntity>> getWaterData();
   Future<Result<List<TimeOfDay>>> getTimesToDrink();
+  Future<Result<DateTime?>> getLastDrankTodayReset();
 
   Future<Result<void>> setDrankToday(int value);
   Future<Result<void>> addDrankToday(int value);
@@ -19,6 +20,7 @@ abstract class WaterRepository {
   Future<Result<void>> setDailyDrinkingGoal(int value);
   Future<Result<void>> setDailyFrequency(int value);
   Future<Result<void>> setWaterData(WaterDataEntity value);
+  Future<Result<void>> setLastDrankTodayReset(DateTime value);
 }
 
 class WaterRepositoryImp implements WaterRepository {
@@ -50,6 +52,16 @@ class WaterRepositoryImp implements WaterRepository {
   }
 
   @override
+  Future<Result<DateTime?>> getLastDrankTodayReset() async {
+    return Right(await _waterDataSource.getLastDrankTodayReset());
+  }
+
+  @override
+  Future<Result<void>> setLastDrankTodayReset(DateTime value) async {
+    return Right(await _waterDataSource.setLastDrankTodayReset(value));
+  }
+
+  @override
   Future<Result<List<TimeOfDay>>> getTimesToDrink() async {
     return Right(await _waterDataSource.getTimesToDrink());
   }
@@ -66,6 +78,10 @@ class WaterRepositoryImp implements WaterRepository {
 
   @override
   Future<Result<void>> setDrankToday(int value) async {
+    if (value.isNegative) {
+      return Left(NegativeNumberFailure());
+    }
+
     return Right(await _waterDataSource.setDrankToday(value));
   }
 
@@ -78,6 +94,12 @@ class WaterRepositoryImp implements WaterRepository {
   @override
   Future<Result<void>> removeDrankToday(int value) async {
     int drankToday = await _waterDataSource.getDrankToday();
+    int newDrankToday = drankToday - value;
+
+    if (newDrankToday.isNegative) {
+      return Left(NegativeNumberFailure());
+    }
+
     return Right(await _waterDataSource.setDrankToday(drankToday - value));
   }
 

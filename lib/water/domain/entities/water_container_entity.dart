@@ -16,4 +16,14 @@ class WaterContainerEntity {
     required this.assetName,
     required this.amount,
   });
+
+  @override
+  bool operator ==(covariant WaterContainerEntity other) {
+    if (identical(this, other)) return true;
+
+    return other.assetName == assetName && other.amount == amount;
+  }
+
+  @override
+  int get hashCode => assetName.hashCode ^ amount.hashCode;
 }

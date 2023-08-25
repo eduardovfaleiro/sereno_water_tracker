@@ -74,7 +74,37 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
                           _ContainerButton(
                             key: globalKey,
                             container: controller.waterContainers[i],
-                            onLongPress: () {},
+                            onLongPress: () {
+                              BottomSheets.items(
+                                items: [
+                                  BottomSheetItemTile(
+                                    onTap: () async {
+                                      await context.read<WaterController>().removeDrankToday(
+                                            amount: controller.waterContainers[i].amount,
+                                            context: context,
+                                          );
+
+                                      Navigator.pop(context);
+                                    },
+                                    label: 'Remover água bebida',
+                                    icon: CommunityMaterialIcons.water_minus_outline,
+                                  ),
+                                  BottomSheetItemTile(
+                                    onTap: () async {
+                                      await controller.remove(
+                                        context: context,
+                                        waterContainerEntity: controller.waterContainers[i],
+                                      );
+
+                                      Navigator.pop(context);
+                                    },
+                                    label: 'Excluir recipiente',
+                                    icon: Icons.delete_outline,
+                                  ),
+                                ],
+                                context: context,
+                              );
+                            },
                             onTap: () {
                               widget.onContainerTap(controller.waterContainers[i].amount);
                             },
@@ -245,52 +275,10 @@ BottomSheetItemTile _getRemoveCustomAmount(BuildContext context) {
                 Button.ok(
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
-                      if (amount! >= 3500) {
-                        await Dialogs.confirm(
-                          title: 'Remover quantidade?',
-                          text: 'Esta quantidade excede 3500ml',
-                          onYes: () => context.read<WaterController>().removeDrankToday(
-                                amount: amount!,
-                                context: context,
-                              ),
-                          onNo: () => Navigator.pop(context),
-                          cancelText: 'Cancelar',
-                          confirmText: 'Sim, remover',
-                          context: context,
-                        );
-
-                        SnackBarMessage.undo(
-                          context: context,
-                          text: '${amount!} ml removido',
-                          onPressed: () async {
-                            await context.read<WaterController>().addDrankToday(
-                                  amount: amount!,
-                                  context: context,
-                                );
-                          },
-                        );
-
-                        Navigator.pop(context);
-                        return;
-                      }
-
-                      await context.read<WaterController>().removeDrankToday(
-                            amount: amount!,
+                      context.read<WaterContainerController>().removeWaterDrankToday(
                             context: context,
+                            amount: amount!,
                           );
-
-                      SnackBarMessage.undo(
-                        context: context,
-                        text: '${amount!} ml removido',
-                        onPressed: () async {
-                          await context.read<WaterController>().addDrankToday(
-                                amount: amount!,
-                                context: context,
-                              );
-                        },
-                      );
-
-                      Navigator.pop(context);
                     }
                   },
                 ),

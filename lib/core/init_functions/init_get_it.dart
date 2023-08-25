@@ -5,9 +5,11 @@ import '../../water/data/datasources/water_datasource.dart';
 import '../../water/data/repositories/user_repository.dart';
 import '../../water/data/repositories/water_container_repository.dart';
 import '../../water/data/repositories/water_repository.dart';
+import '../../water/domain/services/reset_data_with_timer_service.dart';
 import '../../water/domain/services/time_to_drink_service.dart';
 import '../../water/domain/services/timer_to_drink_service.dart';
 import '../../water/domain/usecases/calculate_water_data_usecase.dart';
+import '../../water/domain/usecases/handle_reset_water_data_usecase.dart';
 import '../../water/domain/usecases/validate_session_usecase.dart';
 import '../../water/presentation/controllers/home_controller.dart';
 import '../../water/presentation/controllers/water_container_controller.dart';
@@ -60,6 +62,10 @@ void initGetIt() {
     return ValidateSessionUseCaseImp(getIt(), getIt());
   });
 
+  getIt.registerLazySingleton<HandleResetWaterDataUseCase>(() {
+    return HandleResetWaterDataUseCaseImp(getIt());
+  });
+
   // Services
 
   getIt.registerLazySingleton<TimeToDrinkAgainService>(() {
@@ -68,6 +74,10 @@ void initGetIt() {
 
   getIt.registerLazySingleton<TimerToDrinkService>(() {
     return TimerToDrinkServiceImp(getIt());
+  });
+
+  getIt.registerLazySingleton<ResetDataWithTimerService>(() {
+    return ResetDataWithTimerServiceImp(getIt());
   });
 
   // Controllers
@@ -81,7 +91,7 @@ void initGetIt() {
   });
 
   getIt.registerLazySingleton<WaterContainerController>(() {
-    return WaterContainerController(getIt());
+    return WaterContainerController(getIt(), getIt());
   });
 
   getIt.registerLazySingleton<WaterSettingsController>(() {

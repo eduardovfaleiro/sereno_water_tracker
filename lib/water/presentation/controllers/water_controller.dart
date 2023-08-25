@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/core.dart';
@@ -35,10 +36,10 @@ class WaterController extends ChangeNotifier {
   }
 
   Future<void> addDrankToday({required int amount, required BuildContext context}) async {
-    final drankTodayResult = await _waterRepository.addDrankToday(amount);
+    final drankTodayResult = await getResult(_waterRepository.addDrankToday(amount));
 
     if (drankTodayResult is Failure) {
-      SnackBarMessage.error(drankTodayResult as Failure, context: context);
+      SnackBarMessage.error(drankTodayResult, context: context);
       return;
     }
 
@@ -47,16 +48,23 @@ class WaterController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> removeDrankToday({required int amount, required BuildContext context}) async {
-    final drankTodayResult = await _waterRepository.removeDrankToday(amount);
+  Future<Result<void>> removeDrankToday({required int amount, required BuildContext context}) async {
+    final drankTodayResult = await getResult(_waterRepository.removeDrankToday(amount));
+
+    if (drankTodayResult is NegativeNumberFailure) {
+      SnackBarMessage.normal(context: context, text: 'Água bebida não pode ser negativa');
+      return Left(drankTodayResult);
+    }
 
     if (drankTodayResult is Failure) {
-      SnackBarMessage.error(drankTodayResult as Failure, context: context);
-      return;
+      SnackBarMessage.error(drankTodayResult, context: context);
+      return Left(drankTodayResult);
     }
 
     waterData.drankToday -= amount;
 
     notifyListeners();
+
+    return const Right(null);
   }
 }

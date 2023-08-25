@@ -16,6 +16,7 @@ const String WEEKLY_WORKOUT_DAYS = 'weeklyWorkoutDays';
 const String WEIGHT = 'weight';
 const String SLEEPTIME = 'sleeptime';
 const String WAKE_UP_TIME = 'wakeUpTime';
+const String LAST_WATER_DRANK_TODAY_RESET = 'lastWaterDrankTodayReset';
 
 // Default
 const int DEFAULT_WEIGHT = 70;

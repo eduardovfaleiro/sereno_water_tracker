@@ -31,3 +31,8 @@ class TypeFailure implements Failure {
   @override
   String get message => error.toString();
 }
+
+class NegativeNumberFailure implements Failure {
+  @override
+  String get message => "Number shouldn't be negative";
+}
