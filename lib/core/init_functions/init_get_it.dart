@@ -12,13 +12,14 @@ import '../../water/domain/usecases/calculate_water_data_usecase.dart';
 import '../../water/domain/usecases/handle_reset_water_data_usecase.dart';
 import '../../water/domain/usecases/validate_session_usecase.dart';
 import '../../water/presentation/controllers/home_controller.dart';
+import '../../water/presentation/controllers/reminder_controller.dart';
 import '../../water/presentation/controllers/water_container_controller.dart';
 import '../../water/presentation/controllers/water_controller.dart';
 import '../../water/presentation/controllers/water_form_controller.dart';
 import '../../water/presentation/controllers/water_settings_controller.dart';
 import '../core.dart';
 
-void initGetIt() {
+Future<void> initGetIt() async {
   // Hive
   getIt.registerLazySingleton<HiveInterface>(() {
     return Hive;
@@ -100,5 +101,9 @@ void initGetIt() {
 
   getIt.registerLazySingleton<HomeController>(() {
     return HomeController();
+  });
+
+  getIt.registerLazySingleton<ReminderController>(() {
+    return ReminderController(getIt());
   });
 }

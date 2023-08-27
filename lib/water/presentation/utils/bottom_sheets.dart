@@ -67,7 +67,7 @@ abstract class BottomSheets {
                     ),
                     child: Row(
                       children: [
-                        Icon(items[index].icon),
+                        items[index].icon,
                         const SizedBox(width: Spacing.small1),
                         Text(items[index].label),
                       ],
@@ -85,7 +85,7 @@ abstract class BottomSheets {
 
 class BottomSheetItemTile {
   final VoidCallback onTap;
-  final IconData icon;
+  final Icon icon;
   final String label;
 
   BottomSheetItemTile({

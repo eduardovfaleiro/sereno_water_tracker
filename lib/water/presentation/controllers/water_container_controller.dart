@@ -4,7 +4,6 @@ import '../../../core/core.dart';
 import '../../data/repositories/water_container_repository.dart';
 import '../../data/repositories/water_repository.dart';
 import '../../domain/entities/water_container_entity.dart';
-import '../utils/dialogs.dart';
 import '../utils/snackbar_message.dart';
 
 class WaterContainerController extends ChangeNotifier {
@@ -30,36 +29,6 @@ class WaterContainerController extends ChangeNotifier {
     waterContainers.add(waterContainerEntity);
 
     notifyListeners();
-  }
-
-  Future<void> removeWaterDrankToday({required BuildContext context, required int amount}) async {
-    var result = await getResult(_waterRepository.removeDrankToday(amount));
-
-    if (result is Failure) {
-      SnackBarMessage.error(result, context: context);
-      return;
-    }
-
-    if (amount >= 3500) {
-      await Dialogs.confirm(
-        title: 'Remover quantidade?',
-        text: 'Esta quantidade excede 3500ml',
-        onYes: () async {
-          _handleRemoveWater(amount: amount, context: context);
-        },
-        onNo: () => Navigator.pop(context),
-        cancelText: 'Cancelar',
-        confirmText: 'Sim, remover',
-        context: context,
-      );
-
-      Navigator.pop(context);
-      return;
-    }
-
-    _handleRemoveWater(amount: amount, context: context);
-
-    Navigator.pop(context);
   }
 
   Future<void> remove({

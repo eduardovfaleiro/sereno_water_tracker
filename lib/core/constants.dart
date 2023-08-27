@@ -28,8 +28,6 @@ const TimeOfDay DEFAULT_SLEEPTIME = TimeOfDay(hour: 23, minute: 0);
 // Utils
 
 const String LOCALE = 'pt_BR';
-const String MASS_UNIT_K = 'kg';
-const String VOLUME_UNIT_M = 'ml';
 const int DECIMALS = 1;
 const int DAYS_IN_A_WEEK = 7;
 const int MAX_DAILY_DRINKING_FREQUENCY = 10;

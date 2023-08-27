@@ -16,6 +16,8 @@ abstract class WaterDataSource {
   Future<void> setDailyDrinkingFrequency(int value);
   Future<void> setTimesToDrink(List<TimeOfDay> value);
   Future<void> setLastDrankTodayReset(DateTime value);
+
+  Future<void> deleteTimeToDrink(TimeOfDay value);
 }
 
 class HiveWaterDataSource implements WaterDataSource {
@@ -78,5 +80,11 @@ class HiveWaterDataSource implements WaterDataSource {
   @override
   Future<void> setLastDrankTodayReset(DateTime value) async {
     return _box.put(LAST_WATER_DRANK_TODAY_RESET, value);
+  }
+
+  @override
+  Future<void> deleteTimeToDrink(TimeOfDay value) {
+    // TODO: implement deleteTimeToDrink
+    throw UnimplementedError();
   }
 }

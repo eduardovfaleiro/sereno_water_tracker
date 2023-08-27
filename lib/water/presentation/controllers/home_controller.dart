@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../views/reminder/reminder_view.dart';
 import '../views/settings/water_settings_view.dart';
 import '../views/water/water_view.dart';
 
@@ -15,7 +16,11 @@ class HomeController extends ChangeNotifier {
 
     selectedPage = 0;
     pageController = PageController();
-    pages = [const WaterView(), const WaterSettingsView()];
+    pages = [
+      const WaterView(),
+      const WaterSettingsView(),
+      const ReminderView(),
+    ];
 
     isLoading = false;
   }

@@ -87,7 +87,7 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
                                       Navigator.pop(context);
                                     },
                                     label: 'Remover água bebida',
-                                    icon: CommunityMaterialIcons.water_minus_outline,
+                                    icon: const Icon(CommunityMaterialIcons.water_minus_outline),
                                   ),
                                   BottomSheetItemTile(
                                     onTap: () async {
@@ -99,7 +99,7 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
                                       Navigator.pop(context);
                                     },
                                     label: 'Excluir recipiente',
-                                    icon: Icons.delete_outline,
+                                    icon: const Icon(Icons.delete_outline),
                                   ),
                                 ],
                                 context: context,
@@ -229,7 +229,7 @@ BottomSheetItemTile _getAddWaterContainerItemTile(BuildContext context) {
         ),
       );
     },
-    icon: CommunityMaterialIcons.shape_polygon_plus,
+    icon: const Icon(CommunityMaterialIcons.shape_polygon_plus),
     label: 'Criar novo recipiente',
   );
 }
@@ -275,7 +275,7 @@ BottomSheetItemTile _getRemoveCustomAmount(BuildContext context) {
                 Button.ok(
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
-                      context.read<WaterContainerController>().removeWaterDrankToday(
+                      context.read<WaterController>().removeDrankToday(
                             context: context,
                             amount: amount!,
                           );
@@ -288,7 +288,7 @@ BottomSheetItemTile _getRemoveCustomAmount(BuildContext context) {
         ),
       );
     },
-    icon: CommunityMaterialIcons.water_minus_outline,
+    icon: const Icon(CommunityMaterialIcons.water_minus_outline),
     label: 'Remover quantidade customizada',
   );
 }
@@ -391,7 +391,7 @@ BottomSheetItemTile _getAddCustomAmount(BuildContext context) {
         ),
       );
     },
-    icon: CommunityMaterialIcons.water_plus_outline,
+    icon: const Icon(CommunityMaterialIcons.water_plus_outline),
     label: 'Adicionar quantidade customizada',
   );
 }
@@ -402,7 +402,6 @@ class _ContainerButton extends StatelessWidget {
   final VoidCallback onLongPress;
 
   const _ContainerButton({
-    // ignore: unused_element
     super.key,
     required this.container,
     required this.onTap,
