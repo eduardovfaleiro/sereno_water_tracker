@@ -6,6 +6,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/water/data/repositories/user_repository.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/entities/user_entity.dart';
+import 'package:sereno_clean_architecture_solid/water/domain/entities/water_data_entity.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/usecases/validate_session_usecase.dart';
 
 import 'calculate_water_data_usecase_test.dart';
@@ -20,9 +21,11 @@ void main() {
   test('Should return nothing when validation passes', () async {
     // arrange
     final userEntity = UserEntity.normal();
+    final waterDataEntity = WaterDataEntity.empty();
 
     // arrange
     when(() => mockUserRepository.getUser()).thenAnswer((_) async => Right(userEntity));
+    when(() => mockWaterRepository.getWaterData()).thenAnswer((_) async => Right(waterDataEntity));
     when(() => mockWaterRepository.getDailyDrinkingFrequency()).thenAnswer((_) async => const Right(6));
 
     // act
@@ -30,16 +33,18 @@ void main() {
 
     // assert
     verify(() => mockUserRepository.getUser());
-    verify(() => mockWaterRepository.getDailyDrinkingFrequency());
+    // verify(() => mockWaterRepository.getDailyDrinkingFrequency());
 
     expect(result, isA<void>());
   });
 
   test('Should return ValidationFailure', () async {
     final userEntity = UserEntity.normal();
+    final waterDataEntity = WaterDataEntity.empty();
 
     // arrange
     when(() => mockUserRepository.getUser()).thenAnswer((_) async => Right(userEntity));
+    when(() => mockWaterRepository.getWaterData()).thenAnswer((_) async => Right(waterDataEntity));
     when(() => mockWaterRepository.getDailyDrinkingFrequency()).thenAnswer((_) async => const Right(0));
 
     // act

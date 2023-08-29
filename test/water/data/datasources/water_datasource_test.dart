@@ -13,19 +13,25 @@ void main() {
   final dataSource = HiveWaterDataSource(mockHiveInterface);
 
   group('deleteTimeToDrink', () {
-    const timeToDrink = TimeOfDay(hour: 0, minute: 0);
+    const timeToDrink = TimeOfDay(hour: 10, minute: 0);
+
+    List<String> timesToDrink = ['00:00', '10:00', '13:30'];
 
     test('Should make call for hive to delete time to drink', () async {
       // arrange
       when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
-      when(() => mockBox.delete(any())).thenAnswer((_) async {});
+      when(() => mockBox.get(any())).thenReturn(timesToDrink);
+      when(() => mockBox.put(any(), any())).thenAnswer((_) async {});
 
       // act
       await dataSource.deleteTimeToDrink(timeToDrink);
 
       // assert
-      verify(() => mockHiveInterface.box(WATER));
-      verify(() => mockBox.delete(timeToDrink));
+      verifyInOrder([
+        () => mockHiveInterface.box(WATER),
+        () => mockBox.get(TIMES_TO_DRINK),
+        () => mockBox.put(TIMES_TO_DRINK, ['00:00', '13:30']),
+      ]);
     });
   });
 }

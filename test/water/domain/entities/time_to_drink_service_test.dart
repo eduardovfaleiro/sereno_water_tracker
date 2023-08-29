@@ -1,3 +1,4 @@
+import 'package:dart_date/dart_date.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,21 +16,21 @@ void main() {
 
   group('getNext', () {
     test('Should return the closest date (now the before)', () async {
-      Clock.fixed(DateTime(2000).copyWith(hour: 23, minute: 55));
+      withClock(Clock.fixed(DateTime(2000).copyWith(hour: 23, minute: 55)), () async {
+        List<TimeOfDay> timesToDrink = [
+          const TimeOfDay(hour: 12, minute: 0),
+          const TimeOfDay(hour: 13, minute: 15),
+          const TimeOfDay(hour: 15, minute: 32),
+          const TimeOfDay(hour: 1, minute: 0),
+          const TimeOfDay(hour: 20, minute: 2),
+        ];
 
-      List<TimeOfDay> timesToDrink = [
-        const TimeOfDay(hour: 12, minute: 0),
-        const TimeOfDay(hour: 13, minute: 15),
-        const TimeOfDay(hour: 15, minute: 32),
-        const TimeOfDay(hour: 1, minute: 0),
-        const TimeOfDay(hour: 20, minute: 2),
-      ];
+        when(() => mockWaterRepository.getTimesToDrink()).thenAnswer((_) async => Right(timesToDrink));
 
-      when(() => mockWaterRepository.getTimesToDrink()).thenAnswer((_) async => Right(timesToDrink));
+        final result = await getResult(service.getNext());
 
-      final result = await getResult(service.getNext());
-
-      expect(result, const TimeOfDay(hour: 1, minute: 0));
+        expect(result, DateTime(2000).addDays(1).copyWith(hour: 1, minute: 0));
+      });
     });
 
     test('Should return the closest date (now the same)', () async {
@@ -46,26 +47,26 @@ void main() {
 
         final result = await getResult(service.getNext());
 
-        expect(result, DateTime(1800, 2, 2, 20, 2));
+        expect(result, DateTime(1800, 2, 3, 1));
       });
     });
 
     test('Should return the closest date (now after)', () async {
-      Clock.fixed(DateTime(1800).copyWith(hour: 15, minute: 33));
+      withClock(Clock.fixed(DateTime(1800).copyWith(hour: 15, minute: 33)), () async {
+        List<TimeOfDay> timesToDrink = [
+          const TimeOfDay(hour: 12, minute: 0),
+          const TimeOfDay(hour: 13, minute: 15),
+          const TimeOfDay(hour: 15, minute: 32),
+          const TimeOfDay(hour: 1, minute: 0),
+          const TimeOfDay(hour: 20, minute: 2),
+        ];
 
-      List<TimeOfDay> timesToDrink = [
-        const TimeOfDay(hour: 12, minute: 0),
-        const TimeOfDay(hour: 13, minute: 15),
-        const TimeOfDay(hour: 15, minute: 32),
-        const TimeOfDay(hour: 1, minute: 0),
-        const TimeOfDay(hour: 20, minute: 2),
-      ];
+        when(() => mockWaterRepository.getTimesToDrink()).thenAnswer((_) async => Right(timesToDrink));
 
-      when(() => mockWaterRepository.getTimesToDrink()).thenAnswer((_) async => Right(timesToDrink));
+        final result = await getResult(service.getNext());
 
-      final result = await getResult(service.getNext());
-
-      expect(result, const TimeOfDay(hour: 20, minute: 2));
+        expect(result, DateTime(1800).copyWith(hour: 20, minute: 2));
+      });
     });
   });
 }

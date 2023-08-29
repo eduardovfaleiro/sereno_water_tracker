@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:dart_date/dart_date.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class TimeToDrinkAgainServiceImp implements TimeToDrinkAgainService {
 
   @override
   Future<Result<DateTime>> getNext() async {
-    final now = DateTime.now();
+    final now = clock.now();
 
     final timesToDrinkResult = await getResult(_waterRepository.getTimesToDrink());
     if (timesToDrinkResult is Failure) return Left(timesToDrinkResult);
@@ -42,7 +43,7 @@ class TimeToDrinkAgainServiceImp implements TimeToDrinkAgainService {
 
   @override
   Future<String> getDrinkAgainInStr() async {
-    final now = DateTime.now();
+    final now = clock.now();
     Duration drinkAgainIn = await getDrinkAgainIn();
 
     DateTime timeToDrink = now.add(drinkAgainIn);
@@ -57,7 +58,7 @@ class TimeToDrinkAgainServiceImp implements TimeToDrinkAgainService {
 
     DateTime nextTimeToDrink = nextTimeToDrinkResult;
 
-    final now = DateTime.now();
+    final now = clock.now();
 
     var currentDateTime = DateTime(1).copyWith(
       hour: now.hour,

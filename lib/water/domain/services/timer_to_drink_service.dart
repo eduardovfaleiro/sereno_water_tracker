@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 
 import 'time_to_drink_service.dart';
@@ -37,7 +38,7 @@ class TimerToDrinkServiceImp implements TimerToDrinkService {
     DateTime nextTimeToDrink = await getResult(_timeToDrinkAgainService.getNext());
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      Duration difference = nextTimeToDrink.difference(DateTime.now());
+      Duration difference = nextTimeToDrink.difference(clock.now());
 
       if (difference.isNegative) {
         nextTimeToDrink = await getResult(_timeToDrinkAgainService.getNext());

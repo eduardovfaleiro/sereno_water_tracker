@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:dart_date/dart_date.dart';
 
 import '../../../core/core.dart';
@@ -18,7 +19,7 @@ class HandleResetWaterDataUseCaseImp implements HandleResetWaterDataUseCase {
 
     if (lastTimeReset == null) {
       var setLastDrankTodayResetResult = await getResult(
-        _waterRepository.setLastDrankTodayReset(DateTime.now()),
+        _waterRepository.setLastDrankTodayReset(clock.now()),
       );
 
       if (setLastDrankTodayResetResult is Failure) {
@@ -36,7 +37,7 @@ class HandleResetWaterDataUseCaseImp implements HandleResetWaterDataUseCase {
       }
 
       var setLastDrankTodayResetResult = await getResult(
-        _waterRepository.setLastDrankTodayReset(DateTime.now()),
+        _waterRepository.setLastDrankTodayReset(clock.now()),
       );
 
       if (setLastDrankTodayResetResult is Failure) {
