@@ -6,8 +6,8 @@ import '../../../../core/theme/themes.dart';
 import '../../controllers/water_form_controller.dart';
 import '../../widgets/number_picker.dart';
 
-class WeeklyWorkoutDaysWaterForm extends StatelessWidget {
-  const WeeklyWorkoutDaysWaterForm({super.key});
+class InfoWaterForm extends StatelessWidget {
+  const InfoWaterForm({super.key});
 
   @override
   Widget build(BuildContext context) {

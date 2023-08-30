@@ -25,7 +25,7 @@ class _ReminderViewState extends State<ReminderView> {
     context.read<ReminderController>().init();
   }
 
-  late TimeOfDay _timeOfDay;
+  late TimeOfDay _newReminder;
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +33,12 @@ class _ReminderViewState extends State<ReminderView> {
       builder: (context, controller, _) {
         return SafeArea(
           child: Container(
+            padding: const EdgeInsets.only(top: Spacing.huge),
             child: ListView.builder(
               itemCount: controller.reminders.length,
               itemBuilder: (context, index) {
                 TimeOfDay reminder = controller.reminders[index];
+                _newReminder = TimeOfDay(hour: reminder.hour, minute: reminder.minute);
 
                 return Column(
                   children: [
@@ -62,15 +64,15 @@ class _ReminderViewState extends State<ReminderView> {
                                   child: TimePicker(
                                     initialTime: reminder,
                                     onHourChanged: (value) {
-                                      _timeOfDay = value;
+                                      _newReminder = value;
                                     },
                                     onMinuteChanged: (value) {
-                                      _timeOfDay = value;
+                                      _newReminder = value;
                                     },
                                   ),
                                 ),
                                 Button.ok(onPressed: () async {
-                                  await controller.update(key: reminder, newValue: _timeOfDay);
+                                  await controller.update(key: reminder, newValue: _newReminder);
                                   Navigator.pop(context);
                                 }),
                               ],
@@ -82,7 +84,7 @@ class _ReminderViewState extends State<ReminderView> {
                         controller.delete(timeToDrink: reminder, context: context);
                       },
                     ),
-                    const Divider(height: 0, thickness: 1, color: MyColors.darkGrey),
+                    const SizedBox(height: Spacing.small1),
                   ],
                 );
               },

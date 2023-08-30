@@ -26,6 +26,11 @@ class ReminderController extends ChangeNotifier {
 
     if (updateTimeToDrinkResult is Failure) throw Exception();
 
+    var getTimesToDrinkResult = await getResult(_waterRepository.getTimesToDrink());
+    if (getTimesToDrinkResult is Failure) throw Exception();
+
+    reminders = getTimesToDrinkResult;
+
     notifyListeners();
   }
 

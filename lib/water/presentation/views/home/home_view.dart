@@ -59,8 +59,8 @@ class _HomeViewState extends State<HomeView> {
               ),
               BottomNavigationBarItem(
                 label: 'Notificações',
-                icon: Icon(Icons.notifications_outlined),
-                activeIcon: Icon(Icons.notifications),
+                icon: Icon(CupertinoIcons.bell),
+                activeIcon: Icon(CupertinoIcons.bell_fill),
               ),
             ],
           ),

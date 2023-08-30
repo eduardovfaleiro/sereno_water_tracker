@@ -112,7 +112,8 @@ class _WaterViewState extends State<WaterView> {
                     ),
                   ),
                   const SizedBox(height: Spacing.medium2),
-                  Padding(
+                  Container(
+                    width: MediaQuery.of(context).size.width,
                     padding: const EdgeInsets.symmetric(horizontal: Spacing.small3),
                     child: Column(
                       children: [
@@ -134,8 +135,13 @@ class _WaterViewState extends State<WaterView> {
                             size: Spacing.normal,
                           ),
                           leftText: 'Água bebida hoje',
-                          rightText: Text('${controller.waterData.drankToday} ml',
-                              style: const TextStyle(color: MyColors.lightBlue)),
+                          rightText: Text(
+                            '${controller.waterData.drankToday} ml',
+                            style: const TextStyle(color: MyColors.lightBlue),
+                            softWrap: true,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                         const SizedBox(height: Spacing.small1),
                         _InfoBar(
@@ -165,7 +171,22 @@ class _WaterViewState extends State<WaterView> {
                             await Dialogs.confirm(
                               title: 'Adicionar quantidade?',
                               text: 'Este recipiente excede 3500 ml',
-                              onYes: () => controller.addDrankToday(amount: amount, context: context),
+                              onYes: () async {
+                                await controller.addDrankToday(amount: amount, context: context);
+
+                                SnackBarMessage.undo(
+                                  context: context,
+                                  text: '$amount ml adicionado',
+                                  onPressed: () async {
+                                    controller.removeDrankToday(
+                                      amount: amount,
+                                      context: context,
+                                    );
+                                  },
+                                );
+
+                                Navigator.pop(context);
+                              },
                               onNo: () => Navigator.pop(context),
                               cancelText: 'Cancelar',
                               confirmText: 'Sim, adicionar',
@@ -237,7 +258,12 @@ class _InfoBar extends StatelessWidget {
                 ),
               ],
             ),
-            rightText,
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: rightText,
+              ),
+            ),
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/functions/time_of_day_utils.dart';
@@ -12,23 +13,34 @@ class ReminderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: Spacing.small1, horizontal: Spacing.small3),
+    return Container(
+      decoration: BoxDecoration(
+        color: MyColors.darkGrey,
+        borderRadius: BorderRadius.circular(Sizes.borderRadius),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: Spacing.small, horizontal: Spacing.small3),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(TimeOfDayUtils(reminder).toLiteral()),
           Row(
             children: [
+              const VerticalDivider(
+                width: 0,
+                thickness: 1,
+                color: Colors.amber,
+                indent: 20,
+                endIndent: 0,
+              ),
               IconButton(
-                icon: const Icon(Icons.edit, color: MyColors.lightGrey),
+                icon: const Icon(CupertinoIcons.pencil, color: MyColors.lightGrey),
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   onEdit();
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.delete, color: MyColors.lightGrey),
+                icon: const Icon(CupertinoIcons.delete, color: MyColors.lightGrey),
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   onDelete();
