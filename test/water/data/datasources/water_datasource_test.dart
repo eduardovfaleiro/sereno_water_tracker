@@ -34,4 +34,26 @@ void main() {
       ]);
     });
   });
+
+  group('updateTimeToDrink', () {
+    List<String> timesToDrink = ['11:30', '00:00', '9:00'];
+
+    test('Should update the time to drink accordingly to the key passed', () async {
+      // arrange
+      when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
+      when(() => mockBox.get(any())).thenReturn(timesToDrink);
+
+      // act
+      await dataSource.updateTimeToDrink(
+        const TimeOfDay(hour: 0, minute: 0),
+        const TimeOfDay(hour: 16, minute: 0),
+      );
+
+      // assert
+      verifyInOrder([
+        () => mockHiveInterface.box(WATER),
+        () => mockBox.get(TIMES_TO_DRINK),
+      ]);
+    });
+  });
 }

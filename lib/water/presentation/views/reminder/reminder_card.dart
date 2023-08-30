@@ -6,8 +6,9 @@ import '../../../../core/theme/themes.dart';
 class ReminderCard extends StatelessWidget {
   final TimeOfDay reminder;
   final Function() onDelete;
+  final Function() onEdit;
 
-  const ReminderCard(this.reminder, {super.key, required this.onDelete});
+  const ReminderCard(this.reminder, {super.key, required this.onDelete, required this.onEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,9 @@ class ReminderCard extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.edit, color: MyColors.lightGrey),
                 padding: EdgeInsets.zero,
-                onPressed: () {},
+                onPressed: () {
+                  onEdit();
+                },
               ),
               IconButton(
                 icon: const Icon(Icons.delete, color: MyColors.lightGrey),

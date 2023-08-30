@@ -18,6 +18,7 @@ abstract class WaterDataSource {
   Future<void> setLastDrankTodayReset(DateTime value);
 
   Future<void> deleteTimeToDrink(TimeOfDay value);
+  Future<void> updateTimeToDrink(TimeOfDay key, TimeOfDay newValue);
 }
 
 class HiveWaterDataSource implements WaterDataSource {
@@ -85,5 +86,14 @@ class HiveWaterDataSource implements WaterDataSource {
     timesToDrink.removeWhere((timeToDrink) => timeToDrink == TimeOfDayUtils(value).toLiteral());
 
     return _hiveInterface.box(WATER).put(TIMES_TO_DRINK, timesToDrink);
+  }
+
+  @override
+  Future<void> updateTimeToDrink(TimeOfDay key, TimeOfDay newValue) async {
+    List<String> timesToDrink = _hiveInterface.box(WATER).get(TIMES_TO_DRINK);
+
+    int index = timesToDrink.indexWhere((timeToDrink) => timeToDrink == TimeOfDayUtils(key).toLiteral());
+
+    timesToDrink[index] = TimeOfDayUtils(newValue).toLiteral();
   }
 }

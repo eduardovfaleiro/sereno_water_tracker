@@ -33,17 +33,16 @@ void main() {
 
     // assert
     verify(() => mockUserRepository.getUser());
-    // verify(() => mockWaterRepository.getDailyDrinkingFrequency());
+    verify(() => mockWaterRepository.getWaterData());
 
     expect(result, isA<void>());
   });
 
   test('Should return ValidationFailure', () async {
-    final userEntity = UserEntity.normal();
     final waterDataEntity = WaterDataEntity.empty();
 
     // arrange
-    when(() => mockUserRepository.getUser()).thenAnswer((_) async => Right(userEntity));
+    when(() => mockUserRepository.getUser()).thenAnswer((_) async => Left(ValidationFailure('')));
     when(() => mockWaterRepository.getWaterData()).thenAnswer((_) async => Right(waterDataEntity));
     when(() => mockWaterRepository.getDailyDrinkingFrequency()).thenAnswer((_) async => const Right(0));
 
@@ -52,7 +51,6 @@ void main() {
 
     // assert
     verify(() => mockUserRepository.getUser());
-    verify(() => mockWaterRepository.getDailyDrinkingFrequency());
 
     expect(expectedResult, isA<ValidationFailure>());
   });

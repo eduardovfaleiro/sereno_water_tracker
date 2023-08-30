@@ -21,6 +21,14 @@ class ReminderController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> update({required TimeOfDay key, required TimeOfDay newValue}) async {
+    var updateTimeToDrinkResult = await getResult(_waterRepository.updateTimeToDrink(key, newValue));
+
+    if (updateTimeToDrinkResult is Failure) throw Exception();
+
+    notifyListeners();
+  }
+
   Future<void> delete({
     required TimeOfDay timeToDrink,
     required BuildContext context,

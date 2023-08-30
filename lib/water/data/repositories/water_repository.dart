@@ -23,6 +23,7 @@ abstract class WaterRepository {
   Future<Result<void>> setLastDrankTodayReset(DateTime value);
 
   Future<Result<void>> deleteTimeToDrink(TimeOfDay value);
+  Future<Result<void>> updateTimeToDrink(TimeOfDay key, TimeOfDay newValue);
 }
 
 class WaterRepositoryImp implements WaterRepository {
@@ -135,5 +136,10 @@ class WaterRepositoryImp implements WaterRepository {
   @override
   Future<Result<void>> deleteTimeToDrink(TimeOfDay value) async {
     return Right(await _waterDataSource.deleteTimeToDrink(value));
+  }
+
+  @override
+  Future<Result<void>> updateTimeToDrink(TimeOfDay key, TimeOfDay newValue) async {
+    return Right(await _waterDataSource.updateTimeToDrink(key, newValue));
   }
 }

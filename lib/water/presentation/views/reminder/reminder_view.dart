@@ -5,6 +5,9 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/theme/themes.dart';
 import '../../controllers/reminder_controller.dart';
+import '../../utils/bottom_sheets.dart';
+import '../../widgets/buttons/button.dart';
+import '../../widgets/time_picker.dart';
 import 'reminder_card.dart';
 
 class ReminderView extends StatefulWidget {
@@ -22,6 +25,8 @@ class _ReminderViewState extends State<ReminderView> {
     context.read<ReminderController>().init();
   }
 
+  late TimeOfDay _timeOfDay;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ReminderController>(
@@ -37,6 +42,42 @@ class _ReminderViewState extends State<ReminderView> {
                   children: [
                     ReminderCard(
                       reminder,
+                      onEdit: () {
+                        BottomSheets.normal(
+                          context: context,
+                          title: 'Alterar lembrete',
+                          content: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.only(
+                              left: Spacing.small3,
+                              right: Spacing.small3,
+                              bottom: Spacing.small3,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  height: MediaQuery.of(context).size.height * .2,
+                                  child: TimePicker(
+                                    initialTime: reminder,
+                                    onHourChanged: (value) {
+                                      _timeOfDay = value;
+                                    },
+                                    onMinuteChanged: (value) {
+                                      _timeOfDay = value;
+                                    },
+                                  ),
+                                ),
+                                Button.ok(onPressed: () async {
+                                  await controller.update(key: reminder, newValue: _timeOfDay);
+                                  Navigator.pop(context);
+                                }),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                       onDelete: () {
                         controller.delete(timeToDrink: reminder, context: context);
                       },
