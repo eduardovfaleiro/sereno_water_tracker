@@ -33,7 +33,11 @@ class _ReminderViewState extends State<ReminderView> {
       builder: (context, controller, _) {
         return SafeArea(
           child: Container(
-            padding: const EdgeInsets.only(top: Spacing.huge),
+            padding: const EdgeInsets.only(
+              top: Spacing.huge,
+              left: Spacing.small2,
+              right: Spacing.small2,
+            ),
             child: ListView.builder(
               itemCount: controller.reminders.length,
               itemBuilder: (context, index) {

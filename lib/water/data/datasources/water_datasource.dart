@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 import '../../../core/core.dart';
+import '../../../core/error/exceptions.dart';
 import '../../../core/functions/time_of_day_utils.dart';
 
 abstract class WaterDataSource {
@@ -19,6 +20,7 @@ abstract class WaterDataSource {
 
   Future<void> deleteTimeToDrink(TimeOfDay value);
   Future<void> updateTimeToDrink(TimeOfDay key, TimeOfDay newValue);
+  Future<void> addTimeToDrink(TimeOfDay value);
 }
 
 class HiveWaterDataSource implements WaterDataSource {
@@ -95,5 +97,18 @@ class HiveWaterDataSource implements WaterDataSource {
     int index = timesToDrink.indexWhere((timeToDrink) => timeToDrink == TimeOfDayUtils(key).toLiteral());
 
     timesToDrink[index] = TimeOfDayUtils(newValue).toLiteral();
+  }
+
+  @override
+  Future<void> addTimeToDrink(TimeOfDay value) async {
+    List<String> timesToDrink = _hiveInterface.box(WATER).get(TIMES_TO_DRINK);
+
+    if (timesToDrink.map((e) => TimeOfDayUtils.fromString(e)).contains(value)) {
+      throw TimeToDrinkAlreadyExistsException();
+    }
+
+    timesToDrink.add(TimeOfDayUtils(value).toLiteral());
+
+    _hiveInterface.box(WATER).put(TIMES_TO_DRINK, timesToDrink);
   }
 }

@@ -22,16 +22,15 @@ class ReminderCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(TimeOfDayUtils(reminder).toLiteral()),
           Row(
             children: [
-              const VerticalDivider(
-                width: 0,
-                thickness: 1,
-                color: Colors.amber,
-                indent: 20,
-                endIndent: 0,
-              ),
+              const Icon(Icons.timer, size: Spacing.normal, color: Color.fromARGB(255, 107, 107, 107)),
+              const SizedBox(width: Spacing.small1),
+              Text(TimeOfDayUtils(reminder).toLiteral()),
+            ],
+          ),
+          Row(
+            children: [
               IconButton(
                 icon: const Icon(CupertinoIcons.pencil, color: MyColors.lightGrey),
                 padding: EdgeInsets.zero,

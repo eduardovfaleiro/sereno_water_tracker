@@ -16,3 +16,5 @@ class IconNotFoundException implements Exception {
 class WaterContainerNotFoundException implements Exception {}
 
 class LeftException implements Exception {}
+
+class TimeToDrinkAlreadyExists implements Exception {}
