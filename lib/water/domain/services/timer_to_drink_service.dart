@@ -31,14 +31,16 @@ class TimerToDrinkServiceImp implements TimerToDrinkService {
 
   @override
   void start() async {
+    DateTime nextTimeToDrink = await getResult(_timeToDrinkAgainService.getNext());
+
     if (_timer != null) {
       _timer!.cancel();
     }
 
-    DateTime nextTimeToDrink = await getResult(_timeToDrinkAgainService.getNext());
-
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      Duration difference = nextTimeToDrink.difference(clock.now());
+      final now = clock.now();
+
+      Duration difference = nextTimeToDrink.difference(now);
 
       if (difference.isNegative) {
         nextTimeToDrink = await getResult(_timeToDrinkAgainService.getNext());

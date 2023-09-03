@@ -10,8 +10,20 @@ import '../../utils/dialogs.dart';
 import '../../widgets/buttons/button.dart';
 import '../../widgets/time_picker.dart';
 
-class WaterSettingsView extends StatelessWidget {
+class WaterSettingsView extends StatefulWidget {
   const WaterSettingsView({super.key});
+
+  @override
+  State<WaterSettingsView> createState() => _WaterSettingsViewState();
+}
+
+class _WaterSettingsViewState extends State<WaterSettingsView> {
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<WaterSettingsController>().init();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,16 +71,14 @@ class WaterSettingsView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text('Peso'),
-                            Text('${!controller.isDataLoaded ? MIN_WEIGHT : controller.userEntity.weight}kg'),
+                            Text('${controller.isLoading ? MIN_WEIGHT : controller.userEntity.weight}kg'),
                           ],
                         ),
                         const SizedBox(height: Spacing.small2),
                         Slider(
                           min: MIN_WEIGHT.toDouble(),
                           max: MAX_WEIGHT.toDouble(),
-                          value: !controller.isDataLoaded
-                              ? MIN_WEIGHT.toDouble()
-                              : controller.userEntity.weight.toDouble(),
+                          value: controller.isLoading ? MIN_WEIGHT.toDouble() : controller.userEntity.weight.toDouble(),
                           onChanged: (value) {
                             controller.setWeight(value.toInt());
                           },
@@ -85,13 +95,13 @@ class WaterSettingsView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text('Dias de treino por semana'),
-                            Text('${!controller.isDataLoaded ? 0 : controller.userEntity.weeklyWorkoutDays} dias'),
+                            Text('${controller.isLoading ? 0 : controller.userEntity.weeklyWorkoutDays} dias'),
                           ],
                         ),
                         const SizedBox(height: Spacing.small2),
                         Slider(
                           max: DAYS_IN_A_WEEK.toDouble(),
-                          value: !controller.isDataLoaded ? 0 : controller.userEntity.weeklyWorkoutDays.toDouble(),
+                          value: controller.isLoading ? 0 : controller.userEntity.weeklyWorkoutDays.toDouble(),
                           onChanged: (value) {
                             controller.setWeeklyWorkoutDays(value.toInt());
                           },
@@ -109,7 +119,7 @@ class WaterSettingsView extends StatelessWidget {
                           children: [
                             const Text('Quantas vezes beber por dia'),
                             Text(
-                              '${!controller.isDataLoaded ? MIN_DAILY_DRINKING_FREQUENCY : controller.waterDataEntity.dailyDrinkingFrequency} vezes',
+                              '${controller.isLoading ? MIN_DAILY_DRINKING_FREQUENCY : controller.waterDataEntity.dailyDrinkingFrequency} vezes',
                             ),
                           ],
                         ),
@@ -117,7 +127,7 @@ class WaterSettingsView extends StatelessWidget {
                         Slider(
                           min: MIN_DAILY_DRINKING_FREQUENCY.toDouble(),
                           max: MAX_DAILY_DRINKING_FREQUENCY.toDouble(),
-                          value: !controller.isDataLoaded
+                          value: controller.isLoading
                               ? MIN_DAILY_DRINKING_FREQUENCY.toDouble()
                               : controller.waterDataEntity.dailyDrinkingFrequency.toDouble(),
                           onChanged: (value) {
@@ -141,7 +151,7 @@ class WaterSettingsView extends StatelessWidget {
                           alignment: Alignment.center,
                           child: TimePicker(
                             icon: CupertinoIcons.sun_max,
-                            initialTime: !controller.isDataLoaded
+                            initialTime: controller.isLoading
                                 ? const TimeOfDay(hour: 0, minute: 0)
                                 : controller.userEntity.wakeUpTime,
                             onHourChanged: (value) {
@@ -168,7 +178,7 @@ class WaterSettingsView extends StatelessWidget {
                           height: MediaQuery.of(context).size.height * 0.2,
                           alignment: Alignment.center,
                           child: TimePicker(
-                            initialTime: !controller.isDataLoaded
+                            initialTime: controller.isLoading
                                 ? const TimeOfDay(hour: 0, minute: 0)
                                 : controller.userEntity.sleeptime,
                             icon: CupertinoIcons.moon,

@@ -30,15 +30,15 @@ class DailyFrequencyWaterForm extends StatelessWidget {
               RichText(
                 text: const TextSpan(
                   style: TextStyle(fontSize: FontSize.small2, color: MyColors.lightGrey),
-                  text: 'Quantas vezes deseja ',
+                  text: 'Quantas vezes deseja ser ',
                   children: [
                     TextSpan(
-                      text: 'beber ',
+                      text: 'notificado ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextSpan(text: 'água por '),
+                    TextSpan(text: ' para beber por '),
                     TextSpan(
                       text: 'dia',
                       style: TextStyle(

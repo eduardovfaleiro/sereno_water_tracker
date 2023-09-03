@@ -15,7 +15,6 @@ import 'water/presentation/controllers/water_form_controller.dart';
 import 'core/core.dart';
 import 'water/presentation/controllers/water_settings_controller.dart';
 import 'water/presentation/views/home/home_view.dart';
-import 'water/presentation/views/settings/settings_view.dart';
 import 'water/presentation/views/settings/water_settings_view.dart';
 import 'water/presentation/views/water/water_view.dart';
 import 'water/presentation/views/water_form/water_form_view.dart';
@@ -103,7 +102,6 @@ class _SerenoViewState extends State<SerenoView> {
         '/waterForm': (context) => const WaterFormView(),
         '/water': (_) => const WaterView(),
         '/home': (_) => const HomeView(),
-        '/settings': (_) => const SettingsView(),
         '/waterSettings': (_) => const WaterSettingsView(),
       },
       debugShowCheckedModeBanner: false,

@@ -77,7 +77,7 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
                             onLongPress: () {
                               BottomSheets.items(
                                 items: [
-                                  BottomSheetItemTile(
+                                  BottomSheetItemTileSimple(
                                     onTap: () async {
                                       await context.read<WaterController>().removeDrankToday(
                                             amount: controller.waterContainers[i].amount,
@@ -89,17 +89,32 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
                                     label: 'Remover água bebida',
                                     icon: const Icon(CommunityMaterialIcons.water_minus_outline),
                                   ),
-                                  BottomSheetItemTile(
-                                    onTap: () async {
-                                      await controller.remove(
-                                        context: context,
-                                        waterContainerEntity: controller.waterContainers[i],
-                                      );
+                                  BottomSheetItemTileCustomChild(
+                                    child: InkWell(
+                                      onTap: () async {
+                                        await controller.remove(
+                                          context: context,
+                                          waterContainerEntity: controller.waterContainers[i],
+                                        );
 
-                                      Navigator.pop(context);
-                                    },
-                                    label: 'Excluir recipiente',
-                                    icon: const Icon(Icons.delete_outline),
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(
+                                          right: Spacing.small3,
+                                          left: Spacing.normal - 1.5,
+                                          bottom: Spacing.small2,
+                                          top: Spacing.small2,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Icon(CupertinoIcons.delete, size: Spacing.normal + 1),
+                                            SizedBox(width: Spacing.small1),
+                                            Text('Excluir recipiente'),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ],
                                 context: context,
@@ -164,7 +179,7 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
 }
 
 BottomSheetItemTile _getAddWaterContainerItemTile(BuildContext context) {
-  return BottomSheetItemTile(
+  return BottomSheetItemTileSimple(
     onTap: () {
       Navigator.pop(context);
 
@@ -235,7 +250,7 @@ BottomSheetItemTile _getAddWaterContainerItemTile(BuildContext context) {
 }
 
 BottomSheetItemTile _getRemoveCustomAmount(BuildContext context) {
-  return BottomSheetItemTile(
+  return BottomSheetItemTileSimple(
     onTap: () {
       Navigator.pop(context);
 
@@ -294,7 +309,7 @@ BottomSheetItemTile _getRemoveCustomAmount(BuildContext context) {
 }
 
 BottomSheetItemTile _getAddCustomAmount(BuildContext context) {
-  return BottomSheetItemTile(
+  return BottomSheetItemTileSimple(
     onTap: () {
       Navigator.pop(context);
 

@@ -8,8 +8,6 @@ import '../../data/repositories/water_repository.dart';
 
 abstract class TimeToDrinkAgainService {
   Future<Result<DateTime>> getNext();
-  Future<String> getDrinkAgainInStr();
-  Future<Duration> getDrinkAgainIn();
 }
 
 class TimeToDrinkAgainServiceImp implements TimeToDrinkAgainService {
@@ -28,7 +26,7 @@ class TimeToDrinkAgainServiceImp implements TimeToDrinkAgainService {
 
     DateTime closestToNow = now.closestTo(timesToDrink.map(
       (timeOfDay) {
-        final timeToDrink = now.copyWith(hour: timeOfDay.hour, minute: timeOfDay.minute);
+        final timeToDrink = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
 
         if (now.isSameOrAfter(timeToDrink)) {
           return timeToDrink.addDays(1);
@@ -39,41 +37,5 @@ class TimeToDrinkAgainServiceImp implements TimeToDrinkAgainService {
     ))!;
 
     return Right(closestToNow);
-  }
-
-  @override
-  Future<String> getDrinkAgainInStr() async {
-    final now = clock.now();
-    Duration drinkAgainIn = await getDrinkAgainIn();
-
-    DateTime timeToDrink = now.add(drinkAgainIn);
-
-    return timeToDrink.timeago(locale: LOCALE);
-  }
-
-  @override
-  Future<Duration> getDrinkAgainIn() async {
-    final nextTimeToDrinkResult = await getResult(getNext());
-    if (nextTimeToDrinkResult is Failure) throw Exception();
-
-    DateTime nextTimeToDrink = nextTimeToDrinkResult;
-
-    final now = clock.now();
-
-    var currentDateTime = DateTime(1).copyWith(
-      hour: now.hour,
-      minute: now.minute,
-    );
-
-    var nextDateTimeToDrink = DateTime(1).copyWith(
-      hour: nextTimeToDrink.hour,
-      minute: nextTimeToDrink.minute,
-    );
-
-    if (currentDateTime.isAfter(nextDateTimeToDrink)) {
-      nextDateTimeToDrink = nextDateTimeToDrink.addDays(1);
-    }
-
-    return nextDateTimeToDrink.difference(currentDateTime);
   }
 }

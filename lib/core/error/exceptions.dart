@@ -17,4 +17,4 @@ class WaterContainerNotFoundException implements Exception {}
 
 class LeftException implements Exception {}
 
-class TimeToDrinkAlreadyExists implements Exception {}
+class TimeToDrinkAlreadyExistsException implements Exception {}

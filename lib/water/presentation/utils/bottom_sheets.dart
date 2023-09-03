@@ -58,22 +58,32 @@ abstract class BottomSheets {
             mainAxisSize: MainAxisSize.min,
             children: [
               ...List.generate(items.length, (index) {
-                return InkWell(
-                  onTap: () => items[index].onTap(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Spacing.small3,
-                      vertical: Spacing.small2,
+                if (items[index] is BottomSheetItemTileSimple) {
+                  final itemTile = items[index] as BottomSheetItemTileSimple;
+
+                  return InkWell(
+                    onTap: () => itemTile.onTap(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Spacing.small3,
+                        vertical: Spacing.small2,
+                      ),
+                      child: Row(
+                        children: [
+                          itemTile.icon,
+                          const SizedBox(width: Spacing.small1),
+                          Text(itemTile.label),
+                        ],
+                      ),
                     ),
-                    child: Row(
-                      children: [
-                        items[index].icon,
-                        const SizedBox(width: Spacing.small1),
-                        Text(items[index].label),
-                      ],
-                    ),
-                  ),
-                );
+                  );
+                } else if (items[index] is BottomSheetItemTileCustomChild) {
+                  final itemTile = items[index] as BottomSheetItemTileCustomChild;
+
+                  return itemTile.child;
+                }
+
+                throw TypeError();
               }),
             ],
           ),
@@ -83,14 +93,22 @@ abstract class BottomSheets {
   }
 }
 
-class BottomSheetItemTile {
+abstract class BottomSheetItemTile {}
+
+class BottomSheetItemTileSimple implements BottomSheetItemTile {
   final VoidCallback onTap;
   final Icon icon;
   final String label;
 
-  BottomSheetItemTile({
+  BottomSheetItemTileSimple({
     required this.onTap,
     required this.icon,
     required this.label,
   });
+}
+
+class BottomSheetItemTileCustomChild implements BottomSheetItemTile {
+  final Widget child;
+
+  BottomSheetItemTileCustomChild({required this.child});
 }

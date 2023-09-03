@@ -4,6 +4,7 @@ import '../../../core/core.dart';
 import '../../data/repositories/water_repository.dart';
 import '../utils/dialogs.dart';
 import '../utils/snackbar_message.dart';
+import 'water_controller.dart';
 
 class ReminderController extends ChangeNotifier {
   final WaterRepository _waterRepository;
@@ -31,6 +32,8 @@ class ReminderController extends ChangeNotifier {
 
     reminders = getTimesToDrinkResult;
 
+    getIt<WaterController>().init();
+
     notifyListeners();
   }
 
@@ -44,10 +47,21 @@ class ReminderController extends ChangeNotifier {
       cancelText: 'Cancelar',
       confirmText: 'Sim, excluir',
       onYes: () async {
+        int timesToDrinkCount = (await getResult(_waterRepository.getTimesToDrink())).length;
+
+        if (timesToDrinkCount == 1) {
+          SnackBarMessage.normal(context: context, text: 'Deve haver ao menos uma notificação');
+        }
+
         var deleteTimeToDrinkResult = await getResult(_waterRepository.deleteTimeToDrink(timeToDrink));
         if (deleteTimeToDrinkResult is Failure) throw Exception();
 
+        var setDailyDrinkingFrequency = await getResult(_waterRepository.setDailyFrequency(timesToDrinkCount));
+        if (setDailyDrinkingFrequency is Failure) throw Exception();
+
         reminders.removeWhere((reminder) => reminder == timeToDrink);
+
+        getIt<WaterController>().init();
 
         notifyListeners();
 

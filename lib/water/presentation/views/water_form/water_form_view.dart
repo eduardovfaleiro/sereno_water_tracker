@@ -130,7 +130,7 @@ class _WaterFormViewState extends State<WaterFormView> {
                                     await Dialogs.confirm(
                                         context: context,
                                         text: 'Você poderá mudar essas alterações no futuro.',
-                                        title: 'Salvar',
+                                        title: 'Deseja finalizar?',
                                         onNo: () => Navigator.pop(context),
                                         onYes: () {
                                           controller.saveData(context).then((value) async {

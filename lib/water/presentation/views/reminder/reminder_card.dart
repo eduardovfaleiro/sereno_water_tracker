@@ -13,42 +13,53 @@ class ReminderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: MyColors.darkGrey,
-        borderRadius: BorderRadius.circular(Sizes.borderRadius),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: Spacing.small, horizontal: Spacing.small3),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: MyColors.darkGrey,
+            borderRadius: BorderRadius.circular(Sizes.borderRadius),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: Spacing.small3),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.timer, size: Spacing.normal, color: Color.fromARGB(255, 107, 107, 107)),
-              const SizedBox(width: Spacing.small1),
-              Text(TimeOfDayUtils(reminder).toLiteral()),
+              Row(
+                children: [
+                  const Icon(Icons.timer, size: Spacing.normal, color: Color.fromARGB(255, 107, 107, 107)),
+                  const SizedBox(width: Spacing.small2),
+                  Text(TimeOfDayUtils(reminder).toLiteral()),
+                ],
+              ),
+              Container(
+                decoration: const BoxDecoration(
+                  border: Border(left: BorderSide()),
+                ),
+                padding: const EdgeInsets.only(left: Spacing.small3, top: Spacing.small, bottom: Spacing.small),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(CupertinoIcons.pencil, color: MyColors.lightGrey),
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        onEdit();
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(CupertinoIcons.delete, color: MyColors.lightGrey),
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        onDelete();
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(CupertinoIcons.pencil, color: MyColors.lightGrey),
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  onEdit();
-                },
-              ),
-              IconButton(
-                icon: const Icon(CupertinoIcons.delete, color: MyColors.lightGrey),
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  onDelete();
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

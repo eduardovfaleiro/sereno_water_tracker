@@ -93,6 +93,11 @@ abstract class Themes {
     ),
   );
 
+  static const BottomNavigationBarThemeData _bottomNavigationBarThemeData = BottomNavigationBarThemeData(
+    selectedIconTheme: IconThemeData(size: Spacing.normal),
+    unselectedIconTheme: IconThemeData(size: Spacing.normal),
+  );
+
   static final InputDecorationTheme _inputDecorationTheme = InputDecorationTheme(
     // labelStyle: const TextStyle(fontSize: FontSize.small1),
     contentPadding: const EdgeInsets.symmetric(vertical: Spacing.small1, horizontal: Spacing.small2),
@@ -158,5 +163,6 @@ abstract class Themes {
     popupMenuTheme: _popupMenuButtonTheme,
     snackBarTheme: _snackBarThemeData,
     bottomSheetTheme: _bottomSheetThemeData,
+    bottomNavigationBarTheme: _bottomNavigationBarThemeData,
   );
 }

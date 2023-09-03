@@ -23,8 +23,12 @@ class _WaterViewState extends State<WaterView> {
     context.read<WaterController>().init();
   }
 
-  String getText({required Duration duration}) {
+  String _getText({required Duration duration}) {
     if (duration.inSeconds < 60) {
+      if (duration.inSeconds == 0) {
+        return '';
+      }
+
       if (duration.inSeconds == 1) {
         return '${duration.inSeconds} segundo';
       }
@@ -155,7 +159,10 @@ class _WaterViewState extends State<WaterView> {
                           rightText: ValueListenableBuilder(
                             valueListenable: controller.timerToDrinkService.timeToDrink,
                             builder: (context, timeToDrink, _) {
-                              return Text(getText(duration: timeToDrink));
+                              return Text(
+                                _getText(duration: timeToDrink),
+                                style: const TextStyle(color: Color.fromARGB(255, 84, 152, 219)),
+                              );
                             },
                           ),
                         ),

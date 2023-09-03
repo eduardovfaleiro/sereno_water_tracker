@@ -17,13 +17,15 @@ class WaterSettingsController extends ChangeNotifier {
   late UserEntity userEntity;
   late WaterDataEntity waterDataEntity;
 
-  bool isDataLoaded = false;
+  bool isLoading = true;
 
   Future<void> init() async {
+    isLoading = true;
+
     userEntity = await getResult(_userRepository.getUser());
     waterDataEntity = await getResult(_waterRepository.getWaterData());
 
-    isDataLoaded = true;
+    isLoading = false;
 
     notifyListeners();
   }
