@@ -19,12 +19,12 @@ class WaterFormController extends ChangeNotifier {
 
   WaterFormController(this._userRepository, this._waterRepository, this._calculateWaterDataUseCase);
 
-  late UserEntity user;
+  late UserEntityWithDailyGoal user;
   late int dailyDrinkingFrequency;
 
   final pageController = PageController();
 
-  Future<void> init({UserEntity? userEntity, int? dailyDrinkingFrequency}) async {
+  Future<void> init({UserEntityWithDailyGoal? userEntity, int? dailyDrinkingFrequency}) async {
     isLoading = true;
 
     if (userEntity != null) {
@@ -73,6 +73,20 @@ class WaterFormController extends ChangeNotifier {
     isLoading = false;
   }
 
+  Future<Result<WaterDataEntity>> getWaterData() async {
+    WaterDataEntity waterDataEntity;
+
+    var calculateWaterDataUseCaseResult = await _calculateWaterDataUseCase();
+
+    if (calculateWaterDataUseCaseResult.isLeft()) {
+      return calculateWaterDataUseCaseResult;
+    } else {
+      waterDataEntity = calculateWaterDataUseCaseResult as WaterDataEntity;
+    }
+
+    // TODO: continue from here
+  }
+
   void setWeight(int value) {
     user.weight = value;
 
@@ -99,6 +113,12 @@ class WaterFormController extends ChangeNotifier {
 
   void setWakeUpTime(TimeOfDay value) {
     user.wakeUpTime = value;
+
+    notifyListeners();
+  }
+
+  void setDailyGoal(int value) {
+    user.dailyGoal = value;
 
     notifyListeners();
   }

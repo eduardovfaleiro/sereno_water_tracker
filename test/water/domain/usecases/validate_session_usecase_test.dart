@@ -20,7 +20,7 @@ void main() {
 
   test('Should return nothing when validation passes', () async {
     // arrange
-    final userEntity = UserEntity.normal();
+    final userEntity = UserEntityDefault();
     final waterDataEntity = WaterDataEntity.empty();
 
     // arrange

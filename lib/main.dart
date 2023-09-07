@@ -32,7 +32,7 @@ void main() async {
     await getIt<WaterController>().init();
   } else {
     await getIt<WaterFormController>().init(
-      userEntity: UserEntity.normal(),
+      userEntity: UserEntityDefaultWithDailyGoal(),
       dailyDrinkingFrequency: DEFAULT_DAILY_DRINKING_FREQUENCY,
     );
   }
@@ -80,7 +80,7 @@ class _SerenoViewState extends State<SerenoView> {
 
     if (_initialRoute == '/waterForm') {
       context.read<WaterFormController>().init(
-            userEntity: UserEntity.normal(),
+            userEntity: UserEntityDefaultWithDailyGoal(),
             dailyDrinkingFrequency: DEFAULT_DAILY_DRINKING_FREQUENCY,
           );
     }

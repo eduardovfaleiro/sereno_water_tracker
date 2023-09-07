@@ -27,14 +27,14 @@ class ReminderCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.timer, size: Spacing.normal, color: Color.fromARGB(255, 107, 107, 107)),
+                  const Icon(Icons.timer, size: Spacing.normal, color: MyColors.lightGrey2),
                   const SizedBox(width: Spacing.small2),
                   Text(TimeOfDayUtils(reminder).toLiteral()),
                 ],
               ),
               Container(
                 decoration: const BoxDecoration(
-                  border: Border(left: BorderSide()),
+                  border: Border(left: BorderSide(width: 2)),
                 ),
                 padding: const EdgeInsets.only(left: Spacing.small3, top: Spacing.small, bottom: Spacing.small),
                 child: Row(

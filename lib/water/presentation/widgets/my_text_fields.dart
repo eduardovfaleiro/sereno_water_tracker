@@ -6,6 +6,7 @@ class DigitOnlyTextField extends StatelessWidget {
   final String? suffix;
   final bool autofocus;
   final Function(int) onChanged;
+  final int? maxLength;
   final String? Function(String?)? validator;
 
   const DigitOnlyTextField({
@@ -15,6 +16,7 @@ class DigitOnlyTextField extends StatelessWidget {
     required this.autofocus,
     required this.onChanged,
     this.validator,
+    this.maxLength,
   });
 
   @override
@@ -34,7 +36,7 @@ class DigitOnlyTextField extends StatelessWidget {
         labelText: label,
         suffixText: suffix,
       ),
-      maxLength: 18,
+      maxLength: maxLength ?? 18,
       onChanged: (value) async {
         if (value.isEmpty) {
           await onChanged(0);

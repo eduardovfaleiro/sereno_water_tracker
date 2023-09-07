@@ -1,10 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/core.dart';
 import '../../../../core/theme/themes.dart';
 import '../../controllers/water_form_controller.dart';
-import '../../widgets/number_picker.dart';
+import '../../utils/bottom_sheets.dart';
+import '../../widgets/buttons/button.dart';
+import '../../widgets/my_text_fields.dart';
 
 class InfoWaterForm extends StatelessWidget {
   const InfoWaterForm({super.key});
@@ -19,50 +21,158 @@ class InfoWaterForm extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Treinamento', style: TextStyle(fontWeight: FontWeight.w600)),
+              const Text(
+                'Antes de finalizar...',
+                style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: FontSize.small3),
+              ),
+              const Text(
+                'Isso está correto?',
+                style: TextStyle(fontSize: FontSize.small2),
+              ),
               const Divider(
-                height: Spacing.small3,
+                height: Spacing.big,
                 thickness: 1,
               ),
-              const SizedBox(height: Spacing.medium1),
-              RichText(
-                text: const TextSpan(
-                  style: TextStyle(fontSize: FontSize.small2, color: MyColors.lightGrey),
-                  text: 'Quantos dias você ',
+              const SizedBox(height: Spacing.normal),
+              InkWell(
+                borderRadius: BorderRadius.circular(Sizes.borderRadius),
+                onTap: () {
+                  int? amount;
+                  final formKey = GlobalKey<FormState>();
+
+                  BottomSheets.normal(
+                    context: context,
+                    title: 'Alterar meta diária',
+                    content: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Spacing.small2,
+                        vertical: Spacing.medium,
+                      ),
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const SizedBox(height: Spacing.small1),
+                            DigitOnlyTextField(
+                              suffix: 'ml',
+                              label: 'Meta diária',
+                              maxLength: 4,
+                              autofocus: true,
+                              onChanged: (value) {
+                                amount = value;
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Insira uma meta diária.';
+                                }
+
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: Spacing.small2),
+                            Button.ok(
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  controller.setDailyGoal(amount!);
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: Ink(
+                  padding: const EdgeInsets.all(Spacing.small3),
+                  decoration: BoxDecoration(
+                    color: MyColors.darkGrey,
+                    borderRadius: BorderRadius.circular(Sizes.borderRadius),
+                  ),
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        child: Row(
+                          children: [
+                            Icon(CupertinoIcons.drop_fill, color: MyColors.lightGrey2),
+                            SizedBox(width: Spacing.small2),
+                            Expanded(child: Text('Meta diária')),
+                          ],
+                        ),
+                      ),
+                      Text('${controller.user.dailyGoal} ml', style: const TextStyle(color: MyColors.lightBlue)),
+                      const SizedBox(width: Spacing.small3),
+                      const Icon(CupertinoIcons.pencil, color: MyColors.lightGrey3),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: Spacing.small1),
+              Container(
+                padding: const EdgeInsets.all(Spacing.small3),
+                decoration: const BoxDecoration(
+                  color: MyColors.darkGrey,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(Sizes.borderRadius),
+                  ),
+                ),
+                child: const Row(
                   children: [
-                    TextSpan(
-                      text: 'treina ',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Icon(CupertinoIcons.bell_fill, color: MyColors.lightGrey2),
+                          SizedBox(width: Spacing.small2),
+                          Expanded(child: Text('Notificações')),
+                        ],
                       ),
                     ),
-                    TextSpan(text: 'em uma '),
-                    TextSpan(
-                      text: 'semana',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextSpan(text: '?'),
                   ],
                 ),
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.3,
-                alignment: Alignment.center,
-                child: NumberPicker(
-                  suffixWidget: Text(controller.user.weeklyWorkoutDays == 1 ? 'dia' : 'dias'),
-                  range: DAYS_IN_A_WEEK,
-                  initialValue: controller.user.weeklyWorkoutDays,
-                  onChanged: (value) {
-                    controller.setWeeklyWorkoutDays(value);
-                  },
+                decoration: BoxDecoration(
+                  border: Border.all(color: MyColors.darkGrey, width: Spacing.tiny),
+                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(Sizes.borderRadius)),
+                ),
+                child: const Column(
+                  children: [
+                    _ReminderCard(),
+                    _ReminderCard(),
+                    _ReminderCard(),
+                  ],
                 ),
               ),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class _ReminderCard extends StatelessWidget {
+  const _ReminderCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(Spacing.small3),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('6:00'),
+          Row(
+            children: [
+              Icon(CupertinoIcons.pencil, color: MyColors.lightGrey3),
+              SizedBox(width: Spacing.medium1),
+              Icon(CupertinoIcons.delete, color: MyColors.lightGrey3),
+            ],
+          )
+        ],
+      ),
     );
   }
 }

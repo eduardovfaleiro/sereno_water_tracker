@@ -6,6 +6,7 @@ import '../../utils/snackbar_message.dart';
 import '../../widgets/buttons/button.dart';
 import 'daily_frequency_water_form.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'info_water_form.dart';
 import 'weekly_workout_days_water_form.dart';
 import 'weight_water_form.dart';
 import 'sleep_habit_water_form.dart';
@@ -44,6 +45,7 @@ class _WaterFormViewState extends State<WaterFormView> {
     const DailyFrequencyWaterForm(),
     const WeeklyWorkoutDaysWaterForm(),
     const SleepHabitWaterForm(),
+    const InfoWaterForm(),
   ];
 
   @override
