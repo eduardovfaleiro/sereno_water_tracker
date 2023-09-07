@@ -4,12 +4,7 @@ import '../../controllers/water_controller.dart';
 import '../../utils/dialogs.dart';
 import '../../utils/snackbar_message.dart';
 import '../../widgets/buttons/button.dart';
-import 'daily_frequency_water_form.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'info_water_form.dart';
-import 'weekly_workout_days_water_form.dart';
-import 'weight_water_form.dart';
-import 'sleep_habit_water_form.dart';
 
 import '../../../../core/theme/themes.dart';
 import '../../controllers/water_form_controller.dart';
@@ -36,17 +31,9 @@ class _WaterFormViewState extends State<WaterFormView> {
 
     controller.pageController.addListener(() {
       _showGoBackButton.value = controller.pageController.page! > 0.5;
-      _showFinishButton.value = controller.pageController.page! == _pages.length - 1;
+      _showFinishButton.value = controller.pageController.page! == controller.pages.length - 1;
     });
   }
-
-  final List<Widget> _pages = [
-    const WeightWaterForm(),
-    const DailyFrequencyWaterForm(),
-    const WeeklyWorkoutDaysWaterForm(),
-    const SleepHabitWaterForm(),
-    const InfoWaterForm(),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +84,7 @@ class _WaterFormViewState extends State<WaterFormView> {
                         child: PageView(
                           physics: const NeverScrollableScrollPhysics(),
                           controller: controller.pageController,
-                          children: _pages,
+                          children: controller.pages,
                         ),
                       ),
                     ],
@@ -110,7 +97,7 @@ class _WaterFormViewState extends State<WaterFormView> {
               children: [
                 SmoothPageIndicator(
                   controller: controller.pageController,
-                  count: _pages.length,
+                  count: controller.pages.length,
                   effect: const ExpandingDotsEffect(
                     activeDotColor: MyColors.lightBlue1,
                     dotColor: MyColors.darkBlue1,

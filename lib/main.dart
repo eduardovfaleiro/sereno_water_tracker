@@ -4,7 +4,6 @@ import 'core/functions/validate_session.dart';
 import 'core/init_functions/init_get_it.dart';
 import 'core/init_functions/init_hive.dart';
 import 'core/theme/themes.dart';
-import 'water/domain/entities/user_entity.dart';
 import 'water/domain/services/reset_data_with_timer_service.dart';
 import 'water/presentation/controllers/home_controller.dart';
 import 'water/presentation/controllers/reminder_controller.dart';
@@ -15,7 +14,7 @@ import 'water/presentation/controllers/water_form_controller.dart';
 import 'core/core.dart';
 import 'water/presentation/controllers/water_settings_controller.dart';
 import 'water/presentation/views/home/home_view.dart';
-import 'water/presentation/views/settings/water_settings_view.dart';
+import 'water/presentation/views/water_settings/water_settings_view.dart';
 import 'water/presentation/views/water/water_view.dart';
 import 'water/presentation/views/water_form/water_form_view.dart';
 
@@ -27,15 +26,6 @@ void main() async {
 
   getIt<ResetDataWithTimerService>().startWater();
   bool isSessionValid = await validateSession();
-
-  if (isSessionValid) {
-    await getIt<WaterController>().init();
-  } else {
-    await getIt<WaterFormController>().init(
-      userEntity: UserEntityDefaultWithDailyGoal(),
-      dailyDrinkingFrequency: DEFAULT_DAILY_DRINKING_FREQUENCY,
-    );
-  }
 
   runApp(
     MultiProvider(
@@ -64,40 +54,17 @@ void main() async {
   );
 }
 
-class SerenoView extends StatefulWidget {
+class SerenoView extends StatelessWidget {
   final bool isSessionValid;
 
   const SerenoView({super.key, required this.isSessionValid});
 
-  @override
-  State<SerenoView> createState() => _SerenoViewState();
-}
-
-class _SerenoViewState extends State<SerenoView> {
-  @override
-  void initState() {
-    super.initState();
-
-    if (_initialRoute == '/waterForm') {
-      context.read<WaterFormController>().init(
-            userEntity: UserEntityDefaultWithDailyGoal(),
-            dailyDrinkingFrequency: DEFAULT_DAILY_DRINKING_FREQUENCY,
-          );
-    }
-  }
-
-  String get _initialRoute {
-    if (widget.isSessionValid) {
-      return '/home';
-    }
-
-    return '/waterForm';
-  }
+  String get initialRoute => isSessionValid ? '/home' : '/waterForm';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: _initialRoute,
+      initialRoute: initialRoute,
       routes: {
         '/waterForm': (context) => const WaterFormView(),
         '/water': (_) => const WaterView(),

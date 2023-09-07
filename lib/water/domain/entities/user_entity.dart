@@ -26,6 +26,15 @@ class UserEntity {
     return SleepHabitEntity(wakeUpTime: wakeUpTime, sleeptime: sleeptime);
   }
 
+  factory UserEntity.defaultValues() {
+    return UserEntity(
+      weight: DEFAULT_WEIGHT,
+      weeklyWorkoutDays: DEFAULT_WEEKLY_WORKOUT_DAYS,
+      sleeptime: DEFAULT_SLEEPTIME,
+      wakeUpTime: DEFAULT_WAKE_UP_TIME,
+    );
+  }
+
   UserEntity copyWith({
     int? weight,
     int? weeklyWorkoutDays,
@@ -39,53 +48,4 @@ class UserEntity {
       wakeUpTime: wakeUpTime ?? this.wakeUpTime,
     );
   }
-}
-
-class UserEntityDefaultWithDailyGoal extends UserEntityWithDailyGoal {
-  UserEntityDefaultWithDailyGoal({super.dailyGoal})
-      : super(
-          sleeptime: DEFAULT_SLEEPTIME,
-          wakeUpTime: DEFAULT_WAKE_UP_TIME,
-          weeklyWorkoutDays: DEFAULT_WEEKLY_WORKOUT_DAYS,
-          weight: DEFAULT_WEIGHT,
-        );
-}
-
-class UserEntityWithDailyGoal extends UserEntity {
-  int? dailyGoal;
-
-  UserEntityWithDailyGoal({
-    required this.dailyGoal,
-    required super.weight,
-    required super.weeklyWorkoutDays,
-    required super.sleeptime,
-    required super.wakeUpTime,
-  });
-
-  @override
-  UserEntityWithDailyGoal copyWith({
-    int? dailyGoal,
-    int? weight,
-    int? weeklyWorkoutDays,
-    TimeOfDay? sleeptime,
-    TimeOfDay? wakeUpTime,
-  }) {
-    return UserEntityWithDailyGoal(
-      dailyGoal: dailyGoal ?? this.dailyGoal,
-      sleeptime: sleeptime ?? this.sleeptime,
-      wakeUpTime: wakeUpTime ?? this.wakeUpTime,
-      weeklyWorkoutDays: weeklyWorkoutDays ?? this.weeklyWorkoutDays,
-      weight: weight ?? this.weight,
-    );
-  }
-}
-
-class UserEntityDefault extends UserEntity {
-  UserEntityDefault()
-      : super(
-          sleeptime: DEFAULT_SLEEPTIME,
-          wakeUpTime: DEFAULT_WAKE_UP_TIME,
-          weeklyWorkoutDays: DEFAULT_WEEKLY_WORKOUT_DAYS,
-          weight: DEFAULT_WEIGHT,
-        );
 }

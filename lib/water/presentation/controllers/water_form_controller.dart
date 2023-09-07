@@ -4,87 +4,58 @@ import 'package:flutter/material.dart';
 import '../../../core/core.dart';
 import '../../data/repositories/user_repository.dart';
 import '../../data/repositories/water_repository.dart';
-import '../../domain/entities/sleep_habit_entity.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/entities/water_data_entity.dart';
+import '../../domain/usecases/calculate_water_data_by_parameters_usecase.dart';
 import '../../domain/usecases/calculate_water_data_usecase.dart';
 import '../utils/snackbar_message.dart';
+import '../views/water_form/pages/daily_frequency_water_form.dart';
+import '../views/water_form/pages/info_water_form.dart';
+import '../views/water_form/pages/sleep_habit_water_form.dart';
+import '../views/water_form/pages/weekly_workout_days_water_form.dart';
+import '../views/water_form/pages/weight_water_form.dart';
 
 class WaterFormController extends ChangeNotifier {
   final UserRepository _userRepository;
   final WaterRepository _waterRepository;
   final CalculateWaterDataUseCase _calculateWaterDataUseCase;
+  final CalculateWaterDataByParametersUseCase _calculateWaterDataByParametersUseCase;
+
+  WaterFormController(
+    this._userRepository,
+    this._waterRepository,
+    this._calculateWaterDataUseCase,
+    this._calculateWaterDataByParametersUseCase,
+  );
 
   bool isLoading = false;
 
-  WaterFormController(this._userRepository, this._waterRepository, this._calculateWaterDataUseCase);
+  // data
+  final user = UserEntity.defaultValues();
+  var waterData = WaterDataEntity.empty().copyWith(
+    dailyDrinkingFrequency: DEFAULT_DAILY_DRINKING_FREQUENCY,
+  );
 
-  late UserEntityWithDailyGoal user;
-  late int dailyDrinkingFrequency;
+  // pages
+  final pages = <Widget>[
+    const WeightWaterForm(),
+    const DailyFrequencyWaterForm(),
+    const WeeklyWorkoutDaysWaterForm(),
+    const SleepHabitWaterForm(),
+    const InfoWaterForm(),
+  ];
 
   final pageController = PageController();
 
-  Future<void> init({UserEntityWithDailyGoal? userEntity, int? dailyDrinkingFrequency}) async {
-    isLoading = true;
+  Future<void> init() async {}
 
-    if (userEntity != null) {
-      user = userEntity.copyWith();
-    } else {
-      final sleepHabitResult = await getResult(
-        _userRepository.getSleepHabit(),
-      );
-
-      final weightResult = await getResult(
-        _userRepository.getWeight(),
-      );
-
-      final weeklyWorkoutDaysResult = await getResult(
-        _userRepository.getWeeklyWorkoutDays(),
-      );
-
-      if (sleepHabitResult is Failure) throw Exception(); // TODO
-      if (weightResult is Failure) throw Exception(); // TODO
-      if (weeklyWorkoutDaysResult is Failure) throw Exception(); // TODO
-
-      SleepHabitEntity sleepHabit = sleepHabitResult;
-      int weight = weightResult;
-      int weeklyWorkoutDays = weeklyWorkoutDaysResult;
-
-      user = user.copyWith(
-        sleeptime: sleepHabit.sleeptime,
-        wakeUpTime: sleepHabit.wakeUpTime,
-        weeklyWorkoutDays: weeklyWorkoutDays,
-        weight: weight,
+  void initInfoPage(BuildContext context) {
+    if (waterData.dailyGoal == 0) {
+      waterData = _calculateWaterDataByParametersUseCase(
+        userEntity: user,
+        dailyDrinkingFrequency: waterData.dailyDrinkingFrequency,
       );
     }
-
-    if (dailyDrinkingFrequency != null) {
-      this.dailyDrinkingFrequency = dailyDrinkingFrequency;
-    } else {
-      final dailyDrinkingFrequencyResult = await getResult(
-        _waterRepository.getDailyDrinkingFrequency(),
-      );
-
-      if (dailyDrinkingFrequencyResult is Failure) throw Exception(); // TODO
-
-      this.dailyDrinkingFrequency = dailyDrinkingFrequencyResult;
-    }
-
-    isLoading = false;
-  }
-
-  Future<Result<WaterDataEntity>> getWaterData() async {
-    WaterDataEntity waterDataEntity;
-
-    var calculateWaterDataUseCaseResult = await _calculateWaterDataUseCase();
-
-    if (calculateWaterDataUseCaseResult.isLeft()) {
-      return calculateWaterDataUseCaseResult;
-    } else {
-      waterDataEntity = calculateWaterDataUseCaseResult as WaterDataEntity;
-    }
-
-    // TODO: continue from here
   }
 
   void setWeight(int value) {
@@ -94,7 +65,7 @@ class WaterFormController extends ChangeNotifier {
   }
 
   void setDailyDrinkingFrequency(int value) {
-    dailyDrinkingFrequency = value;
+    waterData.dailyDrinkingFrequency = value;
 
     notifyListeners();
   }
@@ -118,7 +89,7 @@ class WaterFormController extends ChangeNotifier {
   }
 
   void setDailyGoal(int value) {
-    user.dailyGoal = value;
+    waterData.dailyGoal = value;
 
     notifyListeners();
   }
@@ -127,11 +98,49 @@ class WaterFormController extends ChangeNotifier {
     return await getResult(_userRepository.getUser());
   }
 
+  Result<void> editReminder({
+    required BuildContext context,
+    required TimeOfDay oldReminder,
+    required TimeOfDay newReminder,
+  }) {
+    int index = waterData.timesToDrink.indexOf(oldReminder);
+
+    if (index == -1) {
+      final failure = ReminderNotFoundFailure('Lembrete não encontrado.');
+
+      SnackBarMessage.error(failure, context: context);
+      return Left(failure);
+    }
+
+    waterData.timesToDrink[index] = newReminder;
+
+    notifyListeners();
+
+    Navigator.pop(context);
+    return const Right(null);
+  }
+
+  Result<void> deleteReminder({
+    required BuildContext context,
+    required TimeOfDay reminder,
+  }) {
+    int index = waterData.timesToDrink.indexOf(reminder);
+
+    if (index == -1) {
+      final failure = ReminderNotFoundFailure('Lembrete não encontrado.');
+
+      SnackBarMessage.error(failure, context: context);
+      return Left(failure);
+    }
+
+    waterData.timesToDrink.remove(reminder);
+    return const Right(null);
+  }
+
   Future<Result<void>> saveData(BuildContext context) async {
-    final setUserResult = await getResult(_userRepository.setUser(user));
-    final dailyDrinkingFrequencyResult = await getResult(
-      _waterRepository.setDailyFrequency(dailyDrinkingFrequency),
-    );
+    var setUserResult = await getResult(_userRepository.setUser(user));
+    var dailyDrinkingFrequencyResult =
+        await getResult(_waterRepository.setDailyFrequency(waterData.dailyDrinkingFrequency));
 
     if (setUserResult is Failure) {
       SnackBarMessage.error(setUserResult, context: context);
@@ -145,7 +154,7 @@ class WaterFormController extends ChangeNotifier {
       return Left(dailyDrinkingFrequencyResult);
     }
 
-    final calculateWaterDataResult = await getResult(_calculateWaterDataUseCase());
+    var calculateWaterDataResult = await getResult(_calculateWaterDataUseCase());
     if (calculateWaterDataResult is Failure) throw Exception();
 
     WaterDataEntity waterDataEntity = calculateWaterDataResult;

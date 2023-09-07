@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/functions/time_of_day_utils.dart';
 import '../../../../core/theme/themes.dart';
+import '../../utils/show_edit_reminder.dart';
 
 class ReminderCard extends StatelessWidget {
   final TimeOfDay reminder;
   final Function() onDelete;
-  final Function() onEdit;
+  final Function(TimeOfDay reminder) onEdit;
 
   const ReminderCard(this.reminder, {super.key, required this.onDelete, required this.onEdit});
 
@@ -43,7 +44,13 @@ class ReminderCard extends StatelessWidget {
                       icon: const Icon(CupertinoIcons.pencil, color: MyColors.lightGrey),
                       padding: EdgeInsets.zero,
                       onPressed: () {
-                        onEdit();
+                        showEditReminder(
+                          context: context,
+                          onOk: (newReminder) {
+                            onEdit(newReminder);
+                          },
+                          reminder: reminder,
+                        );
                       },
                     ),
                     IconButton(

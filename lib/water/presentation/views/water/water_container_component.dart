@@ -38,9 +38,7 @@ class _WaterContainerWidgetState extends State<WaterContainerWidget> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration.zero, () async {
-      await context.read<WaterContainerController>().init();
-    });
+    context.read<WaterContainerController>().init();
   }
 
   @override

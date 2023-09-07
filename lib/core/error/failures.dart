@@ -36,3 +36,7 @@ class NegativeNumberFailure implements Failure {
   @override
   String get message => "Number shouldn't be negative";
 }
+
+class ReminderNotFoundFailure extends Failure {
+  ReminderNotFoundFailure(super.message);
+}

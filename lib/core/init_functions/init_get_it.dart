@@ -8,6 +8,7 @@ import '../../water/data/repositories/water_repository.dart';
 import '../../water/domain/services/reset_data_with_timer_service.dart';
 import '../../water/domain/services/time_to_drink_service.dart';
 import '../../water/domain/services/timer_to_drink_service.dart';
+import '../../water/domain/usecases/calculate_water_data_by_parameters_usecase.dart';
 import '../../water/domain/usecases/calculate_water_data_usecase.dart';
 import '../../water/domain/usecases/handle_reset_water_data_usecase.dart';
 import '../../water/domain/usecases/validate_session_usecase.dart';
@@ -59,6 +60,10 @@ Future<void> initGetIt() async {
     return CalculateWaterDataUseCaseImp(getIt(), getIt());
   });
 
+  getIt.registerLazySingleton<CalculateWaterDataByParametersUseCase>(() {
+    return CalculateWaterDataByParametersUseCaseImp();
+  });
+
   getIt.registerLazySingleton<ValidateSessionUseCase>(() {
     return ValidateSessionUseCaseImp(getIt(), getIt());
   });
@@ -84,7 +89,7 @@ Future<void> initGetIt() async {
   // Controllers
 
   getIt.registerLazySingleton<WaterFormController>(() {
-    return WaterFormController(getIt(), getIt(), getIt());
+    return WaterFormController(getIt(), getIt(), getIt(), getIt());
   });
 
   getIt.registerLazySingleton<WaterController>(() {

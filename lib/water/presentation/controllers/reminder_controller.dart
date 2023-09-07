@@ -43,20 +43,22 @@ class ReminderController extends ChangeNotifier {
   }) async {
     await Dialogs.confirm(
       title: 'Excluir lembrete?',
-      text: 'O lembrete não poderá ser recuperado',
+      text: 'O lembrete não poderá ser recuperado.',
       cancelText: 'Cancelar',
       confirmText: 'Sim, excluir',
       onYes: () async {
         int timesToDrinkCount = (await getResult(_waterRepository.getTimesToDrink())).length;
 
         if (timesToDrinkCount == 1) {
-          SnackBarMessage.normal(context: context, text: 'Deve haver ao menos uma notificação');
+          SnackBarMessage.normal(context: context, text: 'Deve haver ao menos um lembrete');
+          Navigator.pop(context);
+          return;
         }
 
         var deleteTimeToDrinkResult = await getResult(_waterRepository.deleteTimeToDrink(timeToDrink));
         if (deleteTimeToDrinkResult is Failure) throw Exception();
 
-        var setDailyDrinkingFrequency = await getResult(_waterRepository.setDailyFrequency(timesToDrinkCount));
+        var setDailyDrinkingFrequency = await getResult(_waterRepository.setDailyFrequency(timesToDrinkCount - 1));
         if (setDailyDrinkingFrequency is Failure) throw Exception();
 
         reminders.removeWhere((reminder) => reminder == timeToDrink);

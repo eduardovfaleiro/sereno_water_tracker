@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/core.dart';
-import '../../../../core/theme/themes.dart';
-import '../../controllers/water_form_controller.dart';
-import '../../widgets/number_picker.dart';
+import '../../../../../core/core.dart';
+import '../../../../../core/theme/themes.dart';
+import '../../../controllers/water_form_controller.dart';
+import '../../../widgets/number_picker.dart';
 
 class WeeklyWorkoutDaysWaterForm extends StatelessWidget {
   const WeeklyWorkoutDaysWaterForm({super.key});

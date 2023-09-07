@@ -7,7 +7,7 @@ import '../../controllers/water_controller.dart';
 import '../../utils/dialogs.dart';
 import '../../utils/snackbar_message.dart';
 import '../../widgets/gradient_container.dart';
-import 'water_container_widget.dart';
+import 'water_container_component.dart';
 
 class WaterView extends StatefulWidget {
   const WaterView({super.key});
@@ -20,6 +20,7 @@ class _WaterViewState extends State<WaterView> {
   @override
   void initState() {
     super.initState();
+
     context.read<WaterController>().init();
   }
 

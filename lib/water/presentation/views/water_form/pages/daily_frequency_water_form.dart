@@ -3,10 +3,10 @@ library water_starter_view;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/core.dart';
-import '../../../../core/theme/themes.dart';
-import '../../controllers/water_form_controller.dart';
-import '../../widgets/number_picker.dart';
+import '../../../../../core/core.dart';
+import '../../../../../core/theme/themes.dart';
+import '../../../controllers/water_form_controller.dart';
+import '../../../widgets/number_picker.dart';
 
 class DailyFrequencyWaterForm extends StatelessWidget {
   const DailyFrequencyWaterForm({super.key});
@@ -53,10 +53,10 @@ class DailyFrequencyWaterForm extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.3,
                 alignment: Alignment.center,
                 child: NumberPicker(
-                  suffixWidget: Text(controller.dailyDrinkingFrequency == 1 ? 'vez' : 'vezes'),
+                  suffixWidget: Text(controller.waterData.dailyDrinkingFrequency == 1 ? 'vez' : 'vezes'),
                   range: MAX_DAILY_DRINKING_FREQUENCY,
                   includeZero: false,
-                  initialValue: controller.dailyDrinkingFrequency,
+                  initialValue: controller.waterData.dailyDrinkingFrequency,
                   onChanged: (value) {
                     controller.setDailyDrinkingFrequency(value);
                   },
