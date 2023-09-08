@@ -6,6 +6,7 @@ import '../../../../../core/functions/time_of_day_utils.dart';
 import '../../../../../core/theme/themes.dart';
 import '../../../controllers/water_form_controller.dart';
 import '../../../utils/bottom_sheets.dart';
+import '../../../utils/dialogs.dart';
 import '../../../utils/show_edit_reminder.dart';
 import '../../../widgets/buttons/button.dart';
 import '../../../widgets/my_text_fields.dart';
@@ -22,7 +23,7 @@ class _InfoWaterFormState extends State<InfoWaterForm> {
   void initState() {
     super.initState();
 
-    context.read<WaterFormController>().initInfoPage(context);
+    context.read<WaterFormController>().initInfoPage();
   }
 
   @override
@@ -120,7 +121,23 @@ class _InfoWaterFormState extends State<InfoWaterForm> {
 
                       return _ReminderCard(
                         reminder: timeToDrink,
-                        onDelete: (timeToDrink) {},
+                        onDelete: () async {
+                          await Dialogs.confirm(
+                            title: 'Excluir lembrete?',
+                            text: 'O lembrete não poderá ser recuperado.',
+                            cancelText: 'Cancelar',
+                            confirmText: 'Sim, excluir',
+                            onYes: () async {
+                              await controller.deleteReminder(context: context, reminder: timeToDrink);
+
+                              Navigator.pop(context);
+                            },
+                            onNo: () {
+                              Navigator.pop(context);
+                            },
+                            context: context,
+                          );
+                        },
                         onEdit: (timeToDrink) {
                           showEditReminder(
                             context: context,
@@ -202,7 +219,7 @@ Future<void> _showEditDailyGoalBottomSheet({
 
 class _ReminderCard extends StatelessWidget {
   final TimeOfDay reminder;
-  final Function(TimeOfDay reminder) onDelete;
+  final Function() onDelete;
   final Function(TimeOfDay reminder) onEdit;
 
   const _ReminderCard({
@@ -234,7 +251,7 @@ class _ReminderCard extends StatelessWidget {
               IconButton(
                 icon: const Icon(CupertinoIcons.delete, color: MyColors.lightGrey3),
                 onPressed: () async {
-                  await onDelete(reminder);
+                  await onDelete();
                 },
               ),
             ],

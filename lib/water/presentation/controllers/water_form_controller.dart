@@ -49,13 +49,40 @@ class WaterFormController extends ChangeNotifier {
 
   Future<void> init() async {}
 
-  void initInfoPage(BuildContext context) {
+  void initInfoPage() {
     if (waterData.dailyGoal == 0) {
       waterData = _calculateWaterDataByParametersUseCase(
         userEntity: user,
         dailyDrinkingFrequency: waterData.dailyDrinkingFrequency,
       );
     }
+  }
+
+  void reloadData() {
+    waterData = _calculateWaterDataByParametersUseCase(
+      userEntity: user,
+      dailyDrinkingFrequency: waterData.dailyDrinkingFrequency,
+    );
+
+    notifyListeners();
+  }
+
+  Future<void> goBack() async {
+    await pageController.previousPage(
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOutExpo,
+    );
+
+    notifyListeners();
+  }
+
+  Future<void> goNext() async {
+    await pageController.nextPage(
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOutExpo,
+    );
+
+    notifyListeners();
   }
 
   void setWeight(int value) {
@@ -98,6 +125,21 @@ class WaterFormController extends ChangeNotifier {
     return await getResult(_userRepository.getUser());
   }
 
+  Result<void> addReminder({
+    required BuildContext context,
+    required TimeOfDay reminder,
+  }) {
+    if (waterData.timesToDrink.contains(reminder)) {
+      final failure = Failure('Lembrete já existente.');
+
+      SnackBarMessage.error(failure, context: context);
+      return Left(failure);
+    }
+
+    waterData.timesToDrink.add(reminder);
+    return const Right(null);
+  }
+
   Result<void> editReminder({
     required BuildContext context,
     required TimeOfDay oldReminder,
@@ -120,10 +162,10 @@ class WaterFormController extends ChangeNotifier {
     return const Right(null);
   }
 
-  Result<void> deleteReminder({
+  Future<Result<void>> deleteReminder({
     required BuildContext context,
     required TimeOfDay reminder,
-  }) {
+  }) async {
     int index = waterData.timesToDrink.indexOf(reminder);
 
     if (index == -1) {
@@ -134,6 +176,15 @@ class WaterFormController extends ChangeNotifier {
     }
 
     waterData.timesToDrink.remove(reminder);
+    notifyListeners();
+
+    SnackBarMessage.undo(
+        context: context,
+        text: 'Lembrete excluído',
+        onPressed: () {
+          waterData.timesToDrink.add(reminder);
+        });
+
     return const Right(null);
   }
 
@@ -144,22 +195,15 @@ class WaterFormController extends ChangeNotifier {
 
     if (setUserResult is Failure) {
       SnackBarMessage.error(setUserResult, context: context);
-
       return Left(setUserResult);
     }
 
     if (dailyDrinkingFrequencyResult is Failure) {
       SnackBarMessage.error(dailyDrinkingFrequencyResult, context: context);
-
       return Left(dailyDrinkingFrequencyResult);
     }
 
-    var calculateWaterDataResult = await getResult(_calculateWaterDataUseCase());
-    if (calculateWaterDataResult is Failure) throw Exception();
-
-    WaterDataEntity waterDataEntity = calculateWaterDataResult;
-
-    final setWaterDataResult = await getResult(_waterRepository.setWaterData(waterDataEntity));
+    final setWaterDataResult = await getResult(_waterRepository.setWaterData(waterData));
     if (setWaterDataResult is Failure) throw Exception();
 
     return const Right(null);

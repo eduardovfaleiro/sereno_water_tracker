@@ -19,6 +19,7 @@ class WaterFormView extends StatefulWidget {
 class _WaterFormViewState extends State<WaterFormView> {
   late final ValueNotifier<bool> _showGoBackButton;
   late final ValueNotifier<bool> _showFinishButton;
+  late final ValueNotifier<bool> _showReloadButton;
 
   @override
   void initState() {
@@ -28,10 +29,12 @@ class _WaterFormViewState extends State<WaterFormView> {
 
     _showGoBackButton = ValueNotifier(false);
     _showFinishButton = ValueNotifier(false);
+    _showReloadButton = ValueNotifier(false);
 
     controller.pageController.addListener(() {
       _showGoBackButton.value = controller.pageController.page! > 0.5;
       _showFinishButton.value = controller.pageController.page! == controller.pages.length - 1;
+      _showReloadButton.value = controller.pageController.page! >= controller.pages.length - 1.5;
     });
   }
 
@@ -41,32 +44,70 @@ class _WaterFormViewState extends State<WaterFormView> {
       builder: (context, controller, _) {
         return Scaffold(
             appBar: AppBar(
-              title: ValueListenableBuilder(
-                valueListenable: _showGoBackButton,
-                builder: (context, showGoBackButton, _) {
-                  return Visibility(
-                    visible: showGoBackButton,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    child: AnimatedOpacity(
-                      duration: const Duration(milliseconds: 250),
-                      opacity: showGoBackButton ? 1 : 0,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              controller.pageController.previousPage(
-                                duration: const Duration(milliseconds: 250),
-                                curve: Curves.easeInOutExpo,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ValueListenableBuilder(
+                    valueListenable: _showGoBackButton,
+                    builder: (context, showGoBackButton, _) {
+                      return Visibility(
+                        visible: showGoBackButton,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 250),
+                          opacity: showGoBackButton ? 1 : 0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  controller.goBack();
+                                },
+                                icon: const Icon(Icons.arrow_back),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  ValueListenableBuilder(
+                    valueListenable: _showReloadButton,
+                    builder: (context, showReloadButton, _) {
+                      return Visibility(
+                        visible: showReloadButton,
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 250),
+                          opacity: showReloadButton ? 1 : 0,
+                          child: IconButton(
+                            tooltip: 'Reiniciar dados',
+                            onPressed: () async {
+                              await Dialogs.confirm(
+                                title: 'Reiniciar dados?',
+                                text: 'Somente as alterações feitas nesta tela serão perdidas.',
+                                cancelText: 'Cancelar',
+                                confirmText: 'Sim, reiniciar',
+                                onYes: () {
+                                  controller.reloadData();
+                                  Navigator.pop(context);
+                                },
+                                onNo: () {
+                                  Navigator.pop(context);
+                                },
+                                context: context,
                               );
                             },
-                            icon: const Icon(Icons.arrow_back),
+                            icon: const Icon(
+                              Icons.restart_alt,
+                              size: Spacing.medium2,
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
             body: SafeArea(
@@ -92,64 +133,64 @@ class _WaterFormViewState extends State<WaterFormView> {
                 ),
               ),
             ),
-            bottomNavigationBar: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SmoothPageIndicator(
-                  controller: controller.pageController,
-                  count: controller.pages.length,
-                  effect: const ExpandingDotsEffect(
-                    activeDotColor: MyColors.lightBlue1,
-                    dotColor: MyColors.darkBlue1,
-                    dotHeight: Spacing.small2,
-                    dotWidth: Spacing.small2,
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.only(top: Spacing.small),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SmoothPageIndicator(
+                    controller: controller.pageController,
+                    count: controller.pages.length,
+                    effect: const ExpandingDotsEffect(
+                      activeDotColor: MyColors.lightBlue1,
+                      dotColor: MyColors.darkBlue1,
+                      dotHeight: Spacing.small2,
+                      dotWidth: Spacing.small2,
+                    ),
                   ),
-                ),
-                const SizedBox(height: Spacing.small2),
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 1000),
-                  padding: const EdgeInsets.symmetric(horizontal: Spacing.normal, vertical: Spacing.small1),
-                  child: ValueListenableBuilder(
-                      valueListenable: _showFinishButton,
-                      builder: (context, showFinishButton, _) {
-                        return Container(
-                          child: showFinishButton
-                              ? _Button(
-                                  onPressed: () async {
-                                    await Dialogs.confirm(
-                                        context: context,
-                                        text: 'Você poderá mudar essas alterações no futuro.',
-                                        title: 'Deseja finalizar?',
-                                        onNo: () => Navigator.pop(context),
-                                        onYes: () {
-                                          controller.saveData(context).then((value) async {
-                                            value.fold((failure) {
-                                              SnackBarMessage.error(failure, context: context);
-                                            }, (success) {
-                                              context.read<WaterController>().init().whenComplete(() {
-                                                Navigator.pushNamed(context, '/home');
+                  const SizedBox(height: Spacing.small2),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 1000),
+                    padding: const EdgeInsets.symmetric(horizontal: Spacing.normal, vertical: Spacing.small1),
+                    child: ValueListenableBuilder(
+                        valueListenable: _showFinishButton,
+                        builder: (context, showFinishButton, _) {
+                          return Container(
+                            child: showFinishButton
+                                ? _Button(
+                                    onPressed: () async {
+                                      await Dialogs.confirm(
+                                          context: context,
+                                          text: 'Você poderá mudar essas alterações no futuro.',
+                                          title: 'Deseja finalizar?',
+                                          onNo: () => Navigator.pop(context),
+                                          onYes: () {
+                                            controller.saveData(context).then((value) async {
+                                              value.fold((failure) {
+                                                SnackBarMessage.error(failure, context: context);
+                                              }, (success) {
+                                                context.read<WaterController>().init().whenComplete(() {
+                                                  Navigator.pushNamed(context, '/home');
+                                                });
                                               });
                                             });
                                           });
-                                        });
-                                  },
-                                  text: 'Finalizar',
-                                  suffixIcon: null,
-                                )
-                              : _Button(
-                                  onPressed: () {
-                                    controller.pageController.nextPage(
-                                      duration: const Duration(milliseconds: 250),
-                                      curve: Curves.easeInOutExpo,
-                                    );
-                                  },
-                                  text: 'Próximo',
-                                  suffixIcon: Icons.arrow_forward_ios_rounded,
-                                ),
-                        );
-                      }),
-                ),
-              ],
+                                    },
+                                    text: 'Finalizar',
+                                    suffixIcon: null,
+                                  )
+                                : _Button(
+                                    onPressed: () {
+                                      controller.goNext();
+                                    },
+                                    text: 'Próximo',
+                                    suffixIcon: Icons.arrow_forward_ios_rounded,
+                                  ),
+                          );
+                        }),
+                  ),
+                ],
+              ),
             ));
       },
     );

@@ -21,7 +21,7 @@ abstract class Dialogs {
     );
   }
 
-  static Future<void> confirm({
+  static Future<dynamic> confirm({
     required String title,
     required String text,
     required Function() onYes,
