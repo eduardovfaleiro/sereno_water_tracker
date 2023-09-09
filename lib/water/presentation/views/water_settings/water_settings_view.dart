@@ -1,5 +1,6 @@
 // ignore_for_file: unused_element
 
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,8 +10,11 @@ import '../../../../core/functions/time_of_day_utils.dart';
 import '../../../../core/theme/themes.dart';
 import '../../controllers/water_controller.dart';
 import '../../controllers/water_settings_controller.dart';
+import '../../utils/bottom_sheets.dart';
 import '../../utils/dialogs.dart';
+import '../../utils/show_edit_reminder.dart';
 import '../../widgets/buttons/button.dart';
+import '../../widgets/number_picker.dart';
 
 class WaterSettingsView extends StatefulWidget {
   const WaterSettingsView({super.key});
@@ -32,13 +36,12 @@ class _WaterSettingsViewState extends State<WaterSettingsView> {
     return Consumer<WaterSettingsController>(
       builder: (context, controller, _) {
         return Scaffold(
-          bottomNavigationBar: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Spacing.small2,
-                vertical: Spacing.small1,
-              ),
-              child: Button.normal(
-                onPressed: () async {
+          appBar: AppBar(actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: Spacing.small3),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(Sizes.borderRadius),
+                onTap: () async {
                   await Dialogs.confirm(
                     title: 'Tem certeza?',
                     text: 'A quantidade de água bebida será zerada.',
@@ -56,160 +59,141 @@ class _WaterSettingsViewState extends State<WaterSettingsView> {
                     context: context,
                   );
                 },
-                text: 'Salvar',
-              )),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Spacing.small1, vertical: Spacing.small),
+                  child: Row(
+                    children: [
+                      Icon(Icons.done, color: MyColors.lightBlue),
+                      SizedBox(width: Spacing.small),
+                      Text('Salvar', style: TextStyle(color: MyColors.lightBlue)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ]),
           body: SafeArea(
             child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: Spacing.medium2),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Spacing.small),
-                    child: _SimpleCard(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Spacing.small),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: Spacing.big),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Spacing.small3),
+                      child: Icon(CommunityMaterialIcons.weight, size: Spacing.medium, color: MyColors.lightGrey3),
+                    ),
+                    const SizedBox(height: Spacing.small),
+                    _SimpleCard(
                       text: 'Peso',
                       value: '${controller.isLoading ? MIN_WEIGHT : controller.userEntity.weight} kg',
-                      onTap: () {},
+                      onTap: () async {
+                        await _showEditWeight(
+                          context: context,
+                          onOk: (weight) {
+                            controller.setWeight(weight);
+
+                            Navigator.pop(context);
+                          },
+                          weight: controller.userEntity.weight,
+                        );
+                      },
                     ),
-                  ),
-                  const SizedBox(height: Spacing.small2),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Spacing.small),
-                    child: _SimpleCard(
+                    const SizedBox(height: Spacing.medium),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Spacing.small3),
+                      child:
+                          Icon(CommunityMaterialIcons.weight_lifter, size: Spacing.medium, color: MyColors.lightGrey3),
+                    ),
+                    const SizedBox(height: Spacing.small),
+                    _SimpleCard(
                       text: 'Dias de treino por semana',
                       value: '${controller.isLoading ? 0 : controller.userEntity.weeklyWorkoutDays} dias',
-                      onTap: () {},
+                      onTap: () async {
+                        await _showEditWeeklyWorkoutDays(
+                          context: context,
+                          onOk: (newWeeklyWorkoutDays) {
+                            controller.setWeeklyWorkoutDays(newWeeklyWorkoutDays);
+
+                            Navigator.pop(context);
+                          },
+                          weeklyWorkoutDays: controller.userEntity.weeklyWorkoutDays,
+                        );
+                      },
                     ),
-                    // child: Column(
-                    //   children: [
-                    //     Row(
-                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       children: [
-                    //         const Text('Dias de treino por semana'),
-                    //         Text('${controller.isLoading ? 0 : controller.userEntity.weeklyWorkoutDays} dias'),
-                    //       ],
-                    //     ),
-                    //     const SizedBox(height: Spacing.small2),
-                    //     Slider(
-                    //       max: DAYS_IN_A_WEEK.toDouble(),
-                    //       value: controller.isLoading ? 0 : controller.userEntity.weeklyWorkoutDays.toDouble(),
-                    //       onChanged: (value) {
-                    //         controller.setWeeklyWorkoutDays(value.toInt());
-                    //       },
-                    //     ),
-                    //   ],
-                    // ),
-                  ),
-                  const SizedBox(height: Spacing.small2),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Spacing.small),
-                    child: _SimpleCard(
-                      onTap: () {},
-                      text: 'Quantas vezes beber por dia',
+                    const SizedBox(height: Spacing.medium),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Spacing.small3),
+                      child: Icon(Icons.timer, size: Spacing.medium, color: MyColors.lightGrey3),
+                    ),
+                    const SizedBox(height: Spacing.small),
+                    _SimpleCard(
+                      onTap: () {
+                        _showEditDailyDrinkingFrequency(
+                          context: context,
+                          onOk: (newDailyDrinkingFrequency) {
+                            controller.setDailyDrinkingFrequency(newDailyDrinkingFrequency);
+
+                            Navigator.pop(context);
+                          },
+                          dailyDrinkingFrequency: controller.waterDataEntity.dailyDrinkingFrequency,
+                        );
+                      },
+                      text: 'Quantas vezes beber ao dia',
                       value:
                           '${controller.isLoading ? MIN_DAILY_DRINKING_FREQUENCY : controller.waterDataEntity.dailyDrinkingFrequency} vezes',
                     ),
-                    // child: Column(
-                    //   children: [
-                    //     Row(
-                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       children: [
-                    //         const Text('Quantas vezes beber por dia'),
-                    //         Text(
-                    //           '${controller.isLoading ? MIN_DAILY_DRINKING_FREQUENCY : controller.waterDataEntity.dailyDrinkingFrequency} vezes',
-                    //         ),
-                    //       ],
-                    //     ),
-                    //     const SizedBox(height: Spacing.small2),
-                    //     Slider(
-                    //       min: MIN_DAILY_DRINKING_FREQUENCY.toDouble(),
-                    //       max: MAX_DAILY_DRINKING_FREQUENCY.toDouble(),
-                    //       value: controller.isLoading
-                    //           ? MIN_DAILY_DRINKING_FREQUENCY.toDouble()
-                    //           : controller.waterDataEntity.dailyDrinkingFrequency.toDouble(),
-                    //       onChanged: (value) {
-                    //         controller.setDailyDrinkingFrequency(value.toInt());
-                    //       },
-                    //     ),
-                    //   ],
-                    // ),
-                  ),
-                  const SizedBox(height: Spacing.small2),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Spacing.small),
-                    child: _SimpleCard(
+                    const SizedBox(height: Spacing.medium),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Spacing.small3),
+                      child: Icon(CommunityMaterialIcons.bed, size: Spacing.medium, color: MyColors.lightGrey3),
+                    ),
+                    const SizedBox(height: Spacing.small),
+                    _SimpleCard(
                       text: 'Hora de acordar',
                       preffixIcon: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: Spacing.small1),
-                        child: Icon(CupertinoIcons.sun_max),
+                        child: Icon(CupertinoIcons.sun_min, size: Spacing.normal),
                       ),
                       value: TimeOfDayUtils(controller.userEntity.wakeUpTime).toLiteral(),
-                      onTap: () {},
+                      onTap: () {
+                        showEditTime(
+                          title: 'Alterar hora de acordar',
+                          context: context,
+                          onOk: (wakeUpTime) {
+                            controller.setWakeUpTime(wakeUpTime);
+
+                            Navigator.pop(context);
+                          },
+                          timeOfDay: controller.userEntity.wakeUpTime,
+                        );
+                      },
                     ),
-                    // child: Column(
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   mainAxisSize: MainAxisSize.min,
-                    //   children: [
-                    //     const Text('Hora de acordar'),
-                    //     const SizedBox(height: Spacing.small),
-                    //     Container(
-                    //       height: MediaQuery.of(context).size.height * 0.2,
-                    //       alignment: Alignment.center,
-                    //       child: TimePicker(
-                    //         icon: CupertinoIcons.sun_max,
-                    //         initialTime: controller.isLoading
-                    //             ? const TimeOfDay(hour: 0, minute: 0)
-                    //             : controller.userEntity.wakeUpTime,
-                    //         onHourChanged: (value) {
-                    //           controller.setWakeUpTime(value);
-                    //         },
-                    //         onMinuteChanged: (value) {
-                    //           controller.setWakeUpTime(value);
-                    //         },
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                  ),
-                  const SizedBox(height: Spacing.small2),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Spacing.small),
-                    child: _SimpleCard(
+                    const SizedBox(height: Spacing.small2),
+                    _SimpleCard(
                       preffixIcon: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: Spacing.small1),
-                        child: Icon(CupertinoIcons.moon),
+                        child: Icon(CupertinoIcons.moon_zzz, size: Spacing.normal),
                       ),
                       text: 'Hora de dormir',
                       value: TimeOfDayUtils(controller.userEntity.sleeptime).toLiteral(),
-                      onTap: () {},
+                      onTap: () {
+                        showEditTime(
+                          title: 'Alterar hora de dormir',
+                          context: context,
+                          onOk: (sleeptime) {
+                            controller.setSleepTime(sleeptime);
+
+                            Navigator.pop(context);
+                          },
+                          timeOfDay: controller.userEntity.sleeptime,
+                        );
+                      },
                     ),
-                    // child: Column(
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   mainAxisSize: MainAxisSize.min,
-                    //   children: [
-                    //     const Text('Hora de dormir'),
-                    //     const SizedBox(height: Spacing.small),
-                    //     Container(
-                    //       height: MediaQuery.of(context).size.height * 0.2,
-                    //       alignment: Alignment.center,
-                    //       child: TimePicker(
-                    //         initialTime: controller.isLoading
-                    //             ? const TimeOfDay(hour: 0, minute: 0)
-                    //             : controller.userEntity.sleeptime,
-                    //         icon: CupertinoIcons.moon,
-                    //         onHourChanged: (value) {
-                    //           controller.setSleepTime(value);
-                    //         },
-                    //         onMinuteChanged: (value) {
-                    //           controller.setSleepTime(value);
-                    //         },
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -230,7 +214,9 @@ class _SimpleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        onTap();
+      },
       borderRadius: BorderRadius.circular(Sizes.borderRadius),
       child: Ink(
         decoration: BoxDecoration(
@@ -268,4 +254,148 @@ class _SimpleCard extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _showEditWeight({
+  required BuildContext context,
+  required Function(int weight) onOk,
+  required int weight,
+}) async {
+  await BottomSheets.normal(
+    context: context,
+    title: 'Alterar peso',
+    content: StatefulBuilder(
+      builder: (context, setState) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Spacing.small2,
+            vertical: Spacing.medium,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.25,
+                alignment: Alignment.center,
+                child: NumberPicker(
+                  initialValue: weight,
+                  loop: true,
+                  suffixWidget: const Text('kg'),
+                  range: MAX_WEIGHT,
+                  includeZero: false,
+                  onChanged: (newWeight) {
+                    setState(() {
+                      weight = newWeight;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: Spacing.small2),
+              Button.ok(
+                onPressed: () async {
+                  onOk(weight);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+  );
+}
+
+Future<void> _showEditWeeklyWorkoutDays({
+  required BuildContext context,
+  required Function(int weight) onOk,
+  required int weeklyWorkoutDays,
+}) async {
+  await BottomSheets.normal(
+    context: context,
+    title: 'Alterar dias de treino por semana',
+    content: StatefulBuilder(
+      builder: (context, setState) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Spacing.small2,
+            vertical: Spacing.medium,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.25,
+                alignment: Alignment.center,
+                child: NumberPicker(
+                  suffixWidget: Text(weeklyWorkoutDays == 1 ? 'dia' : 'dias'),
+                  range: DAYS_IN_A_WEEK,
+                  initialValue: weeklyWorkoutDays,
+                  onChanged: (newWeeklyWorkoutDays) {
+                    setState(() {
+                      weeklyWorkoutDays = newWeeklyWorkoutDays;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: Spacing.small2),
+              Button.ok(
+                onPressed: () async {
+                  onOk(weeklyWorkoutDays);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+  );
+}
+
+Future<void> _showEditDailyDrinkingFrequency({
+  required BuildContext context,
+  required Function(int dailyDrinkingFrequency) onOk,
+  required int dailyDrinkingFrequency,
+}) async {
+  await BottomSheets.normal(
+    context: context,
+    title: 'Alterar dias de treino por semana',
+    content: StatefulBuilder(
+      builder: (context, setState) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Spacing.small2,
+            vertical: Spacing.medium,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.3,
+                alignment: Alignment.center,
+                child: NumberPicker(
+                  suffixWidget: Text(dailyDrinkingFrequency == 1 ? 'vez' : 'vezes'),
+                  range: MAX_DAILY_DRINKING_FREQUENCY,
+                  includeZero: false,
+                  initialValue: dailyDrinkingFrequency,
+                  onChanged: (newDailyDrinkingFrequency) {
+                    setState(() {
+                      dailyDrinkingFrequency = newDailyDrinkingFrequency;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: Spacing.small2),
+              Button.ok(
+                onPressed: () async {
+                  onOk(dailyDrinkingFrequency);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+  );
 }

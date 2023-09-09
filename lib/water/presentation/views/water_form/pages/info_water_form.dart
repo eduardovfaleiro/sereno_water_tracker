@@ -139,8 +139,9 @@ class _InfoWaterFormState extends State<InfoWaterForm> {
                           );
                         },
                         onEdit: (timeToDrink) {
-                          showEditReminder(
+                          showEditTime(
                             context: context,
+                            title: 'Alterar lembrete',
                             onOk: (newReminder) {
                               controller.editReminder(
                                 context: context,
@@ -148,7 +149,7 @@ class _InfoWaterFormState extends State<InfoWaterForm> {
                                 newReminder: newReminder,
                               );
                             },
-                            reminder: timeToDrink,
+                            timeOfDay: timeToDrink,
                           );
                         },
                       );

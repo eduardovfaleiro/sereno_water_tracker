@@ -44,12 +44,13 @@ class ReminderCard extends StatelessWidget {
                       icon: const Icon(CupertinoIcons.pencil, color: MyColors.lightGrey),
                       padding: EdgeInsets.zero,
                       onPressed: () {
-                        showEditReminder(
+                        showEditTime(
+                          title: 'Alterar lembrete',
                           context: context,
                           onOk: (newReminder) {
                             onEdit(newReminder);
                           },
-                          reminder: reminder,
+                          timeOfDay: reminder,
                         );
                       },
                     ),

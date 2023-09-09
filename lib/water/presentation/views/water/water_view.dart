@@ -173,7 +173,7 @@ class _WaterViewState extends State<WaterView> {
                   const SizedBox(height: Spacing.medium),
                   SizedBox(
                       width: double.infinity,
-                      child: WaterContainerWidget(
+                      child: WaterContainerComponent(
                         onContainerTap: (amount) async {
                           if (amount > 3500) {
                             await Dialogs.confirm(

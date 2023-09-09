@@ -19,19 +19,19 @@ import '../../widgets/buttons/circular_button.dart';
 import '../../widgets/my_text_fields.dart';
 import '../../widgets/svg_picker/svg_picker_field.dart';
 
-class WaterContainerWidget extends StatefulWidget {
+class WaterContainerComponent extends StatefulWidget {
   final void Function(int amount) onContainerTap;
 
-  const WaterContainerWidget({
+  const WaterContainerComponent({
     Key? key,
     required this.onContainerTap,
   }) : super(key: key);
 
   @override
-  State<WaterContainerWidget> createState() => _WaterContainerWidgetState();
+  State<WaterContainerComponent> createState() => _WaterContainerComponentState();
 }
 
-class _WaterContainerWidgetState extends State<WaterContainerWidget> {
+class _WaterContainerComponentState extends State<WaterContainerComponent> {
   final _moreOptionsKey = GlobalKey();
 
   @override

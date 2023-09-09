@@ -5,16 +5,17 @@ import '../widgets/buttons/button.dart';
 import '../widgets/time_picker.dart';
 import 'bottom_sheets.dart';
 
-Future<void> showEditReminder({
+Future<void> showEditTime({
   required BuildContext context,
-  required Function(TimeOfDay reminder) onOk,
-  required TimeOfDay reminder,
+  required String title,
+  required Function(TimeOfDay timeOfDay) onOk,
+  required TimeOfDay timeOfDay,
 }) async {
-  TimeOfDay newReminder = TimeOfDay(hour: reminder.hour, minute: reminder.minute);
+  TimeOfDay newTimeOfDay = TimeOfDay(hour: timeOfDay.hour, minute: timeOfDay.minute);
 
   BottomSheets.normal(
     context: context,
-    title: 'Alterar lembrete',
+    title: title,
     content: Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.only(
@@ -29,17 +30,17 @@ Future<void> showEditReminder({
           SizedBox(
             height: MediaQuery.of(context).size.height * .2,
             child: TimePicker(
-              initialTime: reminder,
+              initialTime: timeOfDay,
               onHourChanged: (value) {
-                newReminder = value;
+                newTimeOfDay = value;
               },
               onMinuteChanged: (value) {
-                newReminder = value;
+                newTimeOfDay = value;
               },
             ),
           ),
           Button.ok(onPressed: () {
-            onOk(newReminder);
+            onOk(newTimeOfDay);
           }),
         ],
       ),
