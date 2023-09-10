@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "sereno-clean-architecture-solid",
+            "name": "sereno",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "sereno-clean-architecture-solid (profile mode)",
+            "name": "sereno (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "sereno-clean-architecture-solid (release mode)",
+            "name": "sereno (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

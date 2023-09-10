@@ -48,4 +48,19 @@ class UserEntity {
       wakeUpTime: wakeUpTime ?? this.wakeUpTime,
     );
   }
+
+  @override
+  bool operator ==(covariant UserEntity other) {
+    if (identical(this, other)) return true;
+
+    return other.weight == weight &&
+        other.weeklyWorkoutDays == weeklyWorkoutDays &&
+        other.sleeptime == sleeptime &&
+        other.wakeUpTime == wakeUpTime;
+  }
+
+  @override
+  int get hashCode {
+    return weight.hashCode ^ weeklyWorkoutDays.hashCode ^ sleeptime.hashCode ^ wakeUpTime.hashCode;
+  }
 }

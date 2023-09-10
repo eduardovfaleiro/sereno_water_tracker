@@ -14,6 +14,7 @@ import 'water/presentation/controllers/water_form_controller.dart';
 import 'core/core.dart';
 import 'water/presentation/controllers/water_settings_controller.dart';
 import 'water/presentation/views/home/home_view.dart';
+import 'water/presentation/views/water_form/pages/finish_water_form.dart';
 import 'water/presentation/views/water_settings/water_settings_view.dart';
 import 'water/presentation/views/water/water_view.dart';
 import 'water/presentation/views/water_form/water_form_view.dart';
@@ -67,6 +68,7 @@ class SerenoView extends StatelessWidget {
       initialRoute: initialRoute,
       routes: {
         '/waterForm': (context) => const WaterFormView(),
+        '/finishWaterForm': (context) => const FinishWaterForm(),
         '/water': (_) => const WaterView(),
         '/home': (_) => const HomeView(),
         '/waterSettings': (_) => const WaterSettingsView(),

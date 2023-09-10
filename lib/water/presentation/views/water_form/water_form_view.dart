@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../controllers/water_controller.dart';
-import '../../utils/dialogs.dart';
-import '../../utils/snackbar_message.dart';
 import '../../widgets/buttons/button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -72,41 +69,6 @@ class _WaterFormViewState extends State<WaterFormView> {
                       );
                     },
                   ),
-                  ValueListenableBuilder(
-                    valueListenable: _showReloadButton,
-                    builder: (context, showReloadButton, _) {
-                      return Visibility(
-                        visible: showReloadButton,
-                        child: AnimatedOpacity(
-                          duration: const Duration(milliseconds: 250),
-                          opacity: showReloadButton ? 1 : 0,
-                          child: IconButton(
-                            tooltip: 'Reiniciar dados',
-                            onPressed: () async {
-                              await Dialogs.confirm(
-                                title: 'Reiniciar dados?',
-                                text: 'Somente as alterações feitas nesta tela serão perdidas.',
-                                cancelText: 'Cancelar',
-                                confirmText: 'Sim, reiniciar',
-                                onYes: () {
-                                  controller.reloadData();
-                                  Navigator.pop(context);
-                                },
-                                onNo: () {
-                                  Navigator.pop(context);
-                                },
-                                context: context,
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.restart_alt,
-                              size: Spacing.medium2,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
                 ],
               ),
             ),
@@ -159,25 +121,27 @@ class _WaterFormViewState extends State<WaterFormView> {
                             child: showFinishButton
                                 ? _Button(
                                     onPressed: () async {
-                                      await Dialogs.confirm(
-                                          context: context,
-                                          text: 'Você poderá mudar essas alterações no futuro.',
-                                          title: 'Deseja finalizar?',
-                                          onNo: () => Navigator.pop(context),
-                                          onYes: () {
-                                            controller.saveData(context).then((value) async {
-                                              value.fold((failure) {
-                                                SnackBarMessage.error(failure, context: context);
-                                              }, (success) {
-                                                context.read<WaterController>().init().whenComplete(() {
-                                                  Navigator.pushReplacementNamed(context, '/home');
-                                                });
-                                              });
-                                            });
-                                          });
+                                      Navigator.pushReplacementNamed(context, '/finishWaterForm');
+
+                                      // await Dialogs.confirm(
+                                      //     context: context,
+                                      //     text: 'Você poderá mudar essas alterações no futuro.',
+                                      //     title: 'Deseja finalizar?',
+                                      //     onNo: () => Navigator.pop(context),
+                                      //     onYes: () {
+                                      //       controller.saveData(context).then((value) async {
+                                      //         value.fold((failure) {
+                                      //           SnackBarMessage.error(failure, context: context);
+                                      //         }, (success) {
+                                      //           context.read<WaterController>().init().whenComplete(() {
+                                      //             Navigator.pushReplacementNamed(context, '/home');
+                                      //           });
+                                      //         });
+                                      //       });
+                                      //     });
                                     },
-                                    text: 'Finalizar',
-                                    suffixIcon: null,
+                                    text: 'Próximo',
+                                    suffixIcon: Icons.arrow_forward_ios_rounded,
                                   )
                                 : _Button(
                                     onPressed: () {

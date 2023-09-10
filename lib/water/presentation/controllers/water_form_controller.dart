@@ -10,7 +10,6 @@ import '../../domain/usecases/calculate_water_data_by_parameters_usecase.dart';
 import '../../domain/usecases/calculate_water_data_usecase.dart';
 import '../utils/snackbar_message.dart';
 import '../views/water_form/pages/daily_frequency_water_form.dart';
-import '../views/water_form/pages/info_water_form.dart';
 import '../views/water_form/pages/sleep_habit_water_form.dart';
 import '../views/water_form/pages/weekly_workout_days_water_form.dart';
 import '../views/water_form/pages/weight_water_form.dart';
@@ -32,6 +31,8 @@ class WaterFormController extends ChangeNotifier {
 
   // data
   final user = UserEntity.defaultValues();
+  UserEntity? userEntitySavedInInfoPage;
+
   var waterData = WaterDataEntity.empty().copyWith(
     dailyDrinkingFrequency: DEFAULT_DAILY_DRINKING_FREQUENCY,
   );
@@ -42,7 +43,6 @@ class WaterFormController extends ChangeNotifier {
     const DailyFrequencyWaterForm(),
     const WeeklyWorkoutDaysWaterForm(),
     const SleepHabitWaterForm(),
-    const InfoWaterForm(),
   ];
 
   final pageController = PageController();
@@ -121,6 +121,14 @@ class WaterFormController extends ChangeNotifier {
 
   Future<UserEntity> getUser() async {
     return await getResult(_userRepository.getUser());
+  }
+
+  void setUserEntitySavedInInfoPage(UserEntity userEntity) {
+    userEntitySavedInInfoPage = userEntity.copyWith();
+  }
+
+  bool checkIfUserEntityHasChanges(UserEntity userEntity) {
+    return userEntitySavedInInfoPage != userEntity;
   }
 
   Result<void> addReminder({
