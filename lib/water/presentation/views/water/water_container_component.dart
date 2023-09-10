@@ -107,7 +107,7 @@ class _WaterContainerComponentState extends State<WaterContainerComponent> {
                                         child: Row(
                                           children: [
                                             Icon(CupertinoIcons.delete, size: Spacing.normal + 1),
-                                            SizedBox(width: Spacing.small1),
+                                            SizedBox(width: Spacing.small1 + 0.941),
                                             Text('Excluir recipiente'),
                                           ],
                                         ),
@@ -428,7 +428,7 @@ class _ContainerButton extends StatelessWidget {
       onLongPress: () => onLongPress(),
       label: container.amount <= 999
           ? Text(
-              '${container.amount}ml',
+              '${container.amount} ml',
               style: const TextStyle(color: MyColors.lightGrey, fontWeight: FontWeight.w500),
             )
           : Text(

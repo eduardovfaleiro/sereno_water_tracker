@@ -5,11 +5,9 @@ import 'package:provider/provider.dart';
 import '../../../../../core/functions/time_of_day_utils.dart';
 import '../../../../../core/theme/themes.dart';
 import '../../../controllers/water_form_controller.dart';
-import '../../../utils/bottom_sheets.dart';
 import '../../../utils/dialogs.dart';
-import '../../../utils/show_edit_reminder.dart';
-import '../../../widgets/buttons/button.dart';
-import '../../../widgets/my_text_fields.dart';
+import '../../../utils/show_edit_daily_goal.dart';
+import '../../../utils/show_edit_time.dart';
 
 class InfoWaterForm extends StatefulWidget {
   const InfoWaterForm({super.key});
@@ -52,7 +50,7 @@ class _InfoWaterFormState extends State<InfoWaterForm> {
               InkWell(
                 borderRadius: BorderRadius.circular(Sizes.borderRadius),
                 onTap: () {
-                  _showEditDailyGoalBottomSheet(
+                  showEditDailyGoalBottomSheet(
                     context: context,
                     onOk: (dailyGoal) {
                       controller.setDailyGoal(dailyGoal);
@@ -163,59 +161,6 @@ class _InfoWaterFormState extends State<InfoWaterForm> {
       },
     );
   }
-}
-
-Future<void> _showEditDailyGoalBottomSheet({
-  required BuildContext context,
-  required Function(int dailyGoal) onOk,
-}) async {
-  int? amount;
-  final formKey = GlobalKey<FormState>();
-
-  await BottomSheets.normal(
-    context: context,
-    title: 'Alterar meta diária',
-    content: Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Spacing.small2,
-        vertical: Spacing.medium,
-      ),
-      child: Form(
-        key: formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: Spacing.small1),
-            DigitOnlyTextField(
-              suffix: 'ml',
-              label: 'Meta diária',
-              maxLength: 5,
-              autofocus: true,
-              onChanged: (value) {
-                amount = value;
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Insira uma meta diária.';
-                }
-
-                return null;
-              },
-            ),
-            const SizedBox(height: Spacing.small2),
-            Button.ok(
-              onPressed: () async {
-                if (formKey.currentState!.validate()) {
-                  await onOk(amount!);
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
 }
 
 class _ReminderCard extends StatelessWidget {

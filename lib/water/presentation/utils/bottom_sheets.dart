@@ -15,7 +15,11 @@ abstract class BottomSheets {
       showDragHandle: true,
       builder: (context) {
         return Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            right: Spacing.small1,
+            left: Spacing.small1,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

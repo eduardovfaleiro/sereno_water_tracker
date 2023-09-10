@@ -22,7 +22,25 @@ class ReminderController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> update({required TimeOfDay key, required TimeOfDay newValue}) async {
+  Future<void> add({
+    required TimeOfDay reminder,
+    required BuildContext context,
+  }) async {
+    var addTimeToDrinkResult = await getResult(_waterRepository.addTimeToDrink(reminder));
+
+    if (addTimeToDrinkResult is Failure) {
+      return SnackBarMessage.error(addTimeToDrinkResult, context: context);
+    }
+
+    reminders.add(reminder);
+
+    notifyListeners();
+  }
+
+  Future<void> update({
+    required TimeOfDay key,
+    required TimeOfDay newValue,
+  }) async {
     var updateTimeToDrinkResult = await getResult(_waterRepository.updateTimeToDrink(key, newValue));
 
     if (updateTimeToDrinkResult is Failure) throw Exception();
@@ -43,7 +61,7 @@ class ReminderController extends ChangeNotifier {
   }) async {
     await Dialogs.confirm(
       title: 'Excluir lembrete?',
-      text: 'O lembrete não poderá ser recuperado.',
+      text: 'Deseja mesmo excluir lembrete?',
       cancelText: 'Cancelar',
       confirmText: 'Sim, excluir',
       onYes: () async {
@@ -70,11 +88,20 @@ class ReminderController extends ChangeNotifier {
         Navigator.pop(context);
 
         SnackBarMessage.undo(
-            context: context,
-            text: 'Lembrete excluído',
-            onPressed: () {
-              // TODO: implement
-            });
+          context: context,
+          text: 'Lembrete excluído',
+          onPressed: () async {
+            var addTimeToDrinkResult = await getResult(_waterRepository.addTimeToDrink(timeToDrink));
+
+            if (addTimeToDrinkResult is Failure) {
+              return SnackBarMessage.normal(text: 'Não foi possível desfazer exclusão', context: context);
+            }
+
+            reminders.add(timeToDrink);
+
+            notifyListeners();
+          },
+        );
       },
       onNo: () {
         Navigator.pop(context);

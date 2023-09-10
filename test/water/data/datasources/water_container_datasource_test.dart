@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/water/data/datasources/water_container_datasource.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/entities/water_container_entity.dart';
 
@@ -18,12 +17,12 @@ void main() {
         const WaterContainerEntity(assetName: 'assetName', amount: 200),
       ];
 
-      when(() => mockHiveInterface.box(WATER_CONTAINER)).thenReturn(mockBox);
+      when(() => mockHiveInterface.box(any())).thenReturn(mockBox);
       when(() => mockBox.values).thenReturn(waterContainers);
 
       final result = await dataSource.getAll();
 
-      verify(() => mockHiveInterface.box(WATER_CONTAINER));
+      verify(() => mockHiveInterface.box('waterContainer'));
       verify(() => mockBox.values);
 
       expect(result, waterContainers);

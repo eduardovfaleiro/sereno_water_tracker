@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/theme/themes.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/water_settings_controller.dart';
 
@@ -27,7 +29,6 @@ class _HomeViewState extends State<HomeView> {
         return Scaffold(
           body: PageView(
             controller: controller.pageController,
-            physics: const NeverScrollableScrollPhysics(),
             onPageChanged: (page) {
               setState(() {
                 controller.selectedPage = page;
@@ -35,35 +36,88 @@ class _HomeViewState extends State<HomeView> {
             },
             children: controller.pages,
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: controller.selectedPage,
-            onTap: (index) {
-              setState(() {
-                controller.pageController.animateToPage(
-                  index,
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeInOut,
-                );
-              });
-            },
-            items: const [
-              BottomNavigationBarItem(
-                label: 'Água',
-                icon: Icon(CupertinoIcons.drop),
-                activeIcon: Icon(CupertinoIcons.drop_fill),
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 20,
+                  color: Colors.black.withOpacity(.1),
+                )
+              ],
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * .2,
+                  vertical: Spacing.small,
+                ),
+                child: GNav(
+                  rippleColor: MyColors.darkGrey2,
+                  hoverColor: MyColors.darkGrey2,
+                  gap: 4,
+                  backgroundColor: Colors.black,
+                  activeColor: MyColors.lightGrey,
+                  iconSize: 24,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  duration: const Duration(milliseconds: 400),
+                  color: MyColors.lightGrey,
+                  tabBackgroundColor: MyColors.darkGrey,
+                  tabs: const [
+                    GButton(
+                      icon: CupertinoIcons.drop,
+                    ),
+                    GButton(
+                      icon: CupertinoIcons.gear_alt,
+                    ),
+                    GButton(
+                      icon: CupertinoIcons.bell,
+                    ),
+                  ],
+                  selectedIndex: controller.selectedPage,
+                  onTabChange: (index) {
+                    setState(() {
+                      controller.pageController.animateToPage(
+                        index,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                      );
+                    });
+                  },
+                ),
               ),
-              BottomNavigationBarItem(
-                label: 'Configurações',
-                icon: Icon(CupertinoIcons.gear),
-                activeIcon: Icon(CupertinoIcons.gear_alt_fill),
-              ),
-              BottomNavigationBarItem(
-                label: 'Lembretes',
-                icon: Icon(CupertinoIcons.bell),
-                activeIcon: Icon(CupertinoIcons.bell_fill),
-              ),
-            ],
+            ),
           ),
+          // bottomNavigationBar: BottomNavigationBar(
+          //   showSelectedLabels: true,
+          //   showUnselectedLabels: false,
+          //   currentIndex: controller.selectedPage,
+          //   onTap: (index) {
+          //     setState(() {
+          //       controller.pageController.animateToPage(
+          //         index,
+          //         duration: const Duration(milliseconds: 200),
+          //         curve: Curves.easeInOut,
+          //       );
+          //     });
+          //   },
+          //   items: const [
+          //     BottomNavigationBarItem(
+          //       label: 'Água',
+          //       icon: Icon(CupertinoIcons.drop),
+          //       activeIcon: Icon(CupertinoIcons.drop_fill),
+          //     ),
+          //     BottomNavigationBarItem(
+          //       label: 'Dados',
+          //       icon: Icon(CupertinoIcons.gear),
+          //       activeIcon: Icon(CupertinoIcons.gear_alt_fill),
+          //     ),
+          //     BottomNavigationBarItem(
+          //       label: 'Lembretes',
+          //       icon: Icon(CupertinoIcons.bell),
+          //       activeIcon: Icon(CupertinoIcons.bell_fill),
+          //     ),
+          //   ],
+          // ),
         );
       },
     );

@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
+import '../../../core/theme/themes.dart';
 import '../../data/repositories/user_repository.dart';
 import '../../data/repositories/water_repository.dart';
 import '../../domain/entities/user_entity.dart';
@@ -72,6 +74,12 @@ class WaterSettingsController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setDailyGoal(int value) {
+    waterDataEntity.dailyGoal = value;
+
+    notifyListeners();
+  }
+
   Future<void> saveData(BuildContext context) async {
     // Get results
     var checkForWeightChangesResult = await getResult(
@@ -98,11 +106,11 @@ class WaterSettingsController extends ChangeNotifier {
     // Act
 
     if (hasWeightChanges || hasWeeklyWorkoutDaysChanges) {
-      _handleWeightAndWeeklyWorkoutDaysChanges(context);
+      await _handleWeightAndWeeklyWorkoutDaysChanges(context);
     }
 
     // if (hasDailyDrinkingFrequencyChanges || hasSleepHabitChanges) {
-    _handleDailyFrequencyAndSleepHabitChanges(context);
+    await _handleDailyFrequencyAndSleepHabitChanges(context);
     // }
   }
 
@@ -114,6 +122,19 @@ class WaterSettingsController extends ChangeNotifier {
     var setSleepHabitResult = await getResult(
       _userRepository.setSleepHabit(userEntity.sleepHabit),
     );
+
+    final WaterDataEntity calculatedWaterData = _calculateWaterDataByParametersUseCase(
+      userEntity: userEntity,
+      dailyDrinkingFrequency: waterDataEntity.dailyDrinkingFrequency,
+    );
+
+    var setTimesToDrink = await getResult(
+      _waterRepository.setTimesToDrink(calculatedWaterData.timesToDrink),
+    );
+
+    if (setTimesToDrink is Failure) {
+      return SnackBarMessage.error(setTimesToDrink, context: context);
+    }
 
     if (setDailyDrinkingFrequencyResult is Failure) {
       return SnackBarMessage.error(setDailyDrinkingFrequencyResult, context: context);
@@ -157,25 +178,55 @@ class WaterSettingsController extends ChangeNotifier {
     final isDailyGoalCustom = isDailyGoalCustomResult as bool;
 
     if (isDailyGoalCustom) {
-      await Dialogs.confirm(
+      await Dialogs.confirmCustom(
         title: 'Redefinir meta diária?',
         text: 'Parece que a meta diária é customizada. Deseja redefini-la com base nos novos dados?',
-        cancelText: 'Não, manter customizada',
-        confirmText: 'Sim, redefinir',
-        onYes: () async {
-          var setDailyGoalResult = await getResult(
-            _waterRepository.setDailyDrinkingGoal(calculatedWaterData.dailyGoal),
-          );
+        actions: SizedBox(
+          height: 70,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: InkWell(
+                    onTap: () {},
+                    child: CupertinoButton(
+                      pressedOpacity: null,
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Não, manter customizada'),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: Spacing.small),
+              Expanded(
+                child: InkWell(
+                  onTap: () {},
+                  child: CupertinoButton(
+                    pressedOpacity: null,
+                    onPressed: () async {
+                      var setDailyGoalResult = await getResult(
+                        _waterRepository.setDailyDrinkingGoal(calculatedWaterData.dailyGoal),
+                      );
 
-          Navigator.pop(context);
+                      Navigator.pop(context);
 
-          if (setDailyGoalResult is Failure) {
-            return SnackBarMessage.error(setDailyGoalResult, context: context);
-          }
-        },
-        onNo: () {
-          Navigator.pop(context);
-        },
+                      if (setDailyGoalResult is Failure) {
+                        return SnackBarMessage.error(setDailyGoalResult, context: context);
+                      }
+                    },
+                    child: const Align(
+                      child: Text('Sim, redefinir'),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         context: context,
       );
     } else {

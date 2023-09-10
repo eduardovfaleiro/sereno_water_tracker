@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/water/data/repositories/user_repository.dart';
 import 'package:sereno_clean_architecture_solid/water/data/repositories/water_repository.dart';
+import 'package:sereno_clean_architecture_solid/water/domain/entities/water_data_entity.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/services/check_data_for_changes_service.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/usecases/calculate_water_data_usecase.dart';
 
@@ -102,32 +103,38 @@ void main() {
   group('isDailyGoalCustom', () {
     test('Should return false', () async {
       int actualDailyGoal = 3000;
+
+      final waterDataEntity = WaterDataEntity.empty().copyWith(dailyGoal: actualDailyGoal);
+
       int dailyGoalToCompare = 3000;
 
       // arrange
-      when(() => mockWaterRepository.getDailyDrinkingGoal()).thenAnswer((invocation) async => Right(actualDailyGoal));
+      when(() => mockCalculateWaterDataUseCase()).thenAnswer((invocation) async => Right(waterDataEntity));
 
       // act
       final result = await getResult(useCase.isDailyGoalCustom(dailyGoalToCompare));
 
       // assert
-      verify(() => mockWaterRepository.getDailyDrinkingGoal());
+      verify(() => mockCalculateWaterDataUseCase());
 
       expect(result, false);
     });
 
     test('Should return true', () async {
       int actualDailyGoal = 400;
+
+      final waterDataEntity = WaterDataEntity.empty().copyWith(dailyGoal: actualDailyGoal);
+
       int dailyGoalToCompare = 100;
 
       // arrange
-      when(() => mockWaterRepository.getDailyDrinkingGoal()).thenAnswer((invocation) async => Right(actualDailyGoal));
+      when(() => mockCalculateWaterDataUseCase()).thenAnswer((invocation) async => Right(waterDataEntity));
 
       // act
       final result = await getResult(useCase.isDailyGoalCustom(dailyGoalToCompare));
 
       // assert
-      verify(() => mockWaterRepository.getDailyDrinkingGoal());
+      verify(() => mockCalculateWaterDataUseCase());
 
       expect(result, true);
     });

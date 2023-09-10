@@ -28,7 +28,7 @@ Future<void> showEditTime({
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * .2,
+            height: MediaQuery.of(context).size.height * .3,
             child: TimePicker(
               initialTime: timeOfDay,
               onHourChanged: (value) {

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/theme/themes.dart';
 import '../../controllers/reminder_controller.dart';
+import '../../utils/snackbar_message.dart';
 import 'reminder_card.dart';
 
 class ReminderView extends StatefulWidget {
@@ -42,13 +43,19 @@ class _ReminderViewState extends State<ReminderView> {
                   children: [
                     ReminderCard(
                       reminder,
-                      onEdit: (newReminder) {
-                        controller.update(key: reminder, newValue: newReminder);
+                      onEdit: (newReminder) async {
+                        await controller.update(key: reminder, newValue: newReminder);
+
+                        SnackBarMessage.undo(
+                          context: context,
+                          text: 'Lembrete alterado',
+                          onPressed: () {},
+                        );
 
                         Navigator.pop(context);
                       },
-                      onDelete: () {
-                        controller.delete(timeToDrink: reminder, context: context);
+                      onDelete: () async {
+                        await controller.delete(timeToDrink: reminder, context: context);
                       },
                     ),
                     const SizedBox(height: Spacing.small1),

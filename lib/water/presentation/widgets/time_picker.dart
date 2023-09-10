@@ -5,6 +5,7 @@ import '../../../core/theme/themes.dart';
 
 class TimePicker extends StatefulWidget {
   final bool loopHour;
+  final bool loopMinute;
   final int maxHours;
   final int minHours;
   final TimeOfDay initialTime;
@@ -21,6 +22,7 @@ class TimePicker extends StatefulWidget {
     required this.initialTime,
     required this.onMinuteChanged,
     this.loopHour = false,
+    this.loopMinute = true,
   });
 
   @override
@@ -59,6 +61,7 @@ class _TimePickerState extends State<TimePicker> {
               width: Spacing.huge,
               alignment: Alignment.centerRight,
               child: CupertinoPicker(
+                looping: widget.loopHour,
                 magnification: 1.05,
                 scrollController: FixedExtentScrollController(initialItem: widget.initialTime.hour),
                 selectionOverlay: null,
@@ -84,6 +87,7 @@ class _TimePickerState extends State<TimePicker> {
               width: Spacing.huge,
               alignment: Alignment.centerLeft,
               child: CupertinoPicker(
+                looping: widget.loopMinute,
                 scrollController: FixedExtentScrollController(initialItem: widget.initialTime.minute),
                 selectionOverlay: null,
                 magnification: 1.05,

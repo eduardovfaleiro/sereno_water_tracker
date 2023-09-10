@@ -11,7 +11,9 @@ import '../../../../core/theme/themes.dart';
 import '../../controllers/water_controller.dart';
 import '../../controllers/water_settings_controller.dart';
 import '../../utils/bottom_sheets.dart';
-import '../../utils/show_edit_reminder.dart';
+import '../../utils/show_edit_daily_goal.dart';
+import '../../utils/show_edit_time.dart';
+import '../../utils/snackbar_message.dart';
 import '../../widgets/buttons/button.dart';
 import '../../widgets/number_picker.dart';
 
@@ -41,11 +43,16 @@ class _WaterSettingsViewState extends State<WaterSettingsView> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(Sizes.borderRadius),
                 onTap: () async {
-                  controller.saveData(context);
+                  await controller.saveData(context).then((_) {
+                    SnackBarMessage.normal(context: context, text: 'Dados redefinidos com sucesso');
+                  });
+
+                  await controller.init();
+
                   context.read<WaterController>().timerToDrinkService.start();
                 },
                 child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Spacing.small1, vertical: Spacing.small),
+                  padding: EdgeInsets.symmetric(horizontal: Spacing.small2, vertical: Spacing.small1),
                   child: Row(
                     children: [
                       Icon(Icons.done, color: MyColors.lightBlue),
@@ -60,12 +67,31 @@ class _WaterSettingsViewState extends State<WaterSettingsView> {
           body: SafeArea(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Spacing.small),
+                padding: const EdgeInsets.symmetric(horizontal: Spacing.small3),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const SizedBox(height: Spacing.big),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Spacing.small3),
+                      child: Icon(CupertinoIcons.drop_fill, size: Spacing.medium, color: MyColors.lightBlue2),
+                    ),
+                    const SizedBox(height: Spacing.small1),
+                    _SpecialCard(
+                      text: 'Meta diária',
+                      value: '${controller.waterDataEntity.dailyGoal} ml',
+                      onTap: () {
+                        showEditDailyGoalBottomSheet(
+                          context: context,
+                          onOk: (dailyGoal) {
+                            controller.setDailyGoal(dailyGoal);
+
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(height: Spacing.medium),
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: Spacing.small3),
                       child: Icon(CommunityMaterialIcons.weight, size: Spacing.medium, color: MyColors.lightGrey3),
@@ -128,7 +154,7 @@ class _WaterSettingsViewState extends State<WaterSettingsView> {
                       },
                       text: 'Quantas vezes beber ao dia',
                       value:
-                          '${controller.isLoading ? MIN_DAILY_DRINKING_FREQUENCY : controller.waterDataEntity.dailyDrinkingFrequency} vezes',
+                          '${controller.isLoading ? MIN_DAILY_DRINKING_FREQUENCY : controller.waterDataEntity.dailyDrinkingFrequency}',
                     ),
                     const SizedBox(height: Spacing.medium),
                     const Padding(
@@ -188,6 +214,72 @@ class _WaterSettingsViewState extends State<WaterSettingsView> {
   }
 }
 
+class _SpecialCard extends StatelessWidget {
+  final String text;
+  final String value;
+  final Function() onTap;
+  final Widget? preffixIcon;
+
+  const _SpecialCard({
+    super.key,
+    required this.text,
+    required this.value,
+    required this.onTap,
+    this.preffixIcon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        onTap();
+      },
+      borderRadius: BorderRadius.circular(Sizes.borderRadius),
+      child: Ink(
+        decoration: BoxDecoration(
+          border: Border.all(color: MyColors.lightBlue2),
+          color: MyColors.darkGrey,
+          borderRadius: BorderRadius.circular(Sizes.borderRadius),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Spacing.small1,
+          vertical: Spacing.small2,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      preffixIcon ?? const SizedBox.shrink(),
+                      const SizedBox(width: Spacing.small1),
+                      Text(text, style: const TextStyle(color: MyColors.lightBlue)),
+                    ],
+                  ),
+                  FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(
+                      value,
+                      style: const TextStyle(fontWeight: FontWeight.w500, color: MyColors.lightBlue),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: Spacing.small2),
+              child: Icon(CupertinoIcons.pencil, color: MyColors.lightBlue),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _SimpleCard extends StatelessWidget {
   final String text;
   final String value;
@@ -210,7 +302,7 @@ class _SimpleCard extends StatelessWidget {
         ),
         padding: const EdgeInsets.symmetric(
           horizontal: Spacing.small1,
-          vertical: Spacing.small3,
+          vertical: Spacing.small2 + 2,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -220,13 +312,22 @@ class _SimpleCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       preffixIcon ?? const SizedBox.shrink(),
                       const SizedBox(width: Spacing.small1),
-                      Text(text, style: const TextStyle()),
+                      Text(text),
+                      const SizedBox(width: Spacing.small2),
                     ],
                   ),
-                  Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+                  Flexible(
+                    child: Text(
+                      value,
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -344,7 +445,7 @@ Future<void> _showEditDailyDrinkingFrequency({
 }) async {
   await BottomSheets.normal(
     context: context,
-    title: 'Alterar dias de treino por semana',
+    title: 'Alterar quantas vezes beber ao dia',
     content: StatefulBuilder(
       builder: (context, setState) {
         return Padding(
