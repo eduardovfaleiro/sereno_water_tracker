@@ -170,7 +170,7 @@ class _WaterFormViewState extends State<WaterFormView> {
                                                 SnackBarMessage.error(failure, context: context);
                                               }, (success) {
                                                 context.read<WaterController>().init().whenComplete(() {
-                                                  Navigator.pushNamed(context, '/home');
+                                                  Navigator.pushReplacementNamed(context, '/home');
                                                 });
                                               });
                                             });

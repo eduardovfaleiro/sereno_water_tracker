@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../../core/core.dart';
 import '../../data/repositories/user_repository.dart';
-import '../../data/repositories/water_repository.dart';
+import '../usecases/calculate_water_data_usecase.dart';
 
 abstract class CheckDataForChangesService {
   Future<Result<bool>> weeklyWorkoutDays(int weeklyWorkoutDays);
@@ -12,9 +12,9 @@ abstract class CheckDataForChangesService {
 
 class CheckDataForChangesServiceImp implements CheckDataForChangesService {
   final UserRepository _userRepository;
-  final WaterRepository _waterRepository;
+  final CalculateWaterDataUseCase _calculateWaterDataUseCase;
 
-  CheckDataForChangesServiceImp(this._userRepository, this._waterRepository);
+  CheckDataForChangesServiceImp(this._userRepository, this._calculateWaterDataUseCase);
 
   @override
   Future<Result<bool>> weeklyWorkoutDays(weeklyWorkoutDays) async {
@@ -50,18 +50,19 @@ class CheckDataForChangesServiceImp implements CheckDataForChangesService {
     return Right(repositoryWeight != weight);
   }
 
+  // TODO: arruma essa macaquisse
   @override
   Future<Result<bool>> isDailyGoalCustom(dailyGoalToCompare) async {
     // Get results
-    var getDailyGoal = await getResult(_waterRepository.getDailyDrinkingGoal());
+    var calculateWaterDataResult = await getResult(_calculateWaterDataUseCase());
 
     // Failure handling
-    if (getDailyGoal is Failure) {
-      return Left(getDailyGoal);
+    if (calculateWaterDataResult is Failure) {
+      return Left(calculateWaterDataResult);
     }
 
     // Assign
-    final repositoryDailyGoal = getDailyGoal as int;
+    final repositoryDailyGoal = calculateWaterDataResult.dailyGoal as int;
 
     // Act
     return Right(repositoryDailyGoal != dailyGoalToCompare);

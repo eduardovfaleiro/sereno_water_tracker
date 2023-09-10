@@ -5,15 +5,19 @@ import 'package:sereno_clean_architecture_solid/core/core.dart';
 import 'package:sereno_clean_architecture_solid/water/data/repositories/user_repository.dart';
 import 'package:sereno_clean_architecture_solid/water/data/repositories/water_repository.dart';
 import 'package:sereno_clean_architecture_solid/water/domain/services/check_data_for_changes_service.dart';
+import 'package:sereno_clean_architecture_solid/water/domain/usecases/calculate_water_data_usecase.dart';
 
 class MockWaterRepository extends Mock implements WaterRepository {}
 
 class MockUserRepository extends Mock implements UserRepository {}
 
+class MockCalculateWaterDataUseCase extends Mock implements CalculateWaterDataUseCase {}
+
 void main() {
   final mockUserRepository = MockUserRepository();
   final mockWaterRepository = MockWaterRepository();
-  final useCase = CheckDataForChangesServiceImp(mockUserRepository, mockWaterRepository);
+  final mockCalculateWaterDataUseCase = MockCalculateWaterDataUseCase();
+  final useCase = CheckDataForChangesServiceImp(mockUserRepository, mockCalculateWaterDataUseCase);
 
   group('weeklyWorkoutDays', () {
     test('Should return true', () async {

@@ -47,8 +47,6 @@ class WaterFormController extends ChangeNotifier {
 
   final pageController = PageController();
 
-  Future<void> init() async {}
-
   void initInfoPage() {
     if (waterData.dailyGoal == 0) {
       waterData = _calculateWaterDataByParametersUseCase(

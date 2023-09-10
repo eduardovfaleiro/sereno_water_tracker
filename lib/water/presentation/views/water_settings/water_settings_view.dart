@@ -11,7 +11,6 @@ import '../../../../core/theme/themes.dart';
 import '../../controllers/water_controller.dart';
 import '../../controllers/water_settings_controller.dart';
 import '../../utils/bottom_sheets.dart';
-import '../../utils/dialogs.dart';
 import '../../utils/show_edit_reminder.dart';
 import '../../widgets/buttons/button.dart';
 import '../../widgets/number_picker.dart';
@@ -42,22 +41,8 @@ class _WaterSettingsViewState extends State<WaterSettingsView> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(Sizes.borderRadius),
                 onTap: () async {
-                  await Dialogs.confirm(
-                    title: 'Tem certeza?',
-                    text: 'A quantidade de água bebida será zerada.',
-                    cancelText: 'Cancelar',
-                    confirmText: 'Sim, continuar',
-                    onYes: () async {
-                      controller.saveData();
-                      context.read<WaterController>().timerToDrinkService.start();
-
-                      Navigator.pop(context);
-                    },
-                    onNo: () {
-                      Navigator.pop(context);
-                    },
-                    context: context,
-                  );
+                  controller.saveData(context);
+                  context.read<WaterController>().timerToDrinkService.start();
                 },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: Spacing.small1, vertical: Spacing.small),

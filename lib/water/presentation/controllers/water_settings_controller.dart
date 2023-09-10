@@ -6,6 +6,7 @@ import '../../data/repositories/water_repository.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/entities/water_data_entity.dart';
 import '../../domain/services/check_data_for_changes_service.dart';
+import '../../domain/usecases/calculate_water_data_by_parameters_usecase.dart';
 import '../../domain/usecases/calculate_water_data_usecase.dart';
 import '../utils/dialogs.dart';
 import '../utils/snackbar_message.dart';
@@ -14,10 +15,16 @@ class WaterSettingsController extends ChangeNotifier {
   final WaterRepository _waterRepository;
   final UserRepository _userRepository;
   final CalculateWaterDataUseCase _calculateWaterDataUseCase;
+  final CalculateWaterDataByParametersUseCase _calculateWaterDataByParametersUseCase;
   final CheckDataForChangesService _checkDataForChangesService;
 
   WaterSettingsController(
-      this._waterRepository, this._userRepository, this._calculateWaterDataUseCase, this._checkDataForChangesService);
+    this._waterRepository,
+    this._userRepository,
+    this._calculateWaterDataUseCase,
+    this._checkDataForChangesService,
+    this._calculateWaterDataByParametersUseCase,
+  );
 
   late UserEntity userEntity;
   late WaterDataEntity waterDataEntity;
@@ -65,7 +72,7 @@ class WaterSettingsController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> checkAndActOnChanges(BuildContext context) async {
+  Future<void> saveData(BuildContext context) async {
     // Get results
     var checkForWeightChangesResult = await getResult(
       _checkDataForChangesService.weight(userEntity.weight),
@@ -89,66 +96,118 @@ class WaterSettingsController extends ChangeNotifier {
     final hasWeeklyWorkoutDaysChanges = checkForWeeklyWorkoutDaysResult as bool;
 
     // Act
+
     if (hasWeightChanges || hasWeeklyWorkoutDaysChanges) {
-      var isDailyGoalCustomResult = await getResult(
-        _checkDataForChangesService.isDailyGoalCustom(waterDataEntity.dailyGoal),
-      );
-
-      if (isDailyGoalCustomResult is Failure) {
-        return SnackBarMessage.error(isDailyGoalCustomResult, context: context);
-      }
-
-      final isDailyGoalCustom = isDailyGoalCustomResult as bool;
-
-      if (isDailyGoalCustom) {
-        await Dialogs.confirm(
-          title: 'Redefinir meta diária?',
-          text: 'Parece que a meta diária é customizada. Deseja redefini-la com base nos novos dados?',
-          onYes: () async {
-            var setUserResult = await getResult(_userRepository.setUser(userEntity));
-
-            if (setUserResult is Failure) throw Exception();
-          },
-          onNo: () async {
-            var setWeightResult = await getResult(_userRepository.setWeight(userEntity.weight));
-
-            if (setWeightResult is Failure) throw Exception();
-
-            // TODO: continue from here
-          },
-          context: context,
-        );
-      }
-
-      var setUserResult = await getResult(_userRepository.setUser(userEntity));
-
-      if (setUserResult is Failure) {
-        return SnackBarMessage.error(setUserResult, context: context);
-      }
-
-      // Act
+      _handleWeightAndWeeklyWorkoutDaysChanges(context);
     }
+
+    // if (hasDailyDrinkingFrequencyChanges || hasSleepHabitChanges) {
+    _handleDailyFrequencyAndSleepHabitChanges(context);
+    // }
   }
 
-  Future<void> saveData() async {
-    final setUserResult = await getResult(_userRepository.setUser(userEntity));
-
-    final dailyDrinkingFrequencyResult = await getResult(
+  Future<void> _handleDailyFrequencyAndSleepHabitChanges(BuildContext context) async {
+    var setDailyDrinkingFrequencyResult = await getResult(
       _waterRepository.setDailyFrequency(waterDataEntity.dailyDrinkingFrequency),
     );
 
-    if (setUserResult is Failure) throw Exception();
+    var setSleepHabitResult = await getResult(
+      _userRepository.setSleepHabit(userEntity.sleepHabit),
+    );
 
-    if (dailyDrinkingFrequencyResult is Failure) throw Exception();
+    if (setDailyDrinkingFrequencyResult is Failure) {
+      return SnackBarMessage.error(setDailyDrinkingFrequencyResult, context: context);
+    }
 
-    final calculateWaterDataResult = await getResult(_calculateWaterDataUseCase());
-    if (calculateWaterDataResult is Failure) throw Exception();
-
-    WaterDataEntity calculatedWaterDataEntity = calculateWaterDataResult;
-
-    final setWaterDataResult = await getResult(_waterRepository.setWaterData(calculatedWaterDataEntity));
-    if (setWaterDataResult is Failure) throw Exception();
-
-    return;
+    if (setSleepHabitResult is Failure) {
+      return SnackBarMessage.error(setSleepHabitResult, context: context);
+    }
   }
+
+  Future<void> _handleWeightAndWeeklyWorkoutDaysChanges(BuildContext context) async {
+    var setWeightResult = await getResult(
+      _userRepository.setWeight(userEntity.weight),
+    );
+
+    var setWeeklyWorkoutDays = await getResult(
+      _userRepository.setWeeklyWorkoutDays(userEntity.weeklyWorkoutDays),
+    );
+
+    var isDailyGoalCustomResult = await getResult(
+      _checkDataForChangesService.isDailyGoalCustom(waterDataEntity.dailyGoal),
+    );
+
+    if (setWeightResult is Failure) {
+      return SnackBarMessage.error(setWeightResult, context: context);
+    }
+
+    if (setWeeklyWorkoutDays is Failure) {
+      return SnackBarMessage.error(setWeeklyWorkoutDays, context: context);
+    }
+
+    if (isDailyGoalCustomResult is Failure) {
+      return SnackBarMessage.error(isDailyGoalCustomResult, context: context);
+    }
+
+    final WaterDataEntity calculatedWaterData = _calculateWaterDataByParametersUseCase(
+      userEntity: userEntity,
+      dailyDrinkingFrequency: waterDataEntity.dailyDrinkingFrequency,
+    );
+
+    final isDailyGoalCustom = isDailyGoalCustomResult as bool;
+
+    if (isDailyGoalCustom) {
+      await Dialogs.confirm(
+        title: 'Redefinir meta diária?',
+        text: 'Parece que a meta diária é customizada. Deseja redefini-la com base nos novos dados?',
+        cancelText: 'Não, manter customizada',
+        confirmText: 'Sim, redefinir',
+        onYes: () async {
+          var setDailyGoalResult = await getResult(
+            _waterRepository.setDailyDrinkingGoal(calculatedWaterData.dailyGoal),
+          );
+
+          Navigator.pop(context);
+
+          if (setDailyGoalResult is Failure) {
+            return SnackBarMessage.error(setDailyGoalResult, context: context);
+          }
+        },
+        onNo: () {
+          Navigator.pop(context);
+        },
+        context: context,
+      );
+    } else {
+      var setDailyDrinkingGoalResult = await getResult(
+        _waterRepository.setDailyDrinkingGoal(calculatedWaterData.dailyGoal),
+      );
+
+      if (setDailyDrinkingGoalResult is Failure) {
+        return SnackBarMessage.error(setDailyDrinkingGoalResult, context: context);
+      }
+    }
+  }
+
+  // Future<void> saveData() async {
+  //   final setUserResult = await getResult(_userRepository.setUser(userEntity));
+
+  //   final dailyDrinkingFrequencyResult = await getResult(
+  //     _waterRepository.setDailyFrequency(waterDataEntity.dailyDrinkingFrequency),
+  //   );
+
+  //   if (setUserResult is Failure) throw Exception();
+
+  //   if (dailyDrinkingFrequencyResult is Failure) throw Exception();
+
+  //   final calculateWaterDataResult = await getResult(_calculateWaterDataUseCase());
+  //   if (calculateWaterDataResult is Failure) throw Exception();
+
+  //   WaterDataEntity calculatedWaterDataEntity = calculateWaterDataResult;
+
+  //   final setWaterDataResult = await getResult(_waterRepository.setWaterData(calculatedWaterDataEntity));
+  //   if (setWaterDataResult is Failure) throw Exception();
+
+  //   return;
+  // }
 }

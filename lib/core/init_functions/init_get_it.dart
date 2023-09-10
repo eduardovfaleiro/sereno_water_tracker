@@ -5,12 +5,12 @@ import '../../water/data/datasources/water_datasource.dart';
 import '../../water/data/repositories/user_repository.dart';
 import '../../water/data/repositories/water_container_repository.dart';
 import '../../water/data/repositories/water_repository.dart';
+import '../../water/domain/services/check_data_for_changes_service.dart';
 import '../../water/domain/services/reset_data_with_timer_service.dart';
 import '../../water/domain/services/time_to_drink_service.dart';
 import '../../water/domain/services/timer_to_drink_service.dart';
 import '../../water/domain/usecases/calculate_water_data_by_parameters_usecase.dart';
 import '../../water/domain/usecases/calculate_water_data_usecase.dart';
-import '../../water/domain/usecases/check_data_for_changes_usecase.dart';
 import '../../water/domain/usecases/handle_reset_water_data_usecase.dart';
 import '../../water/domain/usecases/validate_session_usecase.dart';
 import '../../water/presentation/controllers/home_controller.dart';
@@ -73,8 +73,8 @@ Future<void> initGetIt() async {
     return HandleResetWaterDataUseCaseImp(getIt());
   });
 
-  getIt.registerLazySingleton<CheckDataForChangesUseCase>(() {
-    return CheckDataForChangesUseCaseImp();
+  getIt.registerLazySingleton<CheckDataForChangesService>(() {
+    return CheckDataForChangesServiceImp(getIt(), getIt());
   });
 
   // Services
@@ -106,7 +106,7 @@ Future<void> initGetIt() async {
   });
 
   getIt.registerLazySingleton<WaterSettingsController>(() {
-    return WaterSettingsController(getIt(), getIt(), getIt(), getIt());
+    return WaterSettingsController(getIt(), getIt(), getIt(), getIt(), getIt());
   });
 
   getIt.registerLazySingleton<HomeController>(() {
