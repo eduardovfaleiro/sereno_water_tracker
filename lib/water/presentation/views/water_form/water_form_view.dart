@@ -76,7 +76,7 @@ class _WaterFormViewState extends State<WaterFormView> {
               child: SizedBox(
                 height: MediaQuery.of(context).size.height,
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.only(left: Spacing.normal, right: Spacing.normal),
+                  padding: const EdgeInsets.only(left: Spacing.small3, right: Spacing.small3),
                   physics: const NeverScrollableScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,7 +141,7 @@ class _WaterFormViewState extends State<WaterFormView> {
                                       //     });
                                     },
                                     text: 'Próximo',
-                                    suffixIcon: Icons.arrow_forward_ios_rounded,
+                                    suffixIcon: null,
                                   )
                                 : _Button(
                                     onPressed: () {

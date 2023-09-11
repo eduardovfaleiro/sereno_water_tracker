@@ -56,6 +56,45 @@ abstract class Button {
     );
   }
 
+  static Widget outlined({
+    required VoidCallback onPressed,
+    required String text,
+    final IconData? suffixIcon,
+  }) {
+    return TextButton(
+      style: TextButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Sizes.buttonBorderRadius),
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: Spacing.small2,
+          horizontal: Spacing.small2,
+        ),
+      ),
+      onPressed: () {
+        onPressed();
+      },
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Text(
+            text,
+            style: const TextStyle(color: MyColors.lightBlue, fontWeight: FontWeight.normal),
+          ),
+          if (suffixIcon != null)
+            Align(
+              alignment: Alignment.centerRight,
+              child: Icon(
+                suffixIcon,
+                color: Colors.black,
+                size: Spacing.small3,
+              ),
+            )
+        ],
+      ),
+    );
+  }
+
   static Widget normal({
     required VoidCallback onPressed,
     required String text,

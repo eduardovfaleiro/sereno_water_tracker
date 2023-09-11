@@ -40,3 +40,7 @@ class NegativeNumberFailure implements Failure {
 class ReminderNotFoundFailure extends Failure {
   ReminderNotFoundFailure(super.message);
 }
+
+class ReminderCountCannotBeZero extends Failure {
+  ReminderCountCannotBeZero(super.message);
+}

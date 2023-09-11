@@ -67,14 +67,10 @@ class ReminderController extends ChangeNotifier {
       onYes: () async {
         int timesToDrinkCount = (await getResult(_waterRepository.getTimesToDrink())).length;
 
-        if (timesToDrinkCount == 1) {
-          SnackBarMessage.normal(context: context, text: 'Deve haver ao menos um lembrete');
-          Navigator.pop(context);
-          return;
-        }
-
         var deleteTimeToDrinkResult = await getResult(_waterRepository.deleteTimeToDrink(timeToDrink));
-        if (deleteTimeToDrinkResult is Failure) throw Exception();
+        if (deleteTimeToDrinkResult is Failure) {
+          return SnackBarMessage.error(deleteTimeToDrinkResult, context: context);
+        }
 
         var setDailyDrinkingFrequency = await getResult(_waterRepository.setDailyFrequency(timesToDrinkCount - 1));
         if (setDailyDrinkingFrequency is Failure) throw Exception();

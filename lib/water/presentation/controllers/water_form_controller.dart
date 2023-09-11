@@ -47,22 +47,11 @@ class WaterFormController extends ChangeNotifier {
 
   final pageController = PageController();
 
-  void initInfoPage() {
-    if (waterData.dailyGoal == 0) {
-      waterData = _calculateWaterDataByParametersUseCase(
-        userEntity: user,
-        dailyDrinkingFrequency: waterData.dailyDrinkingFrequency,
-      );
-    }
-  }
-
-  void reloadData() {
+  void initFinishPage() {
     waterData = _calculateWaterDataByParametersUseCase(
       userEntity: user,
       dailyDrinkingFrequency: waterData.dailyDrinkingFrequency,
     );
-
-    notifyListeners();
   }
 
   Future<void> goBack() async {
@@ -172,6 +161,11 @@ class WaterFormController extends ChangeNotifier {
     required BuildContext context,
     required TimeOfDay reminder,
   }) async {
+    if (waterData.timesToDrink.length == 1) {
+      SnackBarMessage.normal(context: context, text: 'Deve haver ao menos um lembrete.');
+      return Left(ReminderCountCannotBeZero('Deve haver ao menos um lembrete.'));
+    }
+
     int index = waterData.timesToDrink.indexOf(reminder);
 
     if (index == -1) {
@@ -189,28 +183,21 @@ class WaterFormController extends ChangeNotifier {
         text: 'Lembrete excluído',
         onPressed: () {
           waterData.timesToDrink.add(reminder);
+
+          notifyListeners();
         });
 
     return const Right(null);
   }
 
-  Future<Result<void>> saveData(BuildContext context) async {
+  Future<Result<void>> saveData() async {
+    waterData.dailyDrinkingFrequency = waterData.timesToDrink.length;
+
     var setUserResult = await getResult(_userRepository.setUser(user));
-    var dailyDrinkingFrequencyResult =
-        await getResult(_waterRepository.setDailyFrequency(waterData.dailyDrinkingFrequency));
+    var setWaterDataResult = await getResult(_waterRepository.setWaterData(waterData));
 
-    if (setUserResult is Failure) {
-      SnackBarMessage.error(setUserResult, context: context);
-      return Left(setUserResult);
-    }
-
-    if (dailyDrinkingFrequencyResult is Failure) {
-      SnackBarMessage.error(dailyDrinkingFrequencyResult, context: context);
-      return Left(dailyDrinkingFrequencyResult);
-    }
-
-    final setWaterDataResult = await getResult(_waterRepository.setWaterData(waterData));
-    if (setWaterDataResult is Failure) throw Exception();
+    if (setUserResult is Failure) return Left(setUserResult);
+    if (setWaterDataResult is Failure) return Left(setWaterDataResult);
 
     return const Right(null);
   }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/functions/time_of_day_utils.dart';
 import '../../../../core/theme/themes.dart';
-import '../../utils/show_edit_time.dart';
+import '../../utils/edit_dialogs/show_edit_time.dart';
 
 class ReminderCard extends StatelessWidget {
   final TimeOfDay reminder;

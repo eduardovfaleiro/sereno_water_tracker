@@ -2,13 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../core/core.dart';
 import '../../../../../core/functions/time_of_day_utils.dart';
 import '../../../../../core/theme/themes.dart';
 import '../../../controllers/water_form_controller.dart';
 import '../../../utils/dialogs.dart';
-import '../../../utils/show_edit_daily_goal.dart';
-import '../../../utils/show_edit_time.dart';
+import '../../../utils/edit_dialogs/show_edit_daily_goal.dart';
+import '../../../utils/edit_dialogs/show_edit_time.dart';
+import '../../../utils/snackbar_message.dart';
 import '../../../widgets/buttons/button.dart';
+import '../../../widgets/edit_card.dart';
 
 class FinishWaterForm extends StatefulWidget {
   const FinishWaterForm({super.key});
@@ -22,7 +25,7 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
   void initState() {
     super.initState();
 
-    context.read<WaterFormController>().initInfoPage();
+    context.read<WaterFormController>().initFinishPage();
   }
 
   @override
@@ -32,19 +35,41 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
         return SafeArea(
           child: Scaffold(
             appBar: AppBar(),
-            bottomNavigationBar: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Button.confirm(onPressed: () {}, text: 'Não, voltar para formulário'),
-                CupertinoButton.filled(child: const Text('Sim, finalizar'), onPressed: () {}),
-              ],
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Spacing.normal),
+              child: SizedBox(
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Button.outlined(
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, '/waterForm');
+                      },
+                      text: 'Voltar para formulário',
+                    ),
+                    const SizedBox(height: Spacing.small),
+                    Button.normal(
+                      onPressed: () async {
+                        var saveDataResult = await getResult(controller.saveData());
+
+                        if (saveDataResult is Failure) {
+                          SnackBarMessage.error(saveDataResult, context: context);
+                        } else {
+                          Navigator.pushReplacementNamed(context, '/home');
+                        }
+                      },
+                      text: 'Finalizar',
+                    ),
+                  ],
+                ),
+              ),
             ),
             body: Padding(
-              padding: const EdgeInsets.only(left: Spacing.normal, right: Spacing.normal),
+              padding: const EdgeInsets.only(left: Spacing.small3, right: Spacing.small3),
               child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.only(top: Spacing.small, left: Spacing.small, right: Spacing.small, bottom: 140),
+                padding: const EdgeInsets.only(top: Spacing.small, left: Spacing.small, right: Spacing.small),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -54,7 +79,7 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
                       style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: FontSize.small3),
                     ),
                     const Text(
-                      'Isso está correto?',
+                      'Esses foram os dados gerados, você pode alterá-los como quiser',
                       style: TextStyle(fontSize: FontSize.small2),
                     ),
                     const Divider(
@@ -62,8 +87,54 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
                       thickness: 1,
                     ),
                     const SizedBox(height: Spacing.normal),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(Sizes.borderRadius),
+                    // EditCard(
+                    //   text: 'Peso',
+                    //   value: '${controller.user.weight} kg',
+                    //   onTap: () {
+                    //     showEditWeight(
+                    //       context: context,
+                    //       onOk: (weight) {
+                    //         controller.setWeight(weight);
+                    //         Navigator.pop(context);
+                    //       },
+                    //       weight: controller.user.weight,
+                    //     );
+                    //   },
+                    // ),
+                    // const SizedBox(height: Spacing.small),
+                    // EditCard(
+                    //   text: 'Quantas vezes beber ao dia',
+                    //   value: '${controller.waterData.dailyDrinkingFrequency}',
+                    //   onTap: () {
+                    //     showEditDailyDrinkingFrequency(
+                    //       context: context,
+                    //       onOk: (weight) {
+                    //         controller.setWeight(weight);
+                    //         Navigator.pop(context);
+                    //       },
+                    //       dailyDrinkingFrequency: controller.waterData.dailyDrinkingFrequency,
+                    //     );
+                    //   },
+                    // ),
+                    // const SizedBox(height: Spacing.small),
+                    // EditCard(
+                    //   text: 'Dias de treino por semana',
+                    //   value: '${controller.user.weeklyWorkoutDays}',
+                    //   onTap: () {
+                    //     showEditWeeklyWorkoutDays(
+                    //       context: context,
+                    //       onOk: (weeklyWorkoutDays) {
+                    //         controller.setWeeklyWorkoutDays(weeklyWorkoutDays);
+                    //         Navigator.pop(context);
+                    //       },
+                    //       weeklyWorkoutDays: controller.user.weeklyWorkoutDays,
+                    //     );
+                    //   },
+                    // ),
+                    const SizedBox(height: Spacing.small),
+                    EditCard(
+                      text: 'Meta diária',
+                      value: '${controller.waterData.dailyGoal} ml',
                       onTap: () {
                         showEditDailyGoalBottomSheet(
                           context: context,
@@ -73,34 +144,14 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
                           },
                         );
                       },
-                      child: Ink(
-                        padding: const EdgeInsets.all(Spacing.small3),
-                        decoration: BoxDecoration(
-                          color: MyColors.darkGrey,
-                          borderRadius: BorderRadius.circular(Sizes.borderRadius),
-                        ),
-                        child: Row(
-                          children: [
-                            const Expanded(
-                              child: Row(
-                                children: [
-                                  Icon(CupertinoIcons.drop_fill, color: MyColors.lightGrey2),
-                                  SizedBox(width: Spacing.small2),
-                                  Expanded(child: Text('Meta diária')),
-                                ],
-                              ),
-                            ),
-                            Text('${controller.waterData.dailyGoal} ml',
-                                style: const TextStyle(color: MyColors.lightBlue)),
-                            const SizedBox(width: Spacing.small3),
-                            const Icon(CupertinoIcons.pencil, color: MyColors.lightGrey3),
-                          ],
-                        ),
-                      ),
+                      preffixIcon: const Icon(CupertinoIcons.drop_fill, color: MyColors.lightGrey2),
                     ),
                     const SizedBox(height: Spacing.small1),
                     Container(
-                      padding: const EdgeInsets.all(Spacing.small3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Spacing.small1,
+                        vertical: Spacing.small2 + 2,
+                      ),
                       decoration: const BoxDecoration(
                         color: MyColors.darkGrey,
                         borderRadius: BorderRadius.vertical(
@@ -113,8 +164,9 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
                             child: Row(
                               children: [
                                 Icon(CupertinoIcons.bell_fill, color: MyColors.lightGrey2),
-                                SizedBox(width: Spacing.small2),
+                                SizedBox(width: Spacing.small1),
                                 Expanded(child: Text('Lembretes')),
+                                SizedBox(width: Spacing.small2),
                               ],
                             ),
                           ),
@@ -196,7 +248,7 @@ class _ReminderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Spacing.small3, vertical: Spacing.small2),
+      padding: const EdgeInsets.symmetric(horizontal: Spacing.small2, vertical: Spacing.small1),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: MyColors.darkGrey)),
       ),

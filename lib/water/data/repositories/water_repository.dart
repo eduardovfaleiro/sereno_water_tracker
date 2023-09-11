@@ -137,6 +137,12 @@ class WaterRepositoryImp implements WaterRepository {
 
   @override
   Future<Result<void>> deleteTimeToDrink(TimeOfDay value) async {
+    int timesToDrinkCount = (await _waterDataSource.getTimesToDrink()).length;
+
+    if (timesToDrinkCount == 1) {
+      return Left(ReminderCountCannotBeZero('Deve haver ao menos um lembrete.'));
+    }
+
     return Right(await _waterDataSource.deleteTimeToDrink(value));
   }
 
