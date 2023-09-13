@@ -62,9 +62,9 @@ class CheckDataForChangesServiceImp implements CheckDataForChangesService {
     }
 
     // Assign
-    final repositoryDailyGoal = calculateWaterDataResult.dailyGoal as int;
+    final calculatedDailyGoal = calculateWaterDataResult.dailyGoal as int;
 
     // Act
-    return Right(repositoryDailyGoal != dailyGoalToCompare);
+    return Right(calculatedDailyGoal != dailyGoalToCompare);
   }
 }

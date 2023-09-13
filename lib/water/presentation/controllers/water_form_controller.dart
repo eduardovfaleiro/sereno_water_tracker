@@ -163,6 +163,8 @@ class WaterFormController extends ChangeNotifier {
   }) async {
     if (waterData.timesToDrink.length == 1) {
       SnackBarMessage.normal(context: context, text: 'Deve haver ao menos um lembrete.');
+      Navigator.pop(context);
+
       return Left(ReminderCountCannotBeZero('Deve haver ao menos um lembrete.'));
     }
 

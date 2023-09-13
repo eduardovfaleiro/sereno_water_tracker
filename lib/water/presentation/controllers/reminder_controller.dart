@@ -34,6 +34,8 @@ class ReminderController extends ChangeNotifier {
 
     reminders.add(reminder);
 
+    getIt<WaterController>().init();
+
     notifyListeners();
   }
 
@@ -69,6 +71,8 @@ class ReminderController extends ChangeNotifier {
 
         var deleteTimeToDrinkResult = await getResult(_waterRepository.deleteTimeToDrink(timeToDrink));
         if (deleteTimeToDrinkResult is Failure) {
+          Navigator.pop(context);
+
           return SnackBarMessage.error(deleteTimeToDrinkResult, context: context);
         }
 

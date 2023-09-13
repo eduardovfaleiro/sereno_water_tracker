@@ -107,6 +107,14 @@ class WaterSettingsController extends ChangeNotifier {
 
     if (hasWeightChanges || hasWeeklyWorkoutDaysChanges) {
       await _handleWeightAndWeeklyWorkoutDaysChanges(context);
+    } else {
+      var setDailyGoalResult = await getResult(
+        _waterRepository.setDailyDrinkingGoal(waterDataEntity.dailyGoal),
+      );
+
+      if (setDailyGoalResult is Failure) {
+        return SnackBarMessage.error(setDailyGoalResult, context: context);
+      }
     }
 
     // if (hasDailyDrinkingFrequencyChanges || hasSleepHabitChanges) {
@@ -146,16 +154,16 @@ class WaterSettingsController extends ChangeNotifier {
   }
 
   Future<void> _handleWeightAndWeeklyWorkoutDaysChanges(BuildContext context) async {
+    var isDailyGoalCustomResult = await getResult(
+      _checkDataForChangesService.isDailyGoalCustom(waterDataEntity.dailyGoal),
+    );
+
     var setWeightResult = await getResult(
       _userRepository.setWeight(userEntity.weight),
     );
 
     var setWeeklyWorkoutDays = await getResult(
       _userRepository.setWeeklyWorkoutDays(userEntity.weeklyWorkoutDays),
-    );
-
-    var isDailyGoalCustomResult = await getResult(
-      _checkDataForChangesService.isDailyGoalCustom(waterDataEntity.dailyGoal),
     );
 
     if (setWeightResult is Failure) {
@@ -194,6 +202,14 @@ class WaterSettingsController extends ChangeNotifier {
                     child: CupertinoButton(
                       pressedOpacity: null,
                       onPressed: () async {
+                        var setDailyGoalResult = await getResult(
+                          _waterRepository.setDailyDrinkingGoal(waterDataEntity.dailyGoal),
+                        );
+
+                        if (setDailyGoalResult is Failure) {
+                          SnackBarMessage.normal(text: 'Não foi possível definir meta diária', context: context);
+                        }
+
                         Navigator.pop(context);
                       },
                       child: const Text('Não, manter customizada'),

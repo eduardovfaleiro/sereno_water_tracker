@@ -104,12 +104,22 @@ class _WaterViewState extends State<WaterView> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.6,
                             height: MediaQuery.of(context).size.width * 0.6,
-                            child: CircularProgressIndicator(
-                              value: controller.waterData.drankTodayPercentage,
-                              strokeWidth: Spacing.small1,
-                              color: controller.waterData.drankTodayPercentage > 1
-                                  ? const Color.fromARGB(255, 158, 206, 255)
-                                  : MyColors.lightBlue,
+                            child: TweenAnimationBuilder<double>(
+                              duration: const Duration(milliseconds: 250),
+                              curve: Curves.easeInOut,
+                              tween: Tween<double>(
+                                begin: 0,
+                                end: controller.waterData.drankTodayPercentage,
+                              ),
+                              builder: (context, value, _) {
+                                return CircularProgressIndicator(
+                                  value: value,
+                                  strokeWidth: Spacing.small1,
+                                  color: controller.waterData.drankTodayPercentage > 1
+                                      ? const Color.fromARGB(255, 158, 206, 255)
+                                      : MyColors.lightBlue,
+                                );
+                              },
                             ),
                           ),
                         ],

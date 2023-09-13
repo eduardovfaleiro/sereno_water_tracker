@@ -288,10 +288,12 @@ BottomSheetItemTile _getRemoveCustomAmount(BuildContext context) {
                 Button.ok(
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
-                      context.read<WaterController>().removeDrankToday(
+                      await context.read<WaterController>().removeDrankToday(
                             context: context,
                             amount: amount!,
                           );
+
+                      Navigator.pop(context);
                     }
                   },
                 ),

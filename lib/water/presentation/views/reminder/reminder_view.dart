@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/functions/datetime_to_timeofday.dart';
 import '../../../../core/theme/themes.dart';
 import '../../controllers/reminder_controller.dart';
+import '../../utils/edit_dialogs/show_edit_time.dart';
 import '../../utils/snackbar_message.dart';
 import 'reminder_card.dart';
 
@@ -27,41 +29,59 @@ class _ReminderViewState extends State<ReminderView> {
   Widget build(BuildContext context) {
     return Consumer<ReminderController>(
       builder: (context, controller, _) {
-        return SafeArea(
-          child: Container(
-            padding: const EdgeInsets.only(
-              top: Spacing.huge,
-              left: Spacing.small2,
-              right: Spacing.small2,
-            ),
-            child: ListView.builder(
-              itemCount: controller.reminders.length,
-              itemBuilder: (context, index) {
-                TimeOfDay reminder = controller.reminders[index];
+        return Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showEditTime(
+                context: context,
+                title: 'Adicionar lembrete',
+                onOk: (reminder) async {
+                  controller.add(reminder: reminder, context: context);
 
-                return Column(
-                  children: [
-                    ReminderCard(
-                      reminder,
-                      onEdit: (newReminder) async {
-                        await controller.update(key: reminder, newValue: newReminder);
+                  Navigator.pop(context);
+                },
+                timeOfDay: DateTime.now().toTimeOfDay(),
+              );
+            },
+            backgroundColor: MyColors.lightBlue,
+            child: const Icon(Icons.add, color: Colors.black),
+          ),
+          body: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.only(
+                top: Spacing.huge,
+                left: Spacing.small2,
+                right: Spacing.small2,
+              ),
+              child: ListView.builder(
+                itemCount: controller.reminders.length,
+                itemBuilder: (context, index) {
+                  TimeOfDay reminder = controller.reminders[index];
 
-                        SnackBarMessage.undo(
-                          context: context,
-                          text: 'Lembrete alterado',
-                          onPressed: () {},
-                        );
+                  return Column(
+                    children: [
+                      ReminderCard(
+                        reminder,
+                        onEdit: (newReminder) async {
+                          await controller.update(key: reminder, newValue: newReminder);
 
-                        Navigator.pop(context);
-                      },
-                      onDelete: () async {
-                        await controller.delete(timeToDrink: reminder, context: context);
-                      },
-                    ),
-                    const SizedBox(height: Spacing.small1),
-                  ],
-                );
-              },
+                          SnackBarMessage.undo(
+                            context: context,
+                            text: 'Lembrete alterado',
+                            onPressed: () {},
+                          );
+
+                          Navigator.pop(context);
+                        },
+                        onDelete: () async {
+                          await controller.delete(timeToDrink: reminder, context: context);
+                        },
+                      ),
+                      const SizedBox(height: Spacing.small1),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         );
