@@ -11,10 +11,9 @@ abstract class WaterContainerDataSource {
 }
 
 class HiveWaterContainerDataSource implements WaterContainerDataSource {
-  final HiveInterface _hiveInterface;
   final Box _box;
 
-  HiveWaterContainerDataSource(this._hiveInterface) : _box = _hiveInterface.box(WATER_CONTAINER);
+  HiveWaterContainerDataSource(HiveInterface hiveInterface) : _box = hiveInterface.box(WATER_CONTAINER);
 
   @override
   Future<List<WaterContainerEntity>> getAll() async {
