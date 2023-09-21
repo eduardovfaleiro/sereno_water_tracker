@@ -43,6 +43,17 @@ class _WaterViewState extends State<WaterView> {
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
+  double _getPastDrankTodayAmountText({
+    required double? pastDrankTodayPercentage,
+    required double drankTodayPercentage,
+  }) {
+    if (pastDrankTodayPercentage != null) {
+      return pastDrankTodayPercentage;
+    }
+
+    return drankTodayPercentage;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GradientContainer(
@@ -108,7 +119,10 @@ class _WaterViewState extends State<WaterView> {
                               duration: const Duration(milliseconds: 250),
                               curve: Curves.easeInOut,
                               tween: Tween<double>(
-                                begin: 0,
+                                begin: _getPastDrankTodayAmountText(
+                                  pastDrankTodayPercentage: controller.pastDrankTodayPercentage,
+                                  drankTodayPercentage: controller.waterData.drankTodayPercentage,
+                                ),
                                 end: controller.waterData.drankTodayPercentage,
                               ),
                               builder: (context, value, _) {

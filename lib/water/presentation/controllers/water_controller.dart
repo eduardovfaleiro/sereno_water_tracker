@@ -16,6 +16,8 @@ class WaterController extends ChangeNotifier {
   WaterController(this._waterRepository, this.timerToDrinkService);
 
   late WaterDataEntity waterData;
+  double? pastDrankTodayPercentage;
+
   bool isLoading = false;
   bool isTimerStarted = false;
 
@@ -27,7 +29,7 @@ class WaterController extends ChangeNotifier {
     if (waterDataResult is Failure) throw Exception();
 
     waterData = waterDataResult.copyWith();
-
+    pastDrankTodayPercentage = waterData.drankTodayPercentage;
     timerToDrinkService.start();
 
     isLoading = false;
@@ -43,6 +45,7 @@ class WaterController extends ChangeNotifier {
       return;
     }
 
+    pastDrankTodayPercentage = waterData.drankTodayPercentage;
     waterData.drankToday += amount;
 
     notifyListeners();
@@ -61,6 +64,7 @@ class WaterController extends ChangeNotifier {
       return Left(drankTodayResult);
     }
 
+    pastDrankTodayPercentage = waterData.drankTodayPercentage;
     waterData.drankToday -= amount;
 
     notifyListeners();

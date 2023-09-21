@@ -1,3 +1,4 @@
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -6,19 +7,35 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../../main.dart';
 
 abstract class NotificationService {
-  static const initializationSettings = InitializationSettings(android: AndroidInitializationSettings('sereno-icon'));
-  static final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static const initializationSettings = InitializationSettings(android: AndroidInitializationSettings('sereno_icon'));
 
-  static void initialize() {
+  static Future<void> initializeService() async {
     flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveBackgroundNotificationResponse: (_) {
+      onDidReceiveBackgroundNotificationResponse: (NotificationResponse notificationResponse) async {
         // ...
       },
-      onDidReceiveNotificationResponse: notificationTapBackground,
+      onDidReceiveNotificationResponse: (notificationResponse) => notificationTapBackground(notificationResponse),
     );
 
+    await _configureLocalTimeZone();
+  }
+
+  static Future<void> initializeReminders() async {}
+
+  static Future<void> show() async {
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Não se esqueça de beber água!',
+      '200 ml',
+      const NotificationDetails(),
+      payload: '',
+    );
+  }
+
+  static Future<void> _configureLocalTimeZone() async {
     tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation('Brazil/SaoPaulo'));
+    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName));
   }
 }

@@ -1,57 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
+import 'core/core.dart';
 import 'core/functions/validate_session.dart';
 import 'core/init_functions/init_get_it.dart';
 import 'core/init_functions/init_hive.dart';
 import 'core/theme/themes.dart';
 import 'water/domain/services/notification_service.dart';
+
 import 'water/domain/services/reset_data_with_timer_service.dart';
 import 'water/presentation/controllers/home_controller.dart';
 import 'water/presentation/controllers/reminder_controller.dart';
 import 'water/presentation/controllers/water_container_controller.dart';
 import 'water/presentation/controllers/water_controller.dart';
 import 'water/presentation/controllers/water_form_controller.dart';
-
-import 'core/core.dart';
 import 'water/presentation/controllers/water_settings_controller.dart';
 import 'water/presentation/views/home/home_view.dart';
 import 'water/presentation/views/water_form/pages/finish_water_form.dart';
 import 'water/presentation/views/water_settings/water_settings_view.dart';
 import 'water/presentation/views/water/water_view.dart';
 import 'water/presentation/views/water_form/water_form_view.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+
+final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+@pragma('vm:entry-point')
+void onDidReceiveBackgroundNotificationResponse(NotificationResponse notificationResponse) async {}
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) async {
-  const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-    '...',
-    '...',
-    actions: <AndroidNotificationAction>[
-      AndroidNotificationAction('id_1', 'Action 1'),
-      AndroidNotificationAction('id_2', 'Action 2'),
-      AndroidNotificationAction('id_3', 'Action 3'),
-    ],
-  );
-  const NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails);
-  await NotificationService.flutterLocalNotificationsPlugin.show(0, '...', '...', notificationDetails);
-}
+  // const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+  //   '...',
+  //   '...',
+  //   actions: <AndroidNotificationAction>[
+  //     AndroidNotificationAction('id_1', 'Action 1'),
+  //     AndroidNotificationAction('id_2', 'Action 2'),
+  //     AndroidNotificationAction('id_3', 'Action 3'),
+  //   ],
+  // );
 
-const initializationSettings = InitializationSettings(android: AndroidInitializationSettings('sereno-icon'));
-final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-void initialize() {
-  flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-    onDidReceiveBackgroundNotificationResponse: (_) {
-      // ...
-    },
-    onDidReceiveNotificationResponse: notificationTapBackground,
-  );
-
-  tz.initializeTimeZones();
-  tz.setLocalLocation(tz.getLocation('Brazil/SaoPaulo'));
+  // const NotificationDetails notificationDetails = NotificationDetails();
 }
 
 void main() async {
@@ -63,7 +50,10 @@ void main() async {
   getIt<ResetDataWithTimerService>().startWater();
   bool isSessionValid = await validateSession();
 
-  initialize();
+  await NotificationService.initializeService();
+  await NotificationService.initializeReminders();
+
+  await NotificationService.show();
 
   runApp(
     MultiProvider(
