@@ -188,21 +188,19 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
                             return _ReminderCard(
                               reminder: timeToDrink,
                               onDelete: () async {
-                                await Dialogs.confirm(
-                                  title: 'Excluir lembrete?',
-                                  text: 'O lembrete não poderá ser recuperado.',
-                                  cancelText: 'Cancelar',
-                                  confirmText: 'Sim, excluir',
-                                  onYes: () async {
-                                    await controller.deleteReminder(context: context, reminder: timeToDrink);
+                                if (await Dialogs.confirm(
+                                      title: 'Excluir lembrete?',
+                                      text: 'O lembrete não poderá ser recuperado.',
+                                      cancelText: 'Cancelar',
+                                      confirmText: 'Sim, excluir',
+                                      context: context,
+                                    ) !=
+                                    true) {
+                                  return Navigator.pop(context);
+                                }
 
-                                    Navigator.pop(context);
-                                  },
-                                  onNo: () {
-                                    Navigator.pop(context);
-                                  },
-                                  context: context,
-                                );
+                                await controller.deleteReminder(context: context, reminder: timeToDrink);
+                                Navigator.pop(context);
                               },
                               onEdit: (timeToDrink) {
                                 showEditTime(

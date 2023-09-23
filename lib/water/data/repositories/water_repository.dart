@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
+import '../../../core/error/exceptions.dart';
 import '../../domain/entities/water_data_entity.dart';
 import '../datasources/water_datasource.dart';
 
@@ -92,8 +93,13 @@ class WaterRepositoryImp implements WaterRepository {
 
   @override
   Future<Result<void>> addDrankToday(int value) async {
-    int drankToday = await _waterDataSource.getDrankToday();
-    return Right(await _waterDataSource.setDrankToday(drankToday + value));
+    try {
+      int drankToday = await _waterDataSource.getDrankToday();
+      await _waterDataSource.setDrankToday(drankToday + value);
+      return const Right(null);
+    } on TimeToDrinkAlreadyExistsException {
+      return Left(ReminderAlreadyExistsFailure());
+    }
   }
 
   @override
@@ -148,7 +154,13 @@ class WaterRepositoryImp implements WaterRepository {
 
   @override
   Future<Result<void>> updateTimeToDrink(TimeOfDay key, TimeOfDay newValue) async {
-    return Right(await _waterDataSource.updateTimeToDrink(key, newValue));
+    try {
+      await _waterDataSource.updateTimeToDrink(key, newValue);
+
+      return const Right(null);
+    } on TimeToDrinkAlreadyExistsException {
+      return Left(ReminderAlreadyExistsFailure());
+    }
   }
 
   @override

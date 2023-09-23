@@ -34,7 +34,7 @@ class TypeFailure implements Failure {
 
 class NegativeNumberFailure implements Failure {
   @override
-  String get message => "Number shouldn't be negative";
+  String get message => 'Número não deve ser negativo';
 }
 
 class ReminderNotFoundFailure extends Failure {
@@ -43,4 +43,9 @@ class ReminderNotFoundFailure extends Failure {
 
 class ReminderCountCannotBeZero extends Failure {
   ReminderCountCannotBeZero(super.message);
+}
+
+class ReminderAlreadyExistsFailure implements Failure {
+  @override
+  String get message => 'Lembrete já existe';
 }

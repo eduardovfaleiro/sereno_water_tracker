@@ -13,7 +13,6 @@ import '../../controllers/water_container_controller.dart';
 import '../../controllers/water_controller.dart';
 import '../../utils/bottom_sheets.dart';
 import '../../utils/dialogs.dart';
-import '../../utils/snackbar_message.dart';
 import '../../widgets/buttons/button.dart';
 import '../../widgets/buttons/circular_button.dart';
 import '../../widgets/my_text_fields.dart';
@@ -350,51 +349,22 @@ BottomSheetItemTile _getAddCustomAmount(BuildContext context) {
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
                       if (amount! >= 3500) {
-                        await Dialogs.confirm(
-                          title: 'Adicionar quantidade?',
-                          text: 'Esta quantidade excede 3500ml',
-                          onYes: () async {
-                            await context.read<WaterController>().addDrankToday(
-                                  amount: amount!,
-                                  context: context,
-                                );
-                          },
-                          onNo: () => Navigator.pop(context),
-                          cancelText: 'Cancelar',
-                          confirmText: 'Sim, adicionar',
-                          context: context,
-                        );
-
-                        SnackBarMessage.undo(
-                          context: context,
-                          text: '${amount!} ml adicionado',
-                          onPressed: () async {
-                            await context.read<WaterController>().removeDrankToday(
-                                  amount: amount!,
-                                  context: context,
-                                );
-                          },
-                        );
-
-                        Navigator.pop(context);
-                        return;
+                        if (await Dialogs.confirm(
+                              title: 'Adicionar quantidade?',
+                              text: 'Esta quantidade excede 3500ml',
+                              cancelText: 'Cancelar',
+                              confirmText: 'Sim, adicionar',
+                              context: context,
+                            ) !=
+                            true) {
+                          return Navigator.pop(context);
+                        }
                       }
 
                       await context.read<WaterController>().addDrankToday(
                             amount: amount!,
                             context: context,
                           );
-
-                      SnackBarMessage.undo(
-                        context: context,
-                        text: '${amount!} ml adicionado',
-                        onPressed: () async {
-                          await context.read<WaterController>().removeDrankToday(
-                                amount: amount!,
-                                context: context,
-                              );
-                        },
-                      );
 
                       Navigator.pop(context);
                     }

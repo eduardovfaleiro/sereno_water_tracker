@@ -12,13 +12,17 @@ abstract class NotificationService {
   static Future<void> initializeService() async {
     flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveBackgroundNotificationResponse: (NotificationResponse notificationResponse) async {
-        // ...
-      },
+      onDidReceiveBackgroundNotificationResponse: onDidReceiveBackgroundNotificationResponse,
       onDidReceiveNotificationResponse: (notificationResponse) => notificationTapBackground(notificationResponse),
     );
 
     await _configureLocalTimeZone();
+  }
+
+  static Future<void> _configureLocalTimeZone() async {
+    tz.initializeTimeZones();
+    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName));
   }
 
   static Future<void> initializeReminders() async {}
@@ -28,14 +32,7 @@ abstract class NotificationService {
       0,
       'Não se esqueça de beber água!',
       '200 ml',
-      const NotificationDetails(),
-      payload: '',
+      const NotificationDetails(android: AndroidNotificationDetails('channelId', 'channelName')),
     );
-  }
-
-  static Future<void> _configureLocalTimeZone() async {
-    tz.initializeTimeZones();
-    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(timeZoneName));
   }
 }

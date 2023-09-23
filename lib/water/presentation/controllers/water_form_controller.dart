@@ -142,7 +142,7 @@ class WaterFormController extends ChangeNotifier {
   }) {
     int index = waterData.timesToDrink.indexOf(oldReminder);
 
-    if (index == -1) {
+    if (!waterData.timesToDrink.contains(oldReminder)) {
       final failure = ReminderNotFoundFailure('Lembrete não encontrado.');
 
       SnackBarMessage.error(failure, context: context);
@@ -168,9 +168,7 @@ class WaterFormController extends ChangeNotifier {
       return Left(ReminderCountCannotBeZero('Deve haver ao menos um lembrete.'));
     }
 
-    int index = waterData.timesToDrink.indexOf(reminder);
-
-    if (index == -1) {
+    if (!waterData.timesToDrink.contains(reminder)) {
       final failure = ReminderNotFoundFailure('Lembrete não encontrado.');
 
       SnackBarMessage.error(failure, context: context);

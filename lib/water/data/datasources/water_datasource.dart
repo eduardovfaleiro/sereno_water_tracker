@@ -96,6 +96,10 @@ class HiveWaterDataSource implements WaterDataSource {
 
     int index = timesToDrink.indexWhere((timeToDrink) => timeToDrink == TimeOfDayUtils(key).toLiteral());
 
+    if (timesToDrink.contains(TimeOfDayUtils(newValue).toLiteral()) && newValue != key) {
+      throw TimeToDrinkAlreadyExistsException();
+    }
+
     timesToDrink[index] = TimeOfDayUtils(newValue).toLiteral();
   }
 

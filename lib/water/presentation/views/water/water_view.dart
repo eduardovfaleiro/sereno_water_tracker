@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../../../../core/theme/themes.dart';
 import '../../controllers/water_controller.dart';
 import '../../utils/dialogs.dart';
-import '../../utils/snackbar_message.dart';
 import '../../widgets/gradient_container.dart';
 import 'water_container_component.dart';
 
@@ -200,46 +199,19 @@ class _WaterViewState extends State<WaterView> {
                       child: WaterContainerComponent(
                         onContainerTap: (amount) async {
                           if (amount > 3500) {
-                            await Dialogs.confirm(
-                              title: 'Adicionar quantidade?',
-                              text: 'Este recipiente excede 3500 ml',
-                              onYes: () async {
-                                await controller.addDrankToday(amount: amount, context: context);
-
-                                SnackBarMessage.undo(
+                            if (await Dialogs.confirm(
+                                  title: 'Adicionar quantidade?',
+                                  text: 'Este recipiente excede 3500 ml',
+                                  cancelText: 'Cancelar',
+                                  confirmText: 'Sim, adicionar',
                                   context: context,
-                                  text: '$amount ml adicionado',
-                                  onPressed: () async {
-                                    controller.removeDrankToday(
-                                      amount: amount,
-                                      context: context,
-                                    );
-                                  },
-                                );
-
-                                Navigator.pop(context);
-                              },
-                              onNo: () => Navigator.pop(context),
-                              cancelText: 'Cancelar',
-                              confirmText: 'Sim, adicionar',
-                              context: context,
-                            );
-
-                            return;
+                                ) !=
+                                true) {
+                              return Navigator.pop(context);
+                            }
                           }
 
                           await controller.addDrankToday(amount: amount, context: context);
-
-                          SnackBarMessage.undo(
-                            context: context,
-                            text: '$amount ml adicionado',
-                            onPressed: () async {
-                              controller.removeDrankToday(
-                                amount: amount,
-                                context: context,
-                              );
-                            },
-                          );
                         },
                       )),
                 ],

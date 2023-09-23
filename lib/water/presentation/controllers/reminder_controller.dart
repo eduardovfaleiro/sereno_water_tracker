@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
 import '../../data/repositories/water_repository.dart';
-import '../utils/dialogs.dart';
 import '../utils/snackbar_message.dart';
 import 'water_controller.dart';
 
@@ -22,10 +21,7 @@ class ReminderController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> add({
-    required TimeOfDay reminder,
-    required BuildContext context,
-  }) async {
+  Future<void> add(BuildContext context, TimeOfDay reminder) async {
     var addTimeToDrinkResult = await getResult(_waterRepository.addTimeToDrink(reminder));
 
     if (addTimeToDrinkResult is Failure) {
@@ -34,79 +30,51 @@ class ReminderController extends ChangeNotifier {
 
     reminders.add(reminder);
 
-    getIt<WaterController>().init();
-
+    _initWaterController();
     notifyListeners();
   }
 
-  Future<void> update({
+  Future<void> update(
+    BuildContext context, {
     required TimeOfDay key,
     required TimeOfDay newValue,
   }) async {
     var updateTimeToDrinkResult = await getResult(_waterRepository.updateTimeToDrink(key, newValue));
-
-    if (updateTimeToDrinkResult is Failure) throw Exception();
-
     var getTimesToDrinkResult = await getResult(_waterRepository.getTimesToDrink());
-    if (getTimesToDrinkResult is Failure) throw Exception();
+
+    if (updateTimeToDrinkResult is Failure) {
+      return SnackBarMessage.error(updateTimeToDrinkResult, context: context);
+    }
+
+    if (getTimesToDrinkResult is Failure) {
+      return SnackBarMessage.error(getTimesToDrinkResult, context: context);
+    }
 
     reminders = getTimesToDrinkResult;
 
-    getIt<WaterController>().init();
-
+    _initWaterController();
     notifyListeners();
   }
 
-  Future<void> delete({
-    required TimeOfDay timeToDrink,
-    required BuildContext context,
-  }) async {
-    await Dialogs.confirm(
-      title: 'Excluir lembrete?',
-      text: 'Deseja mesmo excluir lembrete?',
-      cancelText: 'Cancelar',
-      confirmText: 'Sim, excluir',
-      onYes: () async {
-        int timesToDrinkCount = (await getResult(_waterRepository.getTimesToDrink())).length;
+  Future<void> delete(BuildContext context, TimeOfDay timeToDrink) async {
+    int timesToDrinkCount = (await getResult(_waterRepository.getTimesToDrink())).length;
 
-        var deleteTimeToDrinkResult = await getResult(_waterRepository.deleteTimeToDrink(timeToDrink));
-        if (deleteTimeToDrinkResult is Failure) {
-          Navigator.pop(context);
+    var deleteTimeToDrinkResult = await getResult(_waterRepository.deleteTimeToDrink(timeToDrink));
 
-          return SnackBarMessage.error(deleteTimeToDrinkResult, context: context);
-        }
+    if (deleteTimeToDrinkResult is Failure) {
+      return SnackBarMessage.error(deleteTimeToDrinkResult, context: context);
+    }
 
-        var setDailyDrinkingFrequency = await getResult(_waterRepository.setDailyFrequency(timesToDrinkCount - 1));
-        if (setDailyDrinkingFrequency is Failure) throw Exception();
+    var setDailyDrinkingFrequency = await getResult(_waterRepository.setDailyFrequency(timesToDrinkCount - 1));
+    if (setDailyDrinkingFrequency is Failure) throw Exception();
 
-        reminders.removeWhere((reminder) => reminder == timeToDrink);
+    reminders.removeWhere((reminder) => reminder == timeToDrink);
 
-        getIt<WaterController>().init();
+    _initWaterController();
+    notifyListeners();
+  }
 
-        notifyListeners();
-
-        Navigator.pop(context);
-
-        SnackBarMessage.undo(
-          context: context,
-          text: 'Lembrete excluído',
-          onPressed: () async {
-            var addTimeToDrinkResult = await getResult(_waterRepository.addTimeToDrink(timeToDrink));
-
-            if (addTimeToDrinkResult is Failure) {
-              return SnackBarMessage.normal(text: 'Não foi possível desfazer exclusão', context: context);
-            }
-
-            reminders.add(timeToDrink);
-
-            notifyListeners();
-          },
-        );
-      },
-      onNo: () {
-        Navigator.pop(context);
-      },
-      context: context,
-    );
+  void _initWaterController() {
+    getIt<WaterController>().init();
   }
 }

@@ -24,9 +24,6 @@ import 'water/presentation/views/water_form/water_form_view.dart';
 final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 @pragma('vm:entry-point')
-void onDidReceiveBackgroundNotificationResponse(NotificationResponse notificationResponse) async {}
-
-@pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) async {
   // const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
   //   '...',
@@ -40,6 +37,9 @@ void notificationTapBackground(NotificationResponse notificationResponse) async 
 
   // const NotificationDetails notificationDetails = NotificationDetails();
 }
+
+@pragma('vm:entry-point')
+void onDidReceiveBackgroundNotificationResponse(NotificationResponse notificationResponse) async {}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
