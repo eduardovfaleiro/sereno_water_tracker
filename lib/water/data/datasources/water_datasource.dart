@@ -11,12 +11,14 @@ abstract class WaterDataSource {
   Future<int> getDailyDrinkingFrequency();
   Future<List<TimeOfDay>> getTimesToDrink();
   Future<DateTime?> getLastDrankTodayReset();
+  Future<int> getWaterPerDrink();
 
   Future<void> setDrankToday(int value);
   Future<void> setDailyDrinkingGoal(int value);
   Future<void> setDailyDrinkingFrequency(int value);
   Future<void> setTimesToDrink(List<TimeOfDay> value);
   Future<void> setLastDrankTodayReset(DateTime value);
+  Future<void> setWaterPerDrink(int value);
 
   Future<void> deleteTimeToDrink(TimeOfDay value);
   Future<void> updateTimeToDrink(TimeOfDay key, TimeOfDay newValue);
@@ -101,6 +103,7 @@ class HiveWaterDataSource implements WaterDataSource {
     }
 
     timesToDrink[index] = TimeOfDayUtils(newValue).toLiteral();
+    return _hiveInterface.box(WATER).put(TIMES_TO_DRINK, timesToDrink);
   }
 
   @override
@@ -114,5 +117,15 @@ class HiveWaterDataSource implements WaterDataSource {
     timesToDrink.add(TimeOfDayUtils(value).toLiteral());
 
     _hiveInterface.box(WATER).put(TIMES_TO_DRINK, timesToDrink);
+  }
+
+  @override
+  Future<int> getWaterPerDrink() async {
+    return _hiveInterface.box(WATER).get(WATER_PER_DRINK);
+  }
+
+  @override
+  Future<void> setWaterPerDrink(int value) async {
+    return _hiveInterface.box(WATER).put(WATER_PER_DRINK, value);
   }
 }
