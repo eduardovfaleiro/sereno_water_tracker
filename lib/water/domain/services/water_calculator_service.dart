@@ -5,7 +5,8 @@ abstract class WaterCalculatorService {
 class WaterCalculatorServiceImp implements WaterCalculatorService {
   @override
   int calculateWaterPerDrinkByCustomReminders(int dailyGoal, int remindersCount) {
-    // TODO: implement calculateWaterPerDrinkByCustomReminders
-    throw UnimplementedError();
+    double waterPerDrink = dailyGoal / remindersCount;
+
+    return waterPerDrink.toInt();
   }
 }

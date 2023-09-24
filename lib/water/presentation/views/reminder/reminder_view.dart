@@ -77,11 +77,12 @@ class _ReminderViewState extends State<ReminderView> {
                               cancelText: 'Cancelar',
                               confirmText: 'Sim, excluir',
                               context: context,
-                              onNo: () {},
+                              onNo: () {
+                                Navigator.pop(context);
+                              },
                               onYes: () async {
                                 await controller.delete(context, reminder);
                               });
-                          Navigator.pop(context);
                         },
                       ),
                       const SizedBox(height: Spacing.small1),

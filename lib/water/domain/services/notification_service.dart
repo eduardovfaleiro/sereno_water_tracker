@@ -10,8 +10,10 @@ import '../../../core/core.dart';
 import '../../../core/theme/themes.dart';
 import '../../../main.dart';
 import 'time_to_drink_service.dart';
+import 'water_calculator_by_repository_service.dart';
 
 abstract class NotificationService {
+  static late final WaterCalculatorByRepositoryService _waterCalculatorByRepositoryService;
   static late final TimeToDrinkAgainService _timeToDrinkAgainService;
 
   static const initializationSettings =
@@ -20,6 +22,7 @@ abstract class NotificationService {
   static Future<void> initializeService() async {
     // TODO: fix this shit
     _timeToDrinkAgainService = getIt<TimeToDrinkAgainService>();
+    _waterCalculatorByRepositoryService = getIt<WaterCalculatorByRepositoryService>();
 
     flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
@@ -47,23 +50,29 @@ abstract class NotificationService {
     DateTime? nextTimeScheduledToDrink;
 
     Timer.periodic(const Duration(seconds: 30), (timer) async {
-      var nextTimeToDrinkResult = await getResult(_timeToDrinkAgainService.getNext());
+      var nextTimeToDrink = await getResult(_timeToDrinkAgainService.getNext());
 
-      if (nextTimeToDrinkResult is Failure) throw Exception();
+      if (nextTimeToDrink is Failure) throw Exception();
 
-      if (nextTimeScheduledToDrink != nextTimeToDrinkResult) {
-        await _scheduleNotification(nextTimeToDrinkResult);
+      if (nextTimeScheduledToDrink != nextTimeToDrink) {
+        var waterPerDrink = await getResult(
+          _waterCalculatorByRepositoryService.calculateWaterPerDrinkByCustomReminders(),
+        );
 
-        nextTimeScheduledToDrink = nextTimeToDrinkResult;
+        if (waterPerDrink is Failure) throw Exception();
+
+        await _scheduleNotification(nextTimeToDrink, waterPerDrink);
+
+        nextTimeScheduledToDrink = nextTimeToDrink;
       }
     });
   }
 
-  static Future<void> _scheduleNotification(DateTime whenToNotify) async {
+  static Future<void> _scheduleNotification(DateTime whenToNotify, int waterPerDrink) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
       'Não esqueça de beber água!',
-      'Clique para beber 440 ml rapidamente',
+      'Clique para beber $waterPerDrink ml rapidamente',
       tz.TZDateTime.from(
         whenToNotify,
         tz.getLocation(await FlutterTimezone.getLocalTimezone()),

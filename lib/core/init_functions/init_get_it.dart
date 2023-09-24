@@ -9,6 +9,8 @@ import '../../water/domain/services/check_data_for_changes_service.dart';
 import '../../water/domain/services/reset_data_with_timer_service.dart';
 import '../../water/domain/services/time_to_drink_service.dart';
 import '../../water/domain/services/timer_to_drink_service.dart';
+import '../../water/domain/services/water_calculator_by_repository_service.dart';
+import '../../water/domain/services/water_calculator_service.dart';
 import '../../water/domain/usecases/calculate_water_data_by_parameters_usecase.dart';
 import '../../water/domain/usecases/calculate_water_data_usecase.dart';
 import '../../water/domain/usecases/handle_reset_water_data_usecase.dart';
@@ -89,6 +91,14 @@ Future<void> initGetIt() async {
 
   getIt.registerLazySingleton<ResetDataWithTimerService>(() {
     return ResetDataWithTimerServiceImp(getIt());
+  });
+
+  getIt.registerLazySingleton<WaterCalculatorService>(() {
+    return WaterCalculatorServiceImp();
+  });
+
+  getIt.registerLazySingleton<WaterCalculatorByRepositoryService>(() {
+    return WaterCalculatorByRepositoryServiceImp(getIt(), getIt());
   });
 
   // Controllers
