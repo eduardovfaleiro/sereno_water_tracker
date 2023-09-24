@@ -46,7 +46,7 @@ class _WaterSettingsViewState extends State<WaterSettingsView> {
                 borderRadius: BorderRadius.circular(Sizes.borderRadius),
                 onTap: () async {
                   await controller.saveData(context).then((_) {
-                    SnackBarMessage.normal(context: context, text: 'Dados redefinidos com sucesso');
+                    SnackBarMessage.normal(context: context, text: 'Dados redefinidos');
                   });
 
                   await controller.init();

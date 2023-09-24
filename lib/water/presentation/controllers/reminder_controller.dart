@@ -30,7 +30,7 @@ class ReminderController extends ChangeNotifier {
 
     reminders.add(reminder);
 
-    _initWaterController();
+    _reloadWaterController();
     notifyListeners();
   }
 
@@ -52,7 +52,7 @@ class ReminderController extends ChangeNotifier {
 
     reminders = getTimesToDrinkResult;
 
-    _initWaterController();
+    _reloadWaterController();
     notifyListeners();
   }
 
@@ -70,11 +70,11 @@ class ReminderController extends ChangeNotifier {
 
     reminders.removeWhere((reminder) => reminder == timeToDrink);
 
-    _initWaterController();
+    _reloadWaterController();
     notifyListeners();
   }
 
-  void _initWaterController() {
+  void _reloadWaterController() {
     getIt<WaterController>().init();
   }
 }

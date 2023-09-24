@@ -22,12 +22,14 @@ abstract class Dialogs {
     );
   }
 
-  static Future<bool?> confirm({
+  static Future<void> confirm({
     required String title,
     required String text,
     required BuildContext context,
     String? confirmText,
     String? cancelText,
+    required Function() onYes,
+    required Function() onNo,
   }) async {
     await showGeneralDialog(
       barrierDismissible: true,
@@ -36,8 +38,8 @@ abstract class Dialogs {
         return ConfirmDialog(
           title: title,
           text: text,
-          onNo: () => false,
-          onYes: () => true,
+          onNo: () => onNo(),
+          onYes: () => onYes(),
           confirmText: confirmText,
           cancelText: cancelText,
         );
@@ -50,7 +52,6 @@ abstract class Dialogs {
       },
       transitionDuration: const Duration(milliseconds: 200),
     );
-    return null;
   }
 
   static Future<dynamic> confirmCustom({

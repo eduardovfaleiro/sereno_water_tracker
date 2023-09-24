@@ -102,7 +102,7 @@ Future<void> initGetIt() async {
   });
 
   getIt.registerLazySingleton<WaterContainerController>(() {
-    return WaterContainerController(getIt(), getIt());
+    return WaterContainerController(getIt());
   });
 
   getIt.registerLazySingleton<WaterSettingsController>(() {

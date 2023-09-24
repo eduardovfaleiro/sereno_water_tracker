@@ -255,26 +255,4 @@ class WaterSettingsController extends ChangeNotifier {
       }
     }
   }
-
-  // Future<void> saveData() async {
-  //   final setUserResult = await getResult(_userRepository.setUser(userEntity));
-
-  //   final dailyDrinkingFrequencyResult = await getResult(
-  //     _waterRepository.setDailyFrequency(waterDataEntity.dailyDrinkingFrequency),
-  //   );
-
-  //   if (setUserResult is Failure) throw Exception();
-
-  //   if (dailyDrinkingFrequencyResult is Failure) throw Exception();
-
-  //   final calculateWaterDataResult = await getResult(_calculateWaterDataUseCase());
-  //   if (calculateWaterDataResult is Failure) throw Exception();
-
-  //   WaterDataEntity calculatedWaterDataEntity = calculateWaterDataResult;
-
-  //   final setWaterDataResult = await getResult(_waterRepository.setWaterData(calculatedWaterDataEntity));
-  //   if (setWaterDataResult is Failure) throw Exception();
-
-  //   return;
-  // }
 }

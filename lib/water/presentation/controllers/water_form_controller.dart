@@ -178,15 +178,6 @@ class WaterFormController extends ChangeNotifier {
     waterData.timesToDrink.remove(reminder);
     notifyListeners();
 
-    SnackBarMessage.undo(
-        context: context,
-        text: 'Lembrete excluído',
-        onPressed: () {
-          waterData.timesToDrink.add(reminder);
-
-          notifyListeners();
-        });
-
     return const Right(null);
   }
 

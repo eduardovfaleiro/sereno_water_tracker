@@ -349,24 +349,31 @@ BottomSheetItemTile _getAddCustomAmount(BuildContext context) {
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
                       if (amount! >= 3500) {
-                        if (await Dialogs.confirm(
-                              title: 'Adicionar quantidade?',
-                              text: 'Esta quantidade excede 3500ml',
-                              cancelText: 'Cancelar',
-                              confirmText: 'Sim, adicionar',
-                              context: context,
-                            ) !=
-                            true) {
-                          return Navigator.pop(context);
-                        }
-                      }
-
-                      await context.read<WaterController>().addDrankToday(
-                            amount: amount!,
+                        await Dialogs.confirm(
+                            title: 'Adicionar quantidade?',
+                            text: 'Esta quantidade excede 3500 ml',
+                            cancelText: 'Cancelar',
+                            confirmText: 'Sim, adicionar',
                             context: context,
-                          );
+                            onYes: () async {
+                              await context.read<WaterController>().addDrankToday(
+                                    amount: amount!,
+                                    context: context,
+                                  );
 
-                      Navigator.pop(context);
+                              Navigator.popUntil(context, ModalRoute.withName('/home'));
+                            },
+                            onNo: () {
+                              Navigator.pop(context);
+                            });
+                      } else {
+                        await context.read<WaterController>().addDrankToday(
+                              amount: amount!,
+                              context: context,
+                            );
+
+                        Navigator.pop(context);
+                      }
                     }
                   },
                 ),

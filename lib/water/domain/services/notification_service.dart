@@ -7,7 +7,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../../main.dart';
 
 abstract class NotificationService {
-  static const initializationSettings = InitializationSettings(android: AndroidInitializationSettings('sereno_icon'));
+  static const initializationSettings =
+      InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher'));
 
   static Future<void> initializeService() async {
     flutterLocalNotificationsPlugin.initialize(
@@ -28,11 +29,24 @@ abstract class NotificationService {
   static Future<void> initializeReminders() async {}
 
   static Future<void> show() async {
+    const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+      'your channel id',
+      'your channel name',
+      channelDescription: 'your channel description',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+      icon: 'sereno_icon',
+    );
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+    );
+
     await flutterLocalNotificationsPlugin.show(
       0,
       'Não se esqueça de beber água!',
-      '200 ml',
-      const NotificationDetails(android: AndroidNotificationDetails('channelId', 'channelName')),
+      'Clique para beber rapidamente',
+      notificationDetails,
     );
   }
 }

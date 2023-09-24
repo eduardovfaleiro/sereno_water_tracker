@@ -199,19 +199,21 @@ class _WaterViewState extends State<WaterView> {
                       child: WaterContainerComponent(
                         onContainerTap: (amount) async {
                           if (amount > 3500) {
-                            if (await Dialogs.confirm(
-                                  title: 'Adicionar quantidade?',
-                                  text: 'Este recipiente excede 3500 ml',
-                                  cancelText: 'Cancelar',
-                                  confirmText: 'Sim, adicionar',
-                                  context: context,
-                                ) !=
-                                true) {
-                              return Navigator.pop(context);
-                            }
+                            await Dialogs.confirm(
+                                title: 'Adicionar quantidade?',
+                                text: 'Este recipiente excede 3500 ml',
+                                cancelText: 'Cancelar',
+                                confirmText: 'Sim, adicionar',
+                                context: context,
+                                onNo: () {
+                                  Navigator.pop(context);
+                                },
+                                onYes: () async {
+                                  await controller.addDrankToday(amount: amount, context: context);
+                                });
+                          } else {
+                            await controller.addDrankToday(amount: amount, context: context);
                           }
-
-                          await controller.addDrankToday(amount: amount, context: context);
                         },
                       )),
                 ],

@@ -165,7 +165,12 @@ class WaterRepositoryImp implements WaterRepository {
 
   @override
   Future<Result<void>> addTimeToDrink(TimeOfDay value) async {
-    return Right(await _waterDataSource.addTimeToDrink(value));
+    try {
+      await _waterDataSource.addTimeToDrink(value);
+      return const Right(null);
+    } on TimeToDrinkAlreadyExistsException {
+      return Left(ReminderAlreadyExistsFailure());
+    }
   }
 
   @override
