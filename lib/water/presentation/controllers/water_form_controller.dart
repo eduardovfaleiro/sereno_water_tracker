@@ -17,13 +17,11 @@ import '../views/water_form/pages/weight_water_form.dart';
 class WaterFormController extends ChangeNotifier {
   final UserRepository _userRepository;
   final WaterRepository _waterRepository;
-  final CalculateWaterDataUseCase _calculateWaterDataUseCase;
   final CalculateWaterDataByParametersUseCase _calculateWaterDataByParametersUseCase;
 
   WaterFormController(
     this._userRepository,
     this._waterRepository,
-    this._calculateWaterDataUseCase,
     this._calculateWaterDataByParametersUseCase,
   );
 

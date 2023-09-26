@@ -82,6 +82,8 @@ class _ReminderViewState extends State<ReminderView> {
                               },
                               onYes: () async {
                                 await controller.delete(context, reminder);
+
+                                Navigator.pop(context);
                               });
                         },
                       ),

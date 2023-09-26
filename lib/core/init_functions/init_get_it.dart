@@ -104,7 +104,7 @@ Future<void> initGetIt() async {
   // Controllers
 
   getIt.registerLazySingleton<WaterFormController>(() {
-    return WaterFormController(getIt(), getIt(), getIt(), getIt());
+    return WaterFormController(getIt(), getIt(), getIt());
   });
 
   getIt.registerLazySingleton<WaterController>(() {
