@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'core/core.dart';
@@ -22,20 +25,20 @@ import 'water/presentation/views/water/water_view.dart';
 import 'water/presentation/views/water_form/water_form_view.dart';
 
 final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final navigatorKey = GlobalKey<NavigatorState>();
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) async {
-  // const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-  //   '...',
-  //   '...',
-  //   actions: <AndroidNotificationAction>[
-  //     AndroidNotificationAction('id_1', 'Action 1'),
-  //     AndroidNotificationAction('id_2', 'Action 2'),
-  //     AndroidNotificationAction('id_3', 'Action 3'),
-  //   ],
-  // );
+  if (notificationResponse.actionId == ADD_WATER_ACTION_KEY) {
+    int amountToDrink = jsonDecode(notificationResponse.payload!)['drinking_reminder'];
 
-  // const NotificationDetails notificationDetails = NotificationDetails();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      var context = navigatorKey.currentContext!;
+
+      Navigator.of(context).pushNamed('/water');
+      context.read<WaterController>().addDrankToday(amount: amountToDrink, context: context);
+    });
+  }
 }
 
 @pragma('vm:entry-point')

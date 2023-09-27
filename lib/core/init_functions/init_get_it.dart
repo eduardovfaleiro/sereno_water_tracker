@@ -101,6 +101,8 @@ Future<void> initGetIt() async {
     return WaterCalculatorByRepositoryServiceImp(getIt(), getIt());
   });
 
+  // ViewModels
+
   // Controllers
 
   getIt.registerLazySingleton<WaterFormController>(() {

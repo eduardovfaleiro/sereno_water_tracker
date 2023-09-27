@@ -37,6 +37,7 @@ const int MIN_WEIGHT = 1;
 const int MIN_WATER_DRANK_TODAY = 0;
 const int MIN_DAILY_DRINKING_FREQUENCY = 1;
 const int MIN_DAILY_DRINKING_GOAL = 1;
+const String ADD_WATER_ACTION_KEY = 'addWater';
 
 final GetIt getIt = GetIt.I;
 

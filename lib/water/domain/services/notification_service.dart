@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -71,20 +72,23 @@ abstract class NotificationService {
   static Future<void> _scheduleNotification(DateTime whenToNotify, int waterPerDrink) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
+      payload: jsonEncode({
+        'drinking_reminder': waterPerDrink,
+      }),
       'Não esqueça de beber água!',
       'Clique para beber $waterPerDrink ml rapidamente',
       tz.TZDateTime.from(
         whenToNotify,
         tz.getLocation(await FlutterTimezone.getLocalTimezone()),
       ),
-      const NotificationDetails(
+      NotificationDetails(
           android: AndroidNotificationDetails(
         actions: [
-          AndroidNotificationAction('id', 'title'),
+          AndroidNotificationAction(ADD_WATER_ACTION_KEY, 'Drink $waterPerDrink ml'),
         ],
-        'your channel id',
-        'your channel name',
-        channelDescription: 'your channel description',
+        'drinking_reminder',
+        'Drinking reminder',
+        channelDescription: 'Will remind you to drink water on a regular basis.',
       )),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
