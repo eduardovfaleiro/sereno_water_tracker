@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'core/core.dart';
@@ -29,20 +26,23 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) async {
-  if (notificationResponse.actionId == ADD_WATER_ACTION_KEY) {
-    int amountToDrink = jsonDecode(notificationResponse.payload!)['drinking_reminder'];
+  // navigatorKey.currentState!.pushNamed('/home');
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      var context = navigatorKey.currentContext!;
-
-      Navigator.of(context).pushNamed('/water');
-      context.read<WaterController>().addDrankToday(amount: amountToDrink, context: context);
-    });
-  }
+  // navigatorKey.currentContext!.read<WaterController>().addDrankToday(
+  //       amount: 400,
+  //       context: navigatorKey.currentContext!,
+  //     );
 }
 
 @pragma('vm:entry-point')
-void onDidReceiveBackgroundNotificationResponse(NotificationResponse notificationResponse) async {}
+void onDidReceiveBackgroundNotificationResponse(NotificationResponse notificationResponse) async {
+  // navigatorKey.currentState!.pushNamed('/home');
+
+  // navigatorKey.currentContext!.read<WaterController>().addDrankToday(
+  //       amount: 400,
+  //       context: navigatorKey.currentContext!,
+  //     );
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,8 +55,6 @@ void main() async {
 
   await NotificationService.initializeService();
   await NotificationService.initializeReminders();
-
-  await NotificationService.show();
 
   runApp(
     MultiProvider(
@@ -85,17 +83,28 @@ void main() async {
   );
 }
 
-class SerenoView extends StatelessWidget {
+class SerenoView extends StatefulWidget {
   final bool isSessionValid;
 
   const SerenoView({super.key, required this.isSessionValid});
 
-  String get initialRoute => isSessionValid ? '/home' : '/waterForm';
+  @override
+  State<SerenoView> createState() => SerenoViewState();
+}
+
+class SerenoViewState extends State<SerenoView> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  String get initialRoute => widget.isSessionValid ? '/home' : '/waterForm';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: initialRoute,
+      navigatorKey: navigatorKey,
       routes: {
         '/waterForm': (context) => const WaterFormView(),
         '/finishWaterForm': (context) => const FinishWaterForm(),

@@ -8,7 +8,6 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../../core/core.dart';
-import '../../../core/theme/themes.dart';
 import '../../../main.dart';
 import 'time_to_drink_service.dart';
 import 'water_calculator_by_repository_service.dart';
@@ -28,9 +27,8 @@ abstract class NotificationService {
     flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveBackgroundNotificationResponse: onDidReceiveBackgroundNotificationResponse,
-      onDidReceiveNotificationResponse: (notificationResponse) => notificationTapBackground(notificationResponse),
+      onDidReceiveNotificationResponse: notificationTapBackground,
     );
-
     await _requestPermission();
     await _configureLocalTimeZone();
   }
@@ -50,7 +48,7 @@ abstract class NotificationService {
   static Future<void> initializeReminders() async {
     DateTime? nextTimeScheduledToDrink;
 
-    Timer.periodic(const Duration(seconds: 30), (timer) async {
+    Timer.periodic(const Duration(seconds: 5), (timer) async {
       var nextTimeToDrink = await getResult(_timeToDrinkAgainService.getNext());
 
       if (nextTimeToDrink is Failure) throw Exception();
@@ -82,41 +80,17 @@ abstract class NotificationService {
         tz.getLocation(await FlutterTimezone.getLocalTimezone()),
       ),
       NotificationDetails(
-          android: AndroidNotificationDetails(
-        actions: [
-          AndroidNotificationAction(ADD_WATER_ACTION_KEY, 'Drink $waterPerDrink ml'),
-        ],
-        'drinking_reminder',
-        'Drinking reminder',
-        channelDescription: 'Will remind you to drink water on a regular basis.',
-      )),
+        android: AndroidNotificationDetails(
+          actions: [
+            AndroidNotificationAction(ADD_WATER_ACTION_KEY, 'Drink $waterPerDrink ml'),
+          ],
+          'drinking_reminder',
+          'Drinking reminder',
+          channelDescription: 'Will remind you to drink water on a regular basis.',
+        ),
+      ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-    );
-  }
-
-  static Future<void> show() async {
-    AndroidNotificationDetails androidNotificationDetails = const AndroidNotificationDetails(
-      'your channel id',
-      'your channel name',
-      channelDescription: 'your channel description',
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-      actions: [
-        AndroidNotificationAction('id', 'Beber 440 ml', titleColor: MyColors.lightBlue),
-      ],
-    );
-
-    NotificationDetails notificationDetails = NotificationDetails(
-      android: androidNotificationDetails,
-    );
-
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      'Não se esqueça de beber água!',
-      'Clique para beber 440 ml rapidamente',
-      notificationDetails,
     );
   }
 }
