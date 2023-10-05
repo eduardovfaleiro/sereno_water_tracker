@@ -87,37 +87,6 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
           ),
-          // bottomNavigationBar: BottomNavigationBar(
-          //   showSelectedLabels: true,
-          //   showUnselectedLabels: false,
-          //   currentIndex: controller.selectedPage,
-          //   onTap: (index) {
-          //     setState(() {
-          //       controller.pageController.animateToPage(
-          //         index,
-          //         duration: const Duration(milliseconds: 200),
-          //         curve: Curves.easeInOut,
-          //       );
-          //     });
-          //   },
-          //   items: const [
-          //     BottomNavigationBarItem(
-          //       label: 'Água',
-          //       icon: Icon(CupertinoIcons.drop),
-          //       activeIcon: Icon(CupertinoIcons.drop_fill),
-          //     ),
-          //     BottomNavigationBarItem(
-          //       label: 'Dados',
-          //       icon: Icon(CupertinoIcons.gear),
-          //       activeIcon: Icon(CupertinoIcons.gear_alt_fill),
-          //     ),
-          //     BottomNavigationBarItem(
-          //       label: 'Lembretes',
-          //       icon: Icon(CupertinoIcons.bell),
-          //       activeIcon: Icon(CupertinoIcons.bell_fill),
-          //     ),
-          //   ],
-          // ),
         );
       },
     );

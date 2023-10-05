@@ -8,6 +8,14 @@ import '../../utils/dialogs.dart';
 import '../../widgets/gradient_container.dart';
 import 'water_container_component.dart';
 
+abstract class WaterAction {}
+
+class AddWaterAction implements WaterAction {
+  final int amount;
+
+  AddWaterAction(this.amount);
+}
+
 class WaterView extends StatefulWidget {
   const WaterView({super.key});
 

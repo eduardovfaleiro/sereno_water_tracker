@@ -1,3 +1,4 @@
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
 import '../../water/data/datasources/user_datasource.dart';
 import '../../water/data/datasources/water_container_datasource.dart';
@@ -6,6 +7,7 @@ import '../../water/data/repositories/user_repository.dart';
 import '../../water/data/repositories/water_container_repository.dart';
 import '../../water/data/repositories/water_repository.dart';
 import '../../water/domain/services/check_data_for_changes_service.dart';
+import '../../water/domain/services/notification_service.dart';
 import '../../water/domain/services/reset_data_with_timer_service.dart';
 import '../../water/domain/services/time_to_drink_service.dart';
 import '../../water/domain/services/timer_to_drink_service.dart';
@@ -29,6 +31,10 @@ Future<void> initGetIt() async {
     return Hive;
   });
 
+  // Flutter Local Notifications
+  getIt.registerLazySingleton<FlutterLocalNotificationsPlugin>(() {
+    return FlutterLocalNotificationsPlugin();
+  });
   // Data sources
 
   getIt.registerLazySingleton<UserDataSource>(() {
@@ -101,7 +107,9 @@ Future<void> initGetIt() async {
     return WaterCalculatorByRepositoryServiceImp(getIt(), getIt());
   });
 
-  // ViewModels
+  getIt.registerLazySingleton<NotificationService>(() {
+    return NotificationService(getIt(), getIt(), getIt());
+  });
 
   // Controllers
 

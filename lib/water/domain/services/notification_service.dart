@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:provider/provider.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -9,31 +11,42 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../../core/core.dart';
 import '../../../main.dart';
+import '../../data/repositories/water_repository.dart';
+import '../../presentation/controllers/water_controller.dart';
+import '../../presentation/utils/dialogs.dart';
 import 'time_to_drink_service.dart';
 import 'water_calculator_by_repository_service.dart';
 
-abstract class NotificationService {
-  static late final WaterCalculatorByRepositoryService _waterCalculatorByRepositoryService;
-  static late final TimeToDrinkAgainService _timeToDrinkAgainService;
+final didReceiveLocalNotificationStream = StreamController<NotificationResponse>.broadcast();
+final selectNotificationStream = StreamController<String?>.broadcast();
 
-  static const initializationSettings =
-      InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher'));
+class NotificationService {
+  final WaterCalculatorByRepositoryService _waterCalculatorByRepositoryService;
+  final TimeToDrinkAgainService _timeToDrinkAgainService;
 
-  static Future<void> initializeService() async {
-    // TODO: fix this shit
-    _timeToDrinkAgainService = getIt<TimeToDrinkAgainService>();
-    _waterCalculatorByRepositoryService = getIt<WaterCalculatorByRepositoryService>();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
+  final initializationSettings =
+      const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher'));
+
+  NotificationService(
+    this._waterCalculatorByRepositoryService,
+    this._timeToDrinkAgainService,
+    this.flutterLocalNotificationsPlugin,
+  );
+
+  Future<void> initialize() async {
     flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveBackgroundNotificationResponse: onDidReceiveBackgroundNotificationResponse,
+      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
       onDidReceiveNotificationResponse: notificationTapBackground,
     );
+
     await _requestPermission();
     await _configureLocalTimeZone();
   }
 
-  static Future<void> _requestPermission() async {
+  Future<void> _requestPermission() async {
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()!
         .requestPermission();
@@ -45,7 +58,7 @@ abstract class NotificationService {
     tz.setLocalLocation(tz.getLocation(timeZoneName));
   }
 
-  static Future<void> initializeReminders() async {
+  Future<void> initializeReminders() async {
     DateTime? nextTimeScheduledToDrink;
 
     Timer.periodic(const Duration(seconds: 5), (timer) async {
@@ -60,14 +73,14 @@ abstract class NotificationService {
 
         if (waterPerDrink is Failure) throw Exception();
 
-        await _scheduleNotification(nextTimeToDrink, waterPerDrink);
+        await scheduleNotification(nextTimeToDrink, waterPerDrink);
 
         nextTimeScheduledToDrink = nextTimeToDrink;
       }
     });
   }
 
-  static Future<void> _scheduleNotification(DateTime whenToNotify, int waterPerDrink) async {
+  Future<void> scheduleNotification(DateTime whenToNotify, int waterPerDrink) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
       payload: jsonEncode({
@@ -82,7 +95,11 @@ abstract class NotificationService {
       NotificationDetails(
         android: AndroidNotificationDetails(
           actions: [
-            AndroidNotificationAction(ADD_WATER_ACTION_KEY, 'Drink $waterPerDrink ml'),
+            AndroidNotificationAction(
+              ADD_WATER_ACTION_KEY,
+              'Drink $waterPerDrink ml',
+              showsUserInterface: true,
+            ),
           ],
           'drinking_reminder',
           'Drinking reminder',
@@ -91,6 +108,45 @@ abstract class NotificationService {
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+    );
+  }
+
+  void initializeStreams(BuildContext context) {
+    didReceiveLocalNotificationStream.stream.listen((NotificationResponse notificationResponse) {
+      _handleNotificationTap(context, notificationResponse.payload!);
+    });
+
+    selectNotificationStream.stream.listen((String? payload) async {
+      _handleNotificationTap(context, payload!);
+    });
+  }
+
+  void addIfNotificationStartedLaunch() async {
+    var notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+
+    if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+      didReceiveLocalNotificationStream.add(notificationAppLaunchDetails!.notificationResponse!);
+    }
+  }
+
+  Future<void> _handleNotificationTap(BuildContext context, String payload) async {
+    int amount = jsonDecode(payload)['drinking_reminder'];
+
+    await Dialogs.confirm(
+      title: 'Adicionar quantidade?',
+      text: '$amount ml serão adicionados',
+      context: navigatorKey.currentContext!,
+      confirmText: 'Confirmar',
+      cancelText: 'Cancelar',
+      onYes: () async {
+        await getIt<WaterRepository>().addDrankToday(amount);
+        await context.read<WaterController>().init();
+
+        navigatorKey.currentState!.pop(context);
+      },
+      onNo: () {
+        navigatorKey.currentState!.pop(context);
+      },
     );
   }
 }
