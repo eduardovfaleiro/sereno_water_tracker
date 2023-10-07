@@ -38,8 +38,10 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     DateTime? lastTimeScheduled;
 
-    var calculateWaterPerDrinkByCustomRemindersResult =
-        await getResult(getIt<WaterCalculatorByRepositoryService>().calculateWaterPerDrinkByCustomReminders());
+    var calculateWaterPerDrinkByCustomRemindersResult = await getResult(
+      getIt<WaterCalculatorByRepositoryService>().calculateWaterPerDrinkByCustomReminders(),
+    );
+
     int waterPerDrink = calculateWaterPerDrinkByCustomRemindersResult;
 
     Timer.periodic(const Duration(seconds: 1), (timer) async {
@@ -64,11 +66,7 @@ void callbackDispatcher() {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Workmanager().initialize(callbackDispatcher, // The top level function, aka callbackDispatcher
-      isInDebugMode:
-          true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-      );
-
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   Workmanager().registerOneOffTask("task-identifier", "simpleTask");
 
   await initGetIt();
