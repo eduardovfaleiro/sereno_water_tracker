@@ -35,8 +35,8 @@ Future<void> initGetIt() async {
   getIt.registerLazySingleton<FlutterLocalNotificationsPlugin>(() {
     return FlutterLocalNotificationsPlugin();
   });
-  // Data sources
 
+  // Data sources
   getIt.registerLazySingleton<UserDataSource>(() {
     return HiveUserDataSource(getIt());
   });
@@ -103,9 +103,12 @@ Future<void> initGetIt() async {
     return WaterCalculatorServiceImp();
   });
 
-  getIt.registerLazySingleton<WaterCalculatorByRepositoryService>(() {
-    return WaterCalculatorByRepositoryServiceImp(getIt(), getIt());
-  });
+  getIt.registerSingleton<WaterCalculatorByRepositoryService>(
+    WaterCalculatorByRepositoryServiceImp(getIt(), getIt()),
+    signalsReady: true,
+  );
+
+  getIt.signalReady(getIt<WaterCalculatorByRepositoryService>());
 
   getIt.registerLazySingleton<NotificationService>(() {
     return NotificationService(getIt(), getIt(), getIt());

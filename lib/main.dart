@@ -42,10 +42,13 @@ void callbackDispatcher() {
       getIt<WaterCalculatorByRepositoryService>().calculateWaterPerDrinkByCustomReminders(),
     );
 
+    print('');
     int waterPerDrink = calculateWaterPerDrinkByCustomRemindersResult;
 
     Timer.periodic(const Duration(seconds: 1), (timer) async {
-      var getNextResult = await getResult(getIt<TimeToDrinkAgainService>().getNext());
+      var timeToDrinkAgainService = await getIt.getAsync<TimeToDrinkAgainService>();
+
+      var getNextResult = await getResult(timeToDrinkAgainService.getNext());
       var nextTimeToDrink = getNextResult as DateTime;
 
       if (lastTimeScheduled == null) {
@@ -66,16 +69,17 @@ void callbackDispatcher() {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
-  Workmanager().registerOneOffTask("task-identifier", "simpleTask");
-
   await initGetIt();
   await initHive();
+
+  await getIt.allReady();
+
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  Workmanager().registerOneOffTask("task-identifier", "simpleTask", inputData: {});
 
   getIt<ResetDataWithTimerService>().startWater();
 
   await getIt<NotificationService>().initialize();
-  await getIt<NotificationService>().initializeReminders();
 
   runApp(
     MultiProvider(
