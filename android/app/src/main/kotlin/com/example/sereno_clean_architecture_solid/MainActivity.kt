@@ -1,4 +1,4 @@
-package com.example.sereno_clean_architecture_solid
+package com.example.sereno_water_tracker
 
 import io.flutter.embedding.android.FlutterActivity
 

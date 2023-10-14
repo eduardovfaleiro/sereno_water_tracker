@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:sereno_clean_architecture_solid/water/data/datasources/water_container_datasource.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/entities/water_container_entity.dart';
+import 'package:sereno_water_tracker/water/data/datasources/water_container_datasource.dart';
+import 'package:sereno_water_tracker/water/domain/entities/water_container_entity.dart';
 
 import '../../../mocks.dart';
 

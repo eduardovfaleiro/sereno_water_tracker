@@ -169,6 +169,9 @@ class WaterRepositoryImp implements WaterRepository {
   Future<Result<void>> addTimeToDrink(TimeOfDay value) async {
     try {
       await _waterDataSource.addTimeToDrink(value);
+      List<TimeOfDay> timesToDrink = await _waterDataSource.getTimesToDrink();
+
+      await _waterDataSource.setDailyDrinkingFrequency(timesToDrink.length);
       return const Right(null);
     } on TimeToDrinkAlreadyExistsException {
       return Left(ReminderAlreadyExistsFailure());

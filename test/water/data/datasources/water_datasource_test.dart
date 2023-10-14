@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:sereno_clean_architecture_solid/core/core.dart';
-import 'package:sereno_clean_architecture_solid/water/data/datasources/water_datasource.dart';
+import 'package:sereno_water_tracker/core/core.dart';
+import 'package:sereno_water_tracker/water/data/datasources/water_datasource.dart';
 
 import '../../../mocks.dart';
 

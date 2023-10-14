@@ -1,6 +1,6 @@
 {
-    "name": "sereno_clean_architecture_solid",
-    "short_name": "sereno_clean_architecture_solid",
+    "name": "sereno_water_tracker",
+    "short_name": "sereno_water_tracker",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

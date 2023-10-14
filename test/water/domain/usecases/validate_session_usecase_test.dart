@@ -3,11 +3,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:sereno_clean_architecture_solid/core/core.dart';
-import 'package:sereno_clean_architecture_solid/water/data/repositories/user_repository.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/entities/user_entity.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/entities/water_data_entity.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/usecases/validate_session_usecase.dart';
+import 'package:sereno_water_tracker/core/core.dart';
+import 'package:sereno_water_tracker/water/data/repositories/user_repository.dart';
+import 'package:sereno_water_tracker/water/domain/entities/user_entity.dart';
+import 'package:sereno_water_tracker/water/domain/entities/water_data_entity.dart';
+import 'package:sereno_water_tracker/water/domain/usecases/validate_session_usecase.dart';
 
 import 'calculate_water_data_usecase_test.dart';
 
@@ -35,7 +35,7 @@ void main() {
     verify(() => mockUserRepository.getUser());
     verify(() => mockWaterRepository.getWaterData());
 
-    expect(result, isA<void>());
+    expect(result, isInstanceOf<void>());
   });
 
   test('Should return ValidationFailure', () async {
@@ -52,6 +52,6 @@ void main() {
     // assert
     verify(() => mockUserRepository.getUser());
 
-    expect(expectedResult, isA<ValidationFailure>());
+    expect(expectedResult, isInstanceOf<ValidationFailure>());
   });
 }

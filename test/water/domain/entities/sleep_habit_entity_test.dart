@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/entities/sleep_habit_entity.dart';
+import 'package:sereno_water_tracker/water/domain/entities/sleep_habit_entity.dart';
 
 void main() {
   group('timeAwaken', () {

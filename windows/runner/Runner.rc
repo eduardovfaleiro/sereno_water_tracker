@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "sereno_clean_architecture_solid" "\0"
+            VALUE "FileDescription", "sereno_water_tracker" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "sereno_clean_architecture_solid" "\0"
+            VALUE "InternalName", "sereno_water_tracker" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "sereno_clean_architecture_solid.exe" "\0"
-            VALUE "ProductName", "sereno_clean_architecture_solid" "\0"
+            VALUE "OriginalFilename", "sereno_water_tracker.exe" "\0"
+            VALUE "ProductName", "sereno_water_tracker" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

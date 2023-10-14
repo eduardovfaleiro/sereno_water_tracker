@@ -3,9 +3,9 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:sereno_clean_architecture_solid/core/core.dart';
-import 'package:sereno_clean_architecture_solid/water/data/repositories/water_repository.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/services/time_to_drink_service.dart';
+import 'package:sereno_water_tracker/core/core.dart';
+import 'package:sereno_water_tracker/water/data/repositories/water_repository.dart';
+import 'package:sereno_water_tracker/water/domain/services/time_to_drink_service.dart';
 import 'package:clock/clock.dart';
 
 class MockWaterRepository extends Mock implements WaterRepository {}

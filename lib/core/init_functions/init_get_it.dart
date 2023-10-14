@@ -1,4 +1,4 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:hive/hive.dart';
 import '../../water/data/datasources/user_datasource.dart';
 import '../../water/data/datasources/water_container_datasource.dart';
@@ -31,9 +31,9 @@ Future<void> initGetIt() async {
     return Hive;
   });
 
-  // Flutter Local Notifications
-  getIt.registerLazySingleton<FlutterLocalNotificationsPlugin>(() {
-    return FlutterLocalNotificationsPlugin();
+  // AwesomeNotification
+  getIt.registerLazySingleton<AwesomeNotifications>(() {
+    return AwesomeNotifications();
   });
 
   // Data sources
@@ -103,15 +103,12 @@ Future<void> initGetIt() async {
     return WaterCalculatorServiceImp();
   });
 
-  getIt.registerSingleton<WaterCalculatorByRepositoryService>(
-    WaterCalculatorByRepositoryServiceImp(getIt(), getIt()),
-    signalsReady: true,
-  );
-
-  getIt.signalReady(getIt<WaterCalculatorByRepositoryService>());
+  getIt.registerLazySingleton<WaterCalculatorByRepositoryService>(() {
+    return WaterCalculatorByRepositoryServiceImp(getIt(), getIt());
+  });
 
   getIt.registerLazySingleton<NotificationService>(() {
-    return NotificationService(getIt(), getIt(), getIt());
+    return NotificationServiceImp(getIt(), getIt());
   });
 
   // Controllers

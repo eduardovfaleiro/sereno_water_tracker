@@ -2,14 +2,14 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:sereno_clean_architecture_solid/core/core.dart';
-import 'package:sereno_clean_architecture_solid/core/functions/calculate_water_data_functions.dart';
-import 'package:sereno_clean_architecture_solid/water/data/repositories/user_repository.dart';
-import 'package:sereno_clean_architecture_solid/water/data/repositories/water_repository.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/entities/sleep_habit_entity.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/entities/user_entity.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/entities/water_data_entity.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/usecases/calculate_water_data_usecase.dart';
+import 'package:sereno_water_tracker/core/core.dart';
+import 'package:sereno_water_tracker/core/functions/calculate_water_data_functions.dart';
+import 'package:sereno_water_tracker/water/data/repositories/user_repository.dart';
+import 'package:sereno_water_tracker/water/data/repositories/water_repository.dart';
+import 'package:sereno_water_tracker/water/domain/entities/sleep_habit_entity.dart';
+import 'package:sereno_water_tracker/water/domain/entities/user_entity.dart';
+import 'package:sereno_water_tracker/water/domain/entities/water_data_entity.dart';
+import 'package:sereno_water_tracker/water/domain/usecases/calculate_water_data_usecase.dart';
 
 class MockUserRepository extends Mock implements UserRepository {}
 

@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:sereno_clean_architecture_solid/water/data/datasources/water_container_datasource.dart';
-import 'package:sereno_clean_architecture_solid/water/data/repositories/water_container_repository.dart';
-import 'package:sereno_clean_architecture_solid/water/domain/entities/water_container_entity.dart';
+import 'package:sereno_water_tracker/water/data/datasources/water_container_datasource.dart';
+import 'package:sereno_water_tracker/water/data/repositories/water_container_repository.dart';
+import 'package:sereno_water_tracker/water/domain/entities/water_container_entity.dart';
 
 class MockWaterContainerDataSource extends Mock implements WaterContainerDataSource {}
 

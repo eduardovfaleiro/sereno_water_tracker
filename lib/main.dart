@@ -1,19 +1,17 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-import 'package:workmanager/workmanager.dart';
+
 import 'core/core.dart';
 import 'core/functions/validate_session.dart';
 import 'core/init_functions/init_get_it.dart';
 import 'core/init_functions/init_hive.dart';
 import 'core/theme/themes.dart';
-
 import 'water/domain/services/notification_service.dart';
 import 'water/domain/services/reset_data_with_timer_service.dart';
-import 'water/domain/services/time_to_drink_service.dart';
-import 'water/domain/services/water_calculator_by_repository_service.dart';
 import 'water/presentation/controllers/home_controller.dart';
 import 'water/presentation/controllers/reminder_controller.dart';
 import 'water/presentation/controllers/water_container_controller.dart';
@@ -21,50 +19,12 @@ import 'water/presentation/controllers/water_controller.dart';
 import 'water/presentation/controllers/water_form_controller.dart';
 import 'water/presentation/controllers/water_settings_controller.dart';
 import 'water/presentation/views/home/home_view.dart';
-import 'water/presentation/views/water_form/pages/finish_water_form.dart';
-import 'water/presentation/views/water_settings/water_settings_view.dart';
 import 'water/presentation/views/water/water_view.dart';
+import 'water/presentation/views/water_form/pages/finish_water_form.dart';
 import 'water/presentation/views/water_form/water_form_view.dart';
+import 'water/presentation/views/water_settings/water_settings_view.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
-
-@pragma('vm:entry-point')
-void notificationTapBackground(NotificationResponse notificationResponse) {
-  didReceiveLocalNotificationStream.add(notificationResponse);
-}
-
-@pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    DateTime? lastTimeScheduled;
-
-    var calculateWaterPerDrinkByCustomRemindersResult = await getResult(
-      getIt<WaterCalculatorByRepositoryService>().calculateWaterPerDrinkByCustomReminders(),
-    );
-
-    print('');
-    int waterPerDrink = calculateWaterPerDrinkByCustomRemindersResult;
-
-    Timer.periodic(const Duration(seconds: 1), (timer) async {
-      var timeToDrinkAgainService = await getIt.getAsync<TimeToDrinkAgainService>();
-
-      var getNextResult = await getResult(timeToDrinkAgainService.getNext());
-      var nextTimeToDrink = getNextResult as DateTime;
-
-      if (lastTimeScheduled == null) {
-        await getIt<NotificationService>().scheduleNotification(nextTimeToDrink, waterPerDrink).then((_) {
-          lastTimeScheduled = nextTimeToDrink.copyWith();
-        });
-      } else if (lastTimeScheduled!.isBefore(DateTime.now())) {
-        await getIt<NotificationService>().scheduleNotification(nextTimeToDrink, waterPerDrink).then((_) {
-          lastTimeScheduled = nextTimeToDrink.copyWith();
-        });
-      }
-    });
-
-    return true;
-  });
-}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,14 +32,11 @@ Future<void> main() async {
   await initGetIt();
   await initHive();
 
-  await getIt.allReady();
-
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
-  Workmanager().registerOneOffTask("task-identifier", "simpleTask", inputData: {});
-
   getIt<ResetDataWithTimerService>().startWater();
 
   await getIt<NotificationService>().initialize();
+  await getIt<NotificationService>().requestPermission();
+  await getIt<NotificationService>().scheduleNotification();
 
   runApp(
     MultiProvider(
@@ -103,7 +60,8 @@ Future<void> main() async {
           create: (context) => getIt<ReminderController>(),
         ),
       ],
-      child: SerenoView(
+      child: Sereno(
+        navigatorKey: navigatorKey,
         isSessionValid: await validateSession(),
         notificationService: getIt<NotificationService>(),
       ),
@@ -111,26 +69,43 @@ Future<void> main() async {
   );
 }
 
-class SerenoView extends StatefulWidget {
+class Sereno extends StatefulWidget {
+  final GlobalKey<NavigatorState> navigatorKey;
+
   final bool isSessionValid;
   final NotificationService notificationService;
 
-  const SerenoView({super.key, required this.isSessionValid, required this.notificationService});
+  const Sereno({
+    Key? key,
+    required this.navigatorKey,
+    required this.isSessionValid,
+    required this.notificationService,
+  }) : super(key: key);
 
   @override
-  State<SerenoView> createState() => SerenoViewState();
+  State<Sereno> createState() => SerenoState();
 }
 
-class SerenoViewState extends State<SerenoView> {
+class SerenoState extends State<Sereno> {
   @override
   void initState() {
     super.initState();
 
-    widget.notificationService.initializeStreams(context);
-    widget.notificationService.addIfNotificationStartedLaunch();
+    getIt<AwesomeNotifications>().setListeners(
+      onActionReceivedMethod: onActionReceivedMethod,
+      onNotificationCreatedMethod: onNotificationCreatedMethod,
+      onNotificationDisplayedMethod: onNotificationDisplayedMethod,
+      onDismissActionReceivedMethod: onDismissActionReceivedMethod,
+    );
   }
 
-  String get initialRoute => widget.isSessionValid ? '/home' : '/waterForm';
+  String get initialRoute {
+    if (widget.isSessionValid) {
+      return '/home';
+    }
+
+    return '/waterForm';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,11 +113,14 @@ class SerenoViewState extends State<SerenoView> {
       initialRoute: initialRoute,
       navigatorKey: navigatorKey,
       routes: {
+        // Water
         '/waterForm': (context) => const WaterFormView(),
         '/finishWaterForm': (context) => const FinishWaterForm(),
-        '/water': (_) => const WaterView(),
-        '/home': (_) => const HomeView(),
         '/waterSettings': (_) => const WaterSettingsView(),
+        '/water': (_) => const WaterView(),
+
+        // Home
+        '/home': (_) => const HomeView(),
       },
       debugShowCheckedModeBanner: false,
       theme: Themes.dark,
