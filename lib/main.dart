@@ -2,10 +2,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'core/core.dart';
+import 'core/functions/add_listener_reminders.dart';
 import 'core/functions/validate_session.dart';
 import 'core/init_functions/init_get_it.dart';
 import 'core/init_functions/init_hive.dart';
@@ -29,18 +29,20 @@ final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  getIt<HiveInterface>().box(WATER).listenable(keys: [TIMES_TO_DRINK]).addListener(() {});
-
   await initGetIt();
   await initHive();
 
-  getIt<ResetDataWithTimerService>().startWater();
+  bool isSessionValid = await validateSession();
 
-  await getIt<NotificationService>().initialize();
-  await getIt<NotificationService>().initializeIsolateReceivePort();
+  if (isSessionValid) {
+    getIt<ResetDataWithTimerService>().startWater();
+    await getIt<NotificationService>().initialize();
 
-  await getIt<NotificationService>().requestPermission();
-  await getIt<NotificationService>().scheduleNotification();
+    addListenerReminders(() async {
+      await getIt<NotificationService>().cancelAllNotifications();
+      await getIt<NotificationService>().scheduleNotifications();
+    });
+  }
 
   runApp(
     MultiProvider(
@@ -66,7 +68,7 @@ Future<void> main() async {
       ],
       child: Sereno(
         navigatorKey: navigatorKey,
-        isSessionValid: await validateSession(),
+        isSessionValid: isSessionValid,
         notificationService: getIt<NotificationService>(),
       ),
     ),
@@ -95,7 +97,7 @@ class SerenoState extends State<Sereno> {
   void initState() {
     super.initState();
 
-    getIt<NotificationService>().setListeners();
+    widget.notificationService.setListeners();
   }
 
   String get initialRoute {

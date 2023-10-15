@@ -9,21 +9,18 @@ import '../../domain/entities/user_entity.dart';
 import '../../domain/entities/water_data_entity.dart';
 import '../../domain/services/check_data_for_changes_service.dart';
 import '../../domain/usecases/calculate_water_data_by_parameters_usecase.dart';
-import '../../domain/usecases/calculate_water_data_usecase.dart';
 import '../utils/dialogs.dart';
 import '../utils/snackbar_message.dart';
 
 class WaterSettingsController extends ChangeNotifier {
   final WaterRepository _waterRepository;
   final UserRepository _userRepository;
-  final CalculateWaterDataUseCase _calculateWaterDataUseCase;
   final CalculateWaterDataByParametersUseCase _calculateWaterDataByParametersUseCase;
   final CheckDataForChangesService _checkDataForChangesService;
 
   WaterSettingsController(
     this._waterRepository,
     this._userRepository,
-    this._calculateWaterDataUseCase,
     this._checkDataForChangesService,
     this._calculateWaterDataByParametersUseCase,
   );

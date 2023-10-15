@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/core.dart';
 import '../../../../core/theme/themes.dart';
+import '../../controllers/home_controller.dart';
 import '../../controllers/water_controller.dart';
 import '../../utils/dialogs.dart';
 import '../../widgets/gradient_container.dart';
@@ -33,6 +34,8 @@ class _WaterViewState extends State<WaterView> {
 
     if (context.read<WaterController>().onLaunchAction != null) {
       Future.delayed(mounted ? Duration.zero : const Duration(seconds: 2), () async {
+        context.read<HomeController>().pageController.jumpTo(0);
+
         await getIt<WaterController>().addDrankTodayByNotification(
           context.read<WaterController>().onLaunchAction!.amount,
           context,

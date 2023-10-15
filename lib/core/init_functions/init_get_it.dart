@@ -108,7 +108,7 @@ Future<void> initGetIt() async {
   });
 
   getIt.registerLazySingleton<NotificationService>(() {
-    return NotificationService(getIt(), getIt());
+    return NotificationService(getIt(), getIt(), getIt());
   });
 
   // Controllers
@@ -126,7 +126,7 @@ Future<void> initGetIt() async {
   });
 
   getIt.registerLazySingleton<WaterSettingsController>(() {
-    return WaterSettingsController(getIt(), getIt(), getIt(), getIt(), getIt());
+    return WaterSettingsController(getIt(), getIt(), getIt(), getIt());
   });
 
   getIt.registerLazySingleton<HomeController>(() {

@@ -16,7 +16,6 @@ class MockCalculateWaterDataUseCase extends Mock implements CalculateWaterDataUs
 
 void main() {
   final mockUserRepository = MockUserRepository();
-  final mockWaterRepository = MockWaterRepository();
   final mockCalculateWaterDataUseCase = MockCalculateWaterDataUseCase();
   final useCase = CheckDataForChangesServiceImp(mockUserRepository, mockCalculateWaterDataUseCase);
 

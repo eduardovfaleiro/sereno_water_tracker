@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../main.dart';
 import '../views/reminder/reminder_view.dart';
 import '../views/water_settings/water_settings_view.dart';
 import '../views/water/water_view.dart';

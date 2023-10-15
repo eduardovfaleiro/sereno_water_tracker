@@ -50,7 +50,6 @@ class CheckDataForChangesServiceImp implements CheckDataForChangesService {
     return Right(repositoryWeight != weight);
   }
 
-  // TODO: arruma essa macaquisse
   @override
   Future<Result<bool>> isDailyGoalCustom(dailyGoalToCompare) async {
     // Get results

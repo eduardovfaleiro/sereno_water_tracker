@@ -63,15 +63,9 @@ class _HomeViewState extends State<HomeView> {
                   color: MyColors.lightGrey,
                   tabBackgroundColor: MyColors.darkGrey,
                   tabs: const [
-                    GButton(
-                      icon: CupertinoIcons.drop,
-                    ),
-                    GButton(
-                      icon: CupertinoIcons.gear_alt,
-                    ),
-                    GButton(
-                      icon: CupertinoIcons.bell,
-                    ),
+                    GButton(icon: CupertinoIcons.drop),
+                    GButton(icon: CupertinoIcons.gear_alt),
+                    GButton(icon: CupertinoIcons.bell),
                   ],
                   selectedIndex: controller.selectedPage,
                   onTabChange: (index) {
