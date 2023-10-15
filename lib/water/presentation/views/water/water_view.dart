@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/core.dart';
 import '../../../../core/theme/themes.dart';
 import '../../controllers/water_controller.dart';
 import '../../utils/dialogs.dart';
@@ -29,6 +30,17 @@ class _WaterViewState extends State<WaterView> {
     super.initState();
 
     context.read<WaterController>().init();
+
+    if (context.read<WaterController>().onLaunchAction != null) {
+      Future.delayed(mounted ? Duration.zero : const Duration(seconds: 2), () async {
+        await getIt<WaterController>().addDrankTodayByNotification(
+          context.read<WaterController>().onLaunchAction!.amount,
+          context,
+        );
+
+        context.read<WaterController>().onLaunchAction = null;
+      });
+    }
   }
 
   String _getText({required Duration duration}) {

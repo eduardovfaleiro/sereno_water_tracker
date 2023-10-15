@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'core/core.dart';
@@ -29,12 +29,16 @@ final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  getIt<HiveInterface>().box(WATER).listenable(keys: [TIMES_TO_DRINK]).addListener(() {});
+
   await initGetIt();
   await initHive();
 
   getIt<ResetDataWithTimerService>().startWater();
 
   await getIt<NotificationService>().initialize();
+  await getIt<NotificationService>().initializeIsolateReceivePort();
+
   await getIt<NotificationService>().requestPermission();
   await getIt<NotificationService>().scheduleNotification();
 
@@ -91,12 +95,7 @@ class SerenoState extends State<Sereno> {
   void initState() {
     super.initState();
 
-    getIt<AwesomeNotifications>().setListeners(
-      onActionReceivedMethod: onActionReceivedMethod,
-      onNotificationCreatedMethod: onNotificationCreatedMethod,
-      onNotificationDisplayedMethod: onNotificationDisplayedMethod,
-      onDismissActionReceivedMethod: onDismissActionReceivedMethod,
-    );
+    getIt<NotificationService>().setListeners();
   }
 
   String get initialRoute {

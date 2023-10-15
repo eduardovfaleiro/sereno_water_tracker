@@ -108,7 +108,7 @@ Future<void> initGetIt() async {
   });
 
   getIt.registerLazySingleton<NotificationService>(() {
-    return NotificationServiceImp(getIt(), getIt());
+    return NotificationService(getIt(), getIt());
   });
 
   // Controllers

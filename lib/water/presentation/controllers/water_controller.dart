@@ -7,13 +7,17 @@ import '../../../core/core.dart';
 import '../../data/repositories/water_repository.dart';
 import '../../domain/entities/water_data_entity.dart';
 import '../../domain/services/timer_to_drink_service.dart';
+import '../utils/dialogs.dart';
 import '../utils/snackbar_message.dart';
+import '../views/water/water_view.dart';
 
 class WaterController extends ChangeNotifier {
   final WaterRepository _waterRepository;
   final TimerToDrinkService timerToDrinkService;
 
   WaterController(this._waterRepository, this.timerToDrinkService);
+
+  AddWaterAction? onLaunchAction;
 
   late WaterDataEntity waterData;
   double? pastDrankTodayPercentage;
@@ -49,6 +53,29 @@ class WaterController extends ChangeNotifier {
     waterData.drankToday += amount;
 
     notifyListeners();
+  }
+
+  Future<void> addDrankTodayByNotification(int amount, BuildContext context) async {
+    await Dialogs.confirm(
+      title: 'Adicionar quantidade?',
+      text: '$amount ml serão adicionados.',
+      context: context,
+      onYes: () async {
+        var addDrankTodayResult = await getResult(_waterRepository.addDrankToday(amount));
+
+        if (addDrankTodayResult is Failure) {
+          SnackBarMessage.error(addDrankTodayResult, context: context);
+        } else {
+          waterData.drankToday += amount;
+          notifyListeners();
+        }
+
+        Navigator.pop(context);
+      },
+      onNo: () {
+        Navigator.pop(context);
+      },
+    );
   }
 
   Future<Result<void>> removeDrankToday({required int amount, required BuildContext context}) async {

@@ -4,43 +4,29 @@ import 'dart:ui';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import '../../../core/core.dart';
 import '../../../core/theme/themes.dart';
 import '../../../main.dart';
 import '../../data/repositories/water_repository.dart';
+import '../../presentation/controllers/water_controller.dart';
+import '../../presentation/views/water/water_view.dart';
 
-abstract class NotificationService {
-  Future<void> initialize();
-  Future<void> requestPermission();
-  Future<void> scheduleNotification();
-}
-
-class NotificationServiceImp implements NotificationService {
+class NotificationService {
   final AwesomeNotifications _awesomeNotifications;
   final WaterRepository _waterRepository;
+  // final WaterCalculatorService _waterCalculatorService;
 
-  NotificationServiceImp(this._awesomeNotifications, this._waterRepository);
+  NotificationService(
+    this._awesomeNotifications,
+    this._waterRepository,
+    // this._waterCalculatorService,
+  );
 
-  ReceivedAction? _initialAction;
-  ReceivePort? _receivePort;
+  static ReceivedAction? initialAction;
+  static ReceivePort? _receivePort;
 
-  Future<void> _initializeIsolateReceivePort() async {
-    _receivePort = ReceivePort('Notification action port in main isolate')
-      ..listen((silentData) => onActionReceivedImplementationMethod(silentData));
-
-    // This initialization only happens on main isolate
-    IsolateNameServer.registerPortWithName(_receivePort!.sendPort, 'notification_action_port');
-  }
-
-  Future<void> onActionReceivedImplementationMethod(ReceivedAction receivedAction) async {
-    navigatorKey.currentState?.pushNamedAndRemoveUntil(
-      '/home',
-      (route) => (route.settings.name != '/home') || route.isFirst,
-      arguments: receivedAction,
-    );
-  }
-
-  @override
   Future<void> initialize() async {
     await _awesomeNotifications.initialize(
       null,
@@ -56,16 +42,39 @@ class NotificationServiceImp implements NotificationService {
       debug: true,
     );
 
-    _initialAction = await _awesomeNotifications.getInitialNotificationAction();
-
     await requestPermission();
 
     await _awesomeNotifications.cancelAll();
-    await _scheduleNotifications();
+    await scheduleNotifications();
   }
 
-  Future<void> _scheduleNotifications() async {
+  Future<void> initializeInitialAction() async {
+    initialAction = await _awesomeNotifications.getInitialNotificationAction();
+  }
+
+  Future<void> initializeIsolateReceivePort() async {
+    _receivePort = ReceivePort('Notification action port in main isolate')
+      ..listen((silentData) => onActionReceivedImplementationMethod(silentData));
+
+    // This initialization only happens on main isolate
+    IsolateNameServer.registerPortWithName(_receivePort!.sendPort, 'notification_action_port');
+  }
+
+  Future<void> setListeners() async {
+    _awesomeNotifications.setListeners(
+      onActionReceivedMethod: NotificationService.onActionReceivedMethod,
+    );
+  }
+
+  static Future<void> onActionReceivedImplementationMethod(ReceivedAction receivedAction) async {
+    navigatorKey.currentContext?.read<WaterController>().onLaunchAction = AddWaterAction(450);
+    await navigatorKey.currentState?.pushNamed('/home');
+  }
+
+  Future<void> scheduleNotifications() async {
     int idCount = 0;
+
+    // int amountPerDrink = await getResult(_waterCalculatorService.calculateWaterPerDrinkByCustomReminders(dailyGoal, remindersCount),);
 
     String localTimeZone = await _awesomeNotifications.getLocalTimeZoneIdentifier();
     List<TimeOfDay> timesToDrink = await getResult(_waterRepository.getTimesToDrink());
@@ -79,6 +88,7 @@ class NotificationServiceImp implements NotificationService {
           channelKey: 'drinking_reminder',
           title: 'Não esqueça de beber água!',
           body: 'Clique aqui para rapidamente beber 440ml',
+          payload: {'amount': '450'},
         ),
         schedule: NotificationCalendar(
           hour: time.hour,
@@ -94,7 +104,52 @@ class NotificationServiceImp implements NotificationService {
     }
   }
 
-  @override
+  Future<void> scheduleNotification() async {
+    String localTimeZone = await _awesomeNotifications.getLocalTimeZoneIdentifier();
+
+    await _awesomeNotifications.createNotification(
+      content: NotificationContent(
+        category: NotificationCategory.Reminder,
+        id: 0,
+        actionType: ActionType.SilentBackgroundAction,
+        channelKey: 'drinking_reminder',
+        title: 'Não esqueça de beber água!',
+        body: 'Clique aqui para rapidamente beber 440ml',
+      ),
+      schedule: NotificationCalendar(
+        hour: DateTime.now().hour,
+        minute: DateTime.now().minute + 1,
+        timeZone: localTimeZone,
+        repeats: true,
+        allowWhileIdle: true,
+      ),
+      actionButtons: [
+        NotificationActionButton(
+          key: 'Beber',
+          label: 'Beber',
+        ),
+      ],
+    );
+  }
+
+  @pragma("vm:entry-point")
+  static Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
+    await getIt<NotificationService>().initializeInitialAction();
+
+    if (_receivePort == null) {
+      print('onActionReceivedMethod was called inside a parallel dart isolate.');
+      SendPort? sendPort = IsolateNameServer.lookupPortByName('notification_action_port');
+
+      if (sendPort != null) {
+        print('Redirecting the execution to main isolate process.');
+        sendPort.send(receivedAction);
+        return;
+      }
+    }
+
+    return onActionReceivedImplementationMethod(receivedAction);
+  }
+
   Future<void> requestPermission() async {
     await _awesomeNotifications.isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
@@ -104,42 +159,10 @@ class NotificationServiceImp implements NotificationService {
       }
     });
   }
-
-  @override
-  Future<void> scheduleNotification() async {
-    String localTimeZone = await _awesomeNotifications.getLocalTimeZoneIdentifier();
-
-    _awesomeNotifications.createNotification(
-      content: NotificationContent(
-        category: NotificationCategory.Reminder,
-        id: 0,
-        channelKey: 'drinking_reminder',
-        title: 'Não esqueça de beber água!',
-        body: 'Clique aqui para rapidamente beber 440ml',
-      ),
-      schedule: NotificationCalendar(
-        hour: 21,
-        minute: 36,
-        second: 0,
-        timeZone: localTimeZone,
-        repeats: true,
-        allowWhileIdle: true,
-      ),
-    );
-  }
 }
 
-@pragma("vm:entry-point")
-Future<void> onNotificationCreatedMethod(ReceivedNotification receivedNotification) async {}
 
-@pragma("vm:entry-point")
-Future<void> onNotificationDisplayedMethod(ReceivedNotification receivedNotification) async {}
 
-@pragma("vm:entry-point")
-Future<void> onDismissActionReceivedMethod(ReceivedAction receivedAction) async {}
-
-@pragma("vm:entry-point")
-Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {}
 
   // Future<void> initializeReminders() async {
   //   DateTime? nextTimeScheduledToDrink;
