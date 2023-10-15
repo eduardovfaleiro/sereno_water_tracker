@@ -13,6 +13,7 @@ import '../../water/domain/services/time_to_drink_service.dart';
 import '../../water/domain/services/timer_to_drink_service.dart';
 import '../../water/domain/services/water_calculator_by_repository_service.dart';
 import '../../water/domain/services/water_calculator_service.dart';
+import '../../water/domain/services/water_container_generator_service.dart';
 import '../../water/domain/usecases/calculate_water_data_by_parameters_usecase.dart';
 import '../../water/domain/usecases/calculate_water_data_usecase.dart';
 import '../../water/domain/usecases/handle_reset_water_data_usecase.dart';
@@ -111,6 +112,10 @@ Future<void> initGetIt() async {
     return NotificationService(getIt(), getIt(), getIt());
   });
 
+  getIt.registerLazySingleton<WaterContainerGeneratorService>(() {
+    return WaterContainerGeneratorServiceImp(getIt());
+  });
+
   // Controllers
 
   getIt.registerLazySingleton<WaterFormController>(() {
@@ -118,11 +123,11 @@ Future<void> initGetIt() async {
   });
 
   getIt.registerLazySingleton<WaterController>(() {
-    return WaterController(getIt(), getIt());
+    return WaterController(getIt(), getIt(), getIt());
   });
 
   getIt.registerLazySingleton<WaterContainerController>(() {
-    return WaterContainerController(getIt());
+    return WaterContainerController(getIt(), getIt());
   });
 
   getIt.registerLazySingleton<WaterSettingsController>(() {

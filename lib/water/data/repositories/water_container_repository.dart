@@ -8,6 +8,7 @@ abstract class WaterContainerRepository {
   Future<Result<List<WaterContainerEntity>>> getAll();
   Future<Result<void>> add(WaterContainerEntity value);
   Future<Result<void>> remove(WaterContainerEntity value);
+  Future<Result<void>> removeAll();
 }
 
 class WaterContainerRepositoryImp implements WaterContainerRepository {
@@ -30,5 +31,10 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
   @override
   Future<Result<void>> remove(WaterContainerEntity value) async {
     return Right(await _waterContainerDataSource.remove(value));
+  }
+
+  @override
+  Future<Result<void>> removeAll() async {
+    return Right(_waterContainerDataSource.removeAll());
   }
 }

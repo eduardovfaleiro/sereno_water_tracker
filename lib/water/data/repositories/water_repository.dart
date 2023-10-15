@@ -14,7 +14,7 @@ abstract class WaterRepository {
   Future<Result<WaterDataEntity>> getWaterData();
   Future<Result<List<TimeOfDay>>> getTimesToDrink();
   Future<Result<DateTime?>> getLastDrankTodayReset();
-  Future<Result<int>> getWaterPerDrink();
+  Future<Result<int>> getAmountPerDrink();
 
   Future<Result<void>> setDrankToday(int value);
   Future<Result<void>> addDrankToday(int value);
@@ -24,7 +24,6 @@ abstract class WaterRepository {
   Future<Result<void>> setWaterData(WaterDataEntity value);
   Future<Result<void>> setLastDrankTodayReset(DateTime value);
   Future<Result<void>> setTimesToDrink(List<TimeOfDay> value);
-  Future<Result<void>> setWaterPerDrink(int value);
 
   Future<Result<void>> deleteTimeToDrink(TimeOfDay value);
   Future<Result<void>> updateTimeToDrink(TimeOfDay key, TimeOfDay newValue);
@@ -184,12 +183,7 @@ class WaterRepositoryImp implements WaterRepository {
   }
 
   @override
-  Future<Result<int>> getWaterPerDrink() async {
-    return Right(await _waterDataSource.getWaterPerDrink());
-  }
-
-  @override
-  Future<Result<void>> setWaterPerDrink(int value) async {
-    return Right(await _waterDataSource.setWaterPerDrink(value));
+  Future<Result<int>> getAmountPerDrink() async {
+    return Right(await _waterDataSource.getAmountPerDrink());
   }
 }

@@ -8,6 +8,7 @@ abstract class WaterContainerDataSource {
   Future<List<WaterContainerEntity>> getAll();
   Future<void> add(WaterContainerEntity value);
   Future<void> remove(WaterContainerEntity value);
+  Future<void> removeAll();
 }
 
 class HiveWaterContainerDataSource implements WaterContainerDataSource {
@@ -27,12 +28,17 @@ class HiveWaterContainerDataSource implements WaterContainerDataSource {
 
   @override
   Future<void> remove(WaterContainerEntity value) async {
-    int containerIndex = _box.values.toList().indexWhere((e) => e == value);
+    int containerIndex = _box.values.toList().indexWhere((e) => e == value); // TODO: tá dando bo
 
     if (containerIndex == -1) {
       throw WaterContainerNotFoundException();
     }
 
     return _box.deleteAt(containerIndex);
+  }
+
+  @override
+  Future<void> removeAll() async {
+    await _box.clear();
   }
 }

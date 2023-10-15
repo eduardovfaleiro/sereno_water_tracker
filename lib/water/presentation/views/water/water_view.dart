@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -195,14 +197,14 @@ class _WaterViewState extends State<WaterView> {
                           ),
                         ),
                         const SizedBox(height: Spacing.small1),
-                        _InfoBar(
+                        _InfoBarWithSubtitle(
                           icon: const Icon(
                             Icons.timer,
-                            color: MyColors.lightBlue2,
+                            color: Color.fromARGB(255, 142, 174, 207),
                             size: Spacing.normal,
                           ),
                           backgroundColor: MyColors.darkBlue3,
-                          leftText: 'Beber novamente em',
+                          leftText: 'Beber novamente',
                           rightText: ValueListenableBuilder(
                             valueListenable: controller.timerToDrinkService.timeToDrink,
                             builder: (context, timeToDrink, _) {
@@ -211,6 +213,13 @@ class _WaterViewState extends State<WaterView> {
                                 style: const TextStyle(color: MyColors.lightBlue3),
                               );
                             },
+                          ),
+                          subtitle: Text(
+                            '${controller.getAmountPerDrink()}ml',
+                            style: const TextStyle(
+                              color: MyColors.lightBlue3,
+                              // fontSize: FontSize.small,
+                            ),
                           ),
                         ),
                       ],
@@ -284,6 +293,65 @@ class _InfoBar extends StatelessWidget {
                   softWrap: true,
                   style: const TextStyle(color: MyColors.lightGrey),
                   overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: rightText,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InfoBarWithSubtitle extends StatelessWidget {
+  final Color backgroundColor;
+  final String leftText;
+  final Widget rightText;
+  final Widget subtitle;
+  final Icon icon;
+
+  const _InfoBarWithSubtitle({
+    required this.leftText,
+    required this.rightText,
+    required this.icon,
+    this.backgroundColor = MyColors.darkBlue2,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(Sizes.borderRadius),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Spacing.small, horizontal: Spacing.small2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                icon,
+                const SizedBox(width: Spacing.small2),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      leftText,
+                      softWrap: true,
+                      style: const TextStyle(color: MyColors.lightGrey),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    subtitle,
+                  ],
                 ),
               ],
             ),

@@ -7,15 +7,17 @@ import '../../../core/core.dart';
 import '../../data/repositories/water_repository.dart';
 import '../../domain/entities/water_data_entity.dart';
 import '../../domain/services/timer_to_drink_service.dart';
+import '../../domain/services/water_calculator_service.dart';
 import '../utils/dialogs.dart';
 import '../utils/snackbar_message.dart';
 import '../views/water/water_view.dart';
 
 class WaterController extends ChangeNotifier {
   final WaterRepository _waterRepository;
+  final WaterCalculatorService _waterCalculatorService;
   final TimerToDrinkService timerToDrinkService;
 
-  WaterController(this._waterRepository, this.timerToDrinkService);
+  WaterController(this._waterRepository, this.timerToDrinkService, this._waterCalculatorService);
 
   AddWaterAction? onLaunchAction;
 
@@ -76,6 +78,10 @@ class WaterController extends ChangeNotifier {
         Navigator.pop(context);
       },
     );
+  }
+
+  int getAmountPerDrink() {
+    return waterData.amountPerDrink;
   }
 
   Future<Result<void>> removeDrankToday({required int amount, required BuildContext context}) async {

@@ -23,6 +23,7 @@ class WaterDataEntity {
     );
   }
 
+  int get amountPerDrink => dailyGoal ~/ timesToDrink.length;
   double get drankTodayPercentage => drankToday / dailyGoal;
 
   @override

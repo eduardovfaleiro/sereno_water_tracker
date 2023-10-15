@@ -157,6 +157,7 @@ class _WaterContainerComponentState extends State<WaterContainerComponent> {
                               _getAddWaterContainerItemTile(context),
                               _getAddCustomAmount(context),
                               _getRemoveCustomAmount(context),
+                              _getReloadContainers(context),
                             ],
                             context: context,
                           );
@@ -385,6 +386,30 @@ BottomSheetItemTile _getAddCustomAmount(BuildContext context) {
     },
     icon: const Icon(CommunityMaterialIcons.water_plus_outline),
     label: 'Adicionar quantidade customizada',
+  );
+}
+
+BottomSheetItemTile _getReloadContainers(BuildContext context) {
+  return BottomSheetItemTileSimple(
+    onTap: () async {
+      Navigator.pop(context);
+      await Dialogs.confirm(
+        title: 'Recarregar recipientes?',
+        text: 'Todos recipientes serão excluídos e recarregados.',
+        context: context,
+        confirmText: 'Sim, recarregar',
+        cancelText: 'Cancelar',
+        onNo: () {
+          Navigator.pop(context);
+        },
+        onYes: () async {
+          await context.read<WaterContainerController>().reload();
+          Navigator.pop(context);
+        },
+      );
+    },
+    icon: const Icon(CommunityMaterialIcons.restart),
+    label: 'Recarregar recipientes',
   );
 }
 
