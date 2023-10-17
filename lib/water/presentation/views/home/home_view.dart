@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/core.dart';
 import '../../../../core/theme/themes.dart';
+import '../../controllers/drink_history_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/water_settings_controller.dart';
 
@@ -20,6 +22,7 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     context.read<HomeController>().init();
     context.read<WaterSettingsController>().init();
+    getIt<DrinkHistoryController>().initialize();
   }
 
   @override
@@ -48,7 +51,7 @@ class _HomeViewState extends State<HomeView> {
             child: SafeArea(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * .2,
+                  horizontal: MediaQuery.of(context).size.width * .12,
                   vertical: Spacing.small,
                 ),
                 child: GNav(
@@ -63,9 +66,10 @@ class _HomeViewState extends State<HomeView> {
                   color: MyColors.lightGrey,
                   tabBackgroundColor: MyColors.darkGrey,
                   tabs: const [
-                    GButton(icon: CupertinoIcons.drop),
-                    GButton(icon: CupertinoIcons.gear_alt),
+                    GButton(icon: Icons.water_drop_outlined),
+                    GButton(icon: Icons.history_sharp),
                     GButton(icon: CupertinoIcons.bell),
+                    GButton(icon: CupertinoIcons.gear_alt),
                   ],
                   selectedIndex: controller.selectedPage,
                   onTabChange: (index) {

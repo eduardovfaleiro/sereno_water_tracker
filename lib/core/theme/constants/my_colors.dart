@@ -11,7 +11,7 @@ class MyColors {
   static const Color lightGrey2 = Color.fromARGB(255, 107, 107, 107);
   static const Color lightGrey3 = Color.fromARGB(255, 170, 170, 170);
 
-  static const Color darkGrey = Color.fromARGB(255, 21, 21, 21);
+  static const Color darkGrey = Color.fromRGBO(31, 31, 31, 1);
   static const Color darkGrey1 = Color.fromARGB(255, 34, 34, 34);
   static const Color darkGrey2 = Color.fromARGB(44, 194, 194, 194);
   static const Color darkGrey3 = Color(0xff040404);

@@ -1,8 +1,10 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:hive/hive.dart';
+import '../../water/data/datasources/drink_history_datasource.dart';
 import '../../water/data/datasources/user_datasource.dart';
 import '../../water/data/datasources/water_container_datasource.dart';
 import '../../water/data/datasources/water_datasource.dart';
+import '../../water/data/repositories/drink_history_repository.dart';
 import '../../water/data/repositories/user_repository.dart';
 import '../../water/data/repositories/water_container_repository.dart';
 import '../../water/data/repositories/water_repository.dart';
@@ -18,6 +20,7 @@ import '../../water/domain/usecases/calculate_water_data_by_parameters_usecase.d
 import '../../water/domain/usecases/calculate_water_data_usecase.dart';
 import '../../water/domain/usecases/handle_reset_water_data_usecase.dart';
 import '../../water/domain/usecases/validate_session_usecase.dart';
+import '../../water/presentation/controllers/drink_history_controller.dart';
 import '../../water/presentation/controllers/home_controller.dart';
 import '../../water/presentation/controllers/reminder_controller.dart';
 import '../../water/presentation/controllers/water_container_controller.dart';
@@ -50,6 +53,10 @@ Future<void> initGetIt() async {
     return HiveWaterContainerDataSource(getIt());
   });
 
+  getIt.registerLazySingleton<DrinkHistoryDataSource>(() {
+    return HiveDrinkHistoryDataSource(getIt());
+  });
+
   // Repositories
 
   getIt.registerLazySingleton<WaterRepository>(() {
@@ -62,6 +69,10 @@ Future<void> initGetIt() async {
 
   getIt.registerLazySingleton<UserRepository>(() {
     return UserRepositoryImp(getIt());
+  });
+
+  getIt.registerLazySingleton<DrinkHistoryRepository>(() {
+    return DrinkHistoryRepositoryImp(getIt());
   });
 
   // Usecases
@@ -140,5 +151,9 @@ Future<void> initGetIt() async {
 
   getIt.registerLazySingleton<ReminderController>(() {
     return ReminderController(getIt());
+  });
+
+  getIt.registerLazySingleton<DrinkHistoryController>(() {
+    return DrinkHistoryController(getIt());
   });
 }

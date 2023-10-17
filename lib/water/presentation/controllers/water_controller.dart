@@ -4,20 +4,22 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/core.dart';
+import '../../data/repositories/drink_history_repository.dart';
 import '../../data/repositories/water_repository.dart';
+import '../../domain/entities/drink_record_entity.dart';
 import '../../domain/entities/water_data_entity.dart';
 import '../../domain/services/timer_to_drink_service.dart';
-import '../../domain/services/water_calculator_service.dart';
 import '../utils/dialogs.dart';
 import '../utils/snackbar_message.dart';
 import '../views/water/water_view.dart';
 
 class WaterController extends ChangeNotifier {
   final WaterRepository _waterRepository;
-  final WaterCalculatorService _waterCalculatorService;
+  final DrinkHistoryRepository _drinkHistoryRepository;
+
   final TimerToDrinkService timerToDrinkService;
 
-  WaterController(this._waterRepository, this.timerToDrinkService, this._waterCalculatorService);
+  WaterController(this._waterRepository, this.timerToDrinkService, this._drinkHistoryRepository);
 
   AddWaterAction? onLaunchAction;
 
@@ -51,6 +53,8 @@ class WaterController extends ChangeNotifier {
       return;
     }
 
+    _drinkHistoryRepository.add(DrinkRecordEntity(amount, DateTime.now()));
+
     pastDrankTodayPercentage = waterData.drankTodayPercentage;
     waterData.drankToday += amount;
 
@@ -63,21 +67,12 @@ class WaterController extends ChangeNotifier {
       text: '$amount ml serão adicionados.',
       context: context,
       onYes: () async {
-        var addDrankTodayResult = await getResult(_waterRepository.addDrankToday(amount));
-
-        if (addDrankTodayResult is Failure) {
-          SnackBarMessage.error(addDrankTodayResult, context: context);
-        } else {
-          waterData.drankToday += amount;
-          notifyListeners();
-        }
-
-        Navigator.pop(context);
+        await addDrankToday(amount: amount, context: context);
       },
-      onNo: () {
-        Navigator.pop(context);
-      },
+      onNo: () {},
     );
+
+    Navigator.pop(context);
   }
 
   int getAmountPerDrink() {

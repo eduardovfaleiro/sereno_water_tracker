@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../views/drink_history/drink_history_view.dart';
 import '../views/reminder/reminder_view.dart';
 import '../views/water_settings/water_settings_view.dart';
 import '../views/water/water_view.dart';
@@ -9,8 +10,9 @@ class HomeController extends ChangeNotifier {
 
   final pages = <Widget>[
     const WaterView(),
-    const WaterSettingsView(),
+    const DrinkHistoryView(),
     const ReminderView(),
+    const WaterSettingsView(),
   ];
 
   int selectedPage = 0;

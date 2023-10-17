@@ -76,7 +76,7 @@ class _WaterSettingsViewState extends State<WaterSettingsView> {
                   children: [
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: Spacing.small3),
-                      child: Icon(CupertinoIcons.drop_fill, size: Spacing.medium, color: MyColors.lightBlue2),
+                      child: Icon(Icons.water_drop, size: Spacing.medium, color: MyColors.lightBlue2),
                     ),
                     const SizedBox(height: Spacing.small1),
                     SpecialEditCard(

@@ -1,18 +1,27 @@
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../../core/core.dart';
+import '../../data/repositories/drink_history_repository.dart';
+import '../../domain/entities/drink_record_entity.dart';
 
+class DrinkHistoryController {
+  final ValueNotifier<List<DrinkRecordEntity>> records = ValueNotifier([]);
+  final DrinkHistoryRepository _drinkHistoryRepository;
 
-// class DrinkHistoryController {
-//   final ValueNotifier<List<DrinkRecordEntity>> _records;
+  DrinkHistoryController(this._drinkHistoryRepository);
 
-//   ValueNotifier<List<DrinkRecordEntity>> get records => _records.
+  void initialize() {
+    getIt<HiveInterface>().box(DRINK_HISTORY).listenable().addListener(() {
+      records.value = List.from(getIt<HiveInterface>().box(DRINK_HISTORY).values);
+    });
+  }
 
-//   void initialize() {
-//     getIt<HiveInterface>().box(DRINK_HISTORY).listenable().addListener(() {
-//       _records.value = List.from(getIt<HiveInterface>().box(DRINK_HISTORY).values);
-//     });
-//   }
+  Future<void> remove(DrinkRecordEntity drinkRecordEntity) {
+    return _drinkHistoryRepository.remove(drinkRecordEntity);
+  }
 
-//   Future<void> remove() async {
-
-//   }
-// }
+  Future<void> removeAll() {
+    return _drinkHistoryRepository.removeAll();
+  }
+}

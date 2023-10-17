@@ -183,7 +183,7 @@ class _WaterViewState extends State<WaterView> {
                         const SizedBox(height: Spacing.small1),
                         _InfoBar(
                           icon: const Icon(
-                            CupertinoIcons.drop_fill,
+                            Icons.water_drop,
                             color: Color(0xff576C82),
                             size: Spacing.normal,
                           ),
