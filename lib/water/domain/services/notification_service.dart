@@ -32,7 +32,6 @@ class NotificationService {
   Future<void> initialize() async {
     await _awesomeNotifications.initialize(
       'resource://drawable/launcher_icon',
-      // null,
       [
         NotificationChannel(
           channelKey: 'drinking_reminder',
@@ -116,6 +115,7 @@ class NotificationService {
         schedule: NotificationCalendar(
           hour: time.hour,
           minute: time.minute,
+          second: 0,
           timeZone: localTimeZone,
           repeats: true,
           allowWhileIdle: true,

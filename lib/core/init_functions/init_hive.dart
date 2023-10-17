@@ -15,8 +15,6 @@ Future<void> initHive() async {
   await hive.openBox(USER);
   await hive.openBox(WATER_CONTAINER);
 
-  await hive.box(WATER_CONTAINER).clear();
-
   if (hive.box(WATER_CONTAINER).isEmpty && !await validateSession()) {
     await hive.box(WATER_CONTAINER).add(const WaterContainerEntity(amount: 200, assetName: 'cup.svg'));
     await hive.box(WATER_CONTAINER).add(const WaterContainerEntity(amount: 500, assetName: 'bottle.svg'));

@@ -18,6 +18,7 @@ const String SLEEPTIME = 'sleeptime';
 const String WAKE_UP_TIME = 'wakeUpTime';
 const String LAST_WATER_DRANK_TODAY_RESET = 'lastWaterDrankTodayReset';
 const String WATER_PER_DRINK = 'waterPerDrink';
+const String DRINK_HISTORY = 'drinkHistory';
 
 // Default
 const int DEFAULT_WEIGHT = 70;

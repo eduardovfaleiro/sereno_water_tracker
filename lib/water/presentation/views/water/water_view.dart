@@ -218,7 +218,7 @@ class _WaterViewState extends State<WaterView> {
                             '${controller.getAmountPerDrink()}ml',
                             style: const TextStyle(
                               color: MyColors.lightBlue3,
-                              // fontSize: FontSize.small,
+                              fontSize: FontSize.small1,
                             ),
                           ),
                         ),

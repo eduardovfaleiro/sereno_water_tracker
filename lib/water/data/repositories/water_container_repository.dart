@@ -35,6 +35,6 @@ class WaterContainerRepositoryImp implements WaterContainerRepository {
 
   @override
   Future<Result<void>> removeAll() async {
-    return Right(_waterContainerDataSource.removeAll());
+    return Right(await _waterContainerDataSource.removeAll());
   }
 }

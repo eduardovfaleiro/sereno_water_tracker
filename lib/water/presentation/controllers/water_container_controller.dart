@@ -43,7 +43,9 @@ class WaterContainerController extends ChangeNotifier {
   }
 
   Future<void> reload() async {
-    _waterContainerRepository.removeAll();
+    var removeAllResult = await getResult(_waterContainerRepository.removeAll());
+    if (removeAllResult is Failure) throw Exception();
+
     List<WaterContainerEntity> containers = await _waterContainerGeneratorService.generate();
 
     for (var container in containers) {
