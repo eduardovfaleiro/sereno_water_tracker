@@ -154,6 +154,6 @@ Future<void> initGetIt() async {
   });
 
   getIt.registerLazySingleton<DrinkHistoryController>(() {
-    return DrinkHistoryController(getIt());
+    return DrinkHistoryController(getIt(), getIt());
   });
 }

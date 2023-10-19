@@ -200,10 +200,9 @@ class _WaterViewState extends State<WaterView> {
                         _InfoBarWithSubtitle(
                           icon: const Icon(
                             Icons.timer,
-                            color: Color.fromARGB(255, 142, 174, 207),
+                            color: Color.fromARGB(255, 112, 163, 214),
                             size: Spacing.normal,
                           ),
-                          backgroundColor: MyColors.darkBlue3,
                           leftText: 'Beber novamente',
                           rightText: ValueListenableBuilder(
                             valueListenable: controller.timerToDrinkService.timeToDrink,
@@ -265,7 +264,7 @@ class _InfoBar extends StatelessWidget {
   final Icon icon;
 
   const _InfoBar({
-    this.backgroundColor = MyColors.darkBlue2,
+    this.backgroundColor = MyColors.darkGrey,
     required this.leftText,
     required this.rightText,
     required this.icon,
@@ -320,7 +319,7 @@ class _InfoBarWithSubtitle extends StatelessWidget {
     required this.leftText,
     required this.rightText,
     required this.icon,
-    this.backgroundColor = MyColors.darkBlue2,
+    this.backgroundColor = const Color.fromARGB(255, 30, 44, 58),
     required this.subtitle,
   });
 

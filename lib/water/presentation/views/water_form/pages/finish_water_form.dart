@@ -144,7 +144,7 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
                           },
                         );
                       },
-                      preffixIcon: const Icon(CupertinoIcons.drop_fill, color: MyColors.lightGrey2),
+                      preffixIcon: const Icon(Icons.water_drop, color: MyColors.lightGrey2),
                     ),
                     const SizedBox(height: Spacing.small1),
                     Container(

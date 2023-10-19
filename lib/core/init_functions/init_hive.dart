@@ -16,7 +16,17 @@ Future<void> initHive() async {
   await hive.openBox(WATER);
   await hive.openBox(USER);
   await hive.openBox(WATER_CONTAINER);
-  await hive.openBox(DRINK_HISTORY);
+  await hive.openBox<DrinkRecordEntity>(DRINK_HISTORY);
+
+  // List<DrinkRecordEntity> drinkHistory = hive.box(DRINK_HISTORY).values;
+
+  // for (DrinkRecordEntity record in ) {
+  //   if (record.dateTime.differenceInDays(DateTime.now()) >= 1) {
+  //     hive.box(D)
+
+  //     hive.box(DRINK_HISTORY).deleteAt(index)
+  //   }
+  // }
 
   if (hive.box(WATER_CONTAINER).isEmpty && !await validateSession()) {
     await hive.box(WATER_CONTAINER).add(const WaterContainerEntity(amount: 200, assetName: 'cup.svg'));

@@ -156,7 +156,7 @@ class _WaterContainerComponentState extends State<WaterContainerComponent> {
                             items: [
                               _getAddWaterContainerItemTile(context),
                               _getAddCustomAmount(context),
-                              _getRemoveCustomAmount(context),
+                              // _getRemoveCustomAmount(context),
                               _getReloadContainers(context),
                             ],
                             context: context,
