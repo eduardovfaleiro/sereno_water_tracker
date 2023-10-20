@@ -18,7 +18,7 @@ class WaterContainerGeneratorServiceImp implements WaterContainerGeneratorServic
     String assetName = () {
       if (amountPerDrink <= 100) return 'cup_of_tea.svg';
       if (amountPerDrink <= 200) return 'cup.svg';
-      if (amountPerDrink <= 500) return 'bottle.svg';
+      if (amountPerDrink <= 2000) return 'bottle.svg';
 
       return 'gallon.svg';
     }();

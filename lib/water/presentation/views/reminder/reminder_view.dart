@@ -49,7 +49,7 @@ class _ReminderViewState extends State<ReminderView> {
           body: SafeArea(
             child: Container(
               padding: const EdgeInsets.only(
-                top: Spacing.huge,
+                top: Spacing.medium,
                 left: Spacing.small2,
                 right: Spacing.small2,
               ),

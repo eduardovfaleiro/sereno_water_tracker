@@ -49,6 +49,10 @@ class NotificationService {
     await scheduleNotifications();
   }
 
+  Future<List<NotificationModel>> getNotifications() async {
+    return _awesomeNotifications.listScheduledNotifications();
+  }
+
   Future<void> _requestPermission() async {
     await _awesomeNotifications.isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
@@ -102,66 +106,86 @@ class NotificationService {
     List<TimeOfDay> timesToDrink = await getResult(_waterRepository.getTimesToDrink());
 
     for (TimeOfDay time in timesToDrink) {
-      await _awesomeNotifications.createNotification(
-        content: NotificationContent(
-          category: NotificationCategory.Reminder,
-          id: idCount,
-          actionType: ActionType.SilentBackgroundAction,
-          channelKey: 'drinking_reminder',
-          title: 'Não esqueça de beber água!',
-          body: 'Clique aqui para rapidamente beber ${amountPerDrink}ml',
-          payload: {'amount': '$amountPerDrink'},
-        ),
-        schedule: NotificationCalendar(
-          hour: time.hour,
-          minute: time.minute,
-          second: 0,
-          timeZone: localTimeZone,
-          repeats: true,
-          allowWhileIdle: true,
-        ),
-        actionButtons: [
-          NotificationActionButton(
-            key: 'Beber',
-            label: 'Beber',
-          ),
-        ],
+      await _createSingleNotification(
+        id: idCount,
+        time: time,
+        amountPerDrink: amountPerDrink,
+        localTimeZone: localTimeZone,
       );
 
       idCount++;
     }
   }
 
-  // Future<void> scheduleNotification() async {
-  //   String localTimeZone = await _awesomeNotifications.getLocalTimeZoneIdentifier();
-
-  //   await _awesomeNotifications.createNotification(
-  //     content: NotificationContent(
-  //       category: NotificationCategory.Reminder,
-  //       id: 0,
-  //       actionType: ActionType.SilentBackgroundAction,
-  //       channelKey: 'drinking_reminder',
-  //       title: 'Não esqueça de beber água!',
-  //       body: 'Clique aqui para rapidamente beber 440ml',
-  //     ),
-  //     schedule: NotificationCalendar(
-  //       hour: DateTime.now().hour,
-  //       minute: DateTime.now().minute + 1,
-  //       timeZone: localTimeZone,
-  //       repeats: true,
-  //       allowWhileIdle: true,
-  //     ),
-  //     actionButtons: [
-  //       NotificationActionButton(
-  //         key: 'Beber',
-  //         label: 'Beber',
-  //       ),
-  //     ],
-  //   );
-  // }
-
   Future<void> cancelAllNotifications() async {
     await _awesomeNotifications.cancelAll();
+  }
+
+  Future<void> cancelSchedule(int id) async {
+    await _awesomeNotifications.cancelSchedule(id);
+  }
+
+  Future<void> createDefaultNotification(TimeOfDay time) async {
+    List<NotificationModel> notifications = await _awesomeNotifications.listScheduledNotifications();
+    int dailyGoal = await getResult(_waterRepository.getDailyDrinkingGoal());
+
+    int remindersCount = await getResult(_waterRepository.getTimesToDrink()).then(
+      (timesToDrink) => timesToDrink.length,
+    );
+
+    int amountPerDrink = _waterCalculatorService.calculateWaterPerDrinkByCustomReminders(dailyGoal, remindersCount);
+
+    String localTimeZone = await _awesomeNotifications.getLocalTimeZoneIdentifier();
+
+    int biggestId = -1;
+
+    for (NotificationModel notification in notifications) {
+      if (notification.content!.id! > biggestId) {
+        biggestId = notification.content!.id!;
+      }
+    }
+
+    int biggestIdAvailable = biggestId + 1;
+
+    await _createSingleNotification(
+      id: biggestIdAvailable,
+      amountPerDrink: amountPerDrink,
+      localTimeZone: localTimeZone,
+      time: time,
+    );
+  }
+
+  Future<void> _createSingleNotification({
+    required int id,
+    required TimeOfDay time,
+    required int amountPerDrink,
+    required String localTimeZone,
+  }) {
+    return _awesomeNotifications.createNotification(
+      content: NotificationContent(
+        category: NotificationCategory.Reminder,
+        id: id,
+        actionType: ActionType.SilentBackgroundAction,
+        channelKey: 'drinking_reminder',
+        title: 'Não esqueça de beber água!',
+        body: 'Clique aqui para rapidamente beber ${amountPerDrink}ml',
+        payload: {'amount': '$amountPerDrink'},
+      ),
+      schedule: NotificationCalendar(
+        hour: time.hour,
+        minute: time.minute,
+        second: 0,
+        timeZone: localTimeZone,
+        repeats: true,
+        allowWhileIdle: true,
+      ),
+      actionButtons: [
+        NotificationActionButton(
+          key: 'Beber',
+          label: 'Beber',
+        ),
+      ],
+    );
   }
 
   @pragma("vm:entry-point")
@@ -180,81 +204,3 @@ class NotificationService {
     return onActionReceivedImplementationMethod(receivedAction);
   }
 }
-
-
-
-
-  // Future<void> initializeReminders() async {
-  //   DateTime? nextTimeScheduledToDrink;
-
-  //   Timer.periodic(const Duration(seconds: 5), (timer) async {
-  //     var nextTimeToDrink = await getResult(_timeToDrinkAgainService.getNext());
-
-  //     if (nextTimeToDrink is Failure) throw Exception();
-
-  //     if (nextTimeScheduledToDrink != nextTimeToDrink) {
-  //       var waterPerDrink = await getResult(
-  //         _waterCalculatorByRepositoryService.calculateWaterPerDrinkByCustomReminders(),
-  //       );
-
-  //       if (waterPerDrink is Failure) throw Exception();
-
-  //       await scheduleNotification(nextTimeToDrink, waterPerDrink);
-
-  //       nextTimeScheduledToDrink = nextTimeToDrink;
-  //     }
-  //   });
-  // }
-
-
-  // Future<void> scheduleNotification(DateTime whenToNotify, int waterPerDrink) async {
-  //   await flutterLocalNotificationsPlugin.zonedSchedule(
-  //     0,
-  //     payload: jsonEncode({
-  //       'drinking_reminder': waterPerDrink,
-  //     }),
-  //     'Não esqueça de beber água!',
-  //     'Clique para beber $waterPerDrink ml rapidamente',
-  //     tz.TZDateTime.from(
-  //       whenToNotify,
-  //       tz.getLocation(await FlutterTimezone.getLocalTimezone()),
-  //     ),
-  //     NotificationDetails(
-  //       android: AndroidNotificationDetails(
-  //         actions: [
-  //           AndroidNotificationAction(
-  //             ADD_WATER_ACTION_KEY,
-  //             'Drink $waterPerDrink ml',
-  //             showsUserInterface: true,
-  //           ),
-  //         ],
-  //         'drinking_reminder',
-  //         'Drinking reminder',
-  //         channelDescription: 'Will remind you to drink water on a regular basis.',
-  //       ),
-  //     ),
-  //     androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-  //     uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-  //   );
-  // }
-
-  // Future<void> _handleNotificationTap(BuildContext context, String payload) async {
-  //   int amount = jsonDecode(payload)['drinking_reminder'];
-
-  //   await Dialogs.confirm(
-  //     title: 'Adicionar quantidade?',
-  //     text: '$amount ml serão adicionados',
-  //     context: navigatorKey.currentContext!,
-  //     confirmText: 'Confirmar',
-  //     cancelText: 'Cancelar',
-  //     onYes: () async {
-  //       await getIt<WaterRepository>().addDrankToday(amount);
-  //       await context.read<WaterController>().init();
-
-  //       navigatorKey.currentState!.pop(context);
-  //     },
-  //     onNo: () {
-  //       navigatorKey.currentState!.pop(context);
-  //     },
-  //   );
-  // }

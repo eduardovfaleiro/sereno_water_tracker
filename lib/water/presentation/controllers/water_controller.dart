@@ -68,11 +68,12 @@ class WaterController extends ChangeNotifier {
       context: context,
       onYes: () async {
         await addDrankToday(amount: amount, context: context);
+        Navigator.pop(context);
       },
-      onNo: () {},
+      onNo: () {
+        Navigator.pop(context);
+      },
     );
-
-    Navigator.pop(context);
   }
 
   int getAmountPerDrink() {
