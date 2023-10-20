@@ -16,7 +16,7 @@ Future<void> initHive() async {
   await hive.openBox(WATER);
   await hive.openBox(USER);
   await hive.openBox(WATER_CONTAINER);
-  await hive.openBox<DrinkRecordEntity>(DRINK_HISTORY);
+  await hive.openBox(DRINK_HISTORY);
 
   // List<DrinkRecordEntity> drinkHistory = hive.box(DRINK_HISTORY).values;
 
