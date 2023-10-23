@@ -19,10 +19,11 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
-    super.initState();
     context.read<HomeController>().init();
     context.read<WaterSettingsController>().init();
     getIt<DrinkHistoryController>().initialize();
+
+    super.initState();
   }
 
   @override

@@ -129,6 +129,8 @@ class WaterFormController extends ChangeNotifier {
     }
 
     waterData.timesToDrink.add(reminder);
+
+    notifyListeners();
     return const Right(null);
   }
 

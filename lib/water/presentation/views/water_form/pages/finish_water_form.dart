@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restart_app/restart_app.dart';
 
 import '../../../../../core/core.dart';
+import '../../../../../core/functions/datetime_to_timeofday.dart';
 import '../../../../../core/functions/time_of_day_utils.dart';
 import '../../../../../core/theme/themes.dart';
+import '../../../../../main.dart';
 import '../../../controllers/water_form_controller.dart';
 import '../../../utils/dialogs.dart';
 import '../../../utils/edit_dialogs/show_edit_daily_goal.dart';
@@ -12,6 +15,7 @@ import '../../../utils/edit_dialogs/show_edit_time.dart';
 import '../../../utils/snackbar_message.dart';
 import '../../../widgets/buttons/button.dart';
 import '../../../widgets/edit_card.dart';
+import '../water_form_view.dart';
 
 class FinishWaterForm extends StatefulWidget {
   const FinishWaterForm({super.key});
@@ -36,20 +40,13 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
           child: Scaffold(
             appBar: AppBar(),
             bottomNavigationBar: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Spacing.normal),
+              padding: const EdgeInsets.symmetric(horizontal: Spacing.normal, vertical: Spacing.normal),
               child: SizedBox(
                 width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Button.outlined(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/waterForm');
-                      },
-                      text: 'Voltar para formulário',
-                    ),
-                    const SizedBox(height: Spacing.small),
                     Button.normal(
                       onPressed: () async {
                         var saveDataResult = await getResult(controller.saveData());
@@ -57,10 +54,25 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
                         if (saveDataResult is Failure) {
                           SnackBarMessage.error(saveDataResult, context: context);
                         } else {
-                          Navigator.pushReplacementNamed(context, '/home');
+                          await initializeApp();
+
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => const Sereno(isSessionValid: true)),
+                          );
                         }
                       },
                       text: 'Finalizar',
+                    ),
+                    const SizedBox(height: Spacing.small),
+                    Button.outlined(
+                      onPressed: () async {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const WaterFormView()),
+                        );
+                      },
+                      text: 'Voltar para formulário',
                     ),
                   ],
                 ),
@@ -69,7 +81,8 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
             body: Padding(
               padding: const EdgeInsets.only(left: Spacing.small3, right: Spacing.small3),
               child: SingleChildScrollView(
-                padding: const EdgeInsets.only(top: Spacing.small, left: Spacing.small, right: Spacing.small),
+                padding: const EdgeInsets.only(
+                    top: Spacing.small, left: Spacing.small, right: Spacing.small, bottom: Spacing.small),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -79,7 +92,7 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
                       style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: FontSize.small3),
                     ),
                     const Text(
-                      'Esses foram os dados gerados, você pode alterá-los como quiser',
+                      'Estes foram os dados gerados',
                       style: TextStyle(fontSize: FontSize.small2),
                     ),
                     const Divider(
@@ -87,50 +100,6 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
                       thickness: 1,
                     ),
                     const SizedBox(height: Spacing.normal),
-                    // EditCard(
-                    //   text: 'Peso',
-                    //   value: '${controller.user.weight} kg',
-                    //   onTap: () {
-                    //     showEditWeight(
-                    //       context: context,
-                    //       onOk: (weight) {
-                    //         controller.setWeight(weight);
-                    //         Navigator.pop(context);
-                    //       },
-                    //       weight: controller.user.weight,
-                    //     );
-                    //   },
-                    // ),
-                    // const SizedBox(height: Spacing.small),
-                    // EditCard(
-                    //   text: 'Quantas vezes beber ao dia',
-                    //   value: '${controller.waterData.dailyDrinkingFrequency}',
-                    //   onTap: () {
-                    //     showEditDailyDrinkingFrequency(
-                    //       context: context,
-                    //       onOk: (weight) {
-                    //         controller.setWeight(weight);
-                    //         Navigator.pop(context);
-                    //       },
-                    //       dailyDrinkingFrequency: controller.waterData.dailyDrinkingFrequency,
-                    //     );
-                    //   },
-                    // ),
-                    // const SizedBox(height: Spacing.small),
-                    // EditCard(
-                    //   text: 'Dias de treino por semana',
-                    //   value: '${controller.user.weeklyWorkoutDays}',
-                    //   onTap: () {
-                    //     showEditWeeklyWorkoutDays(
-                    //       context: context,
-                    //       onOk: (weeklyWorkoutDays) {
-                    //         controller.setWeeklyWorkoutDays(weeklyWorkoutDays);
-                    //         Navigator.pop(context);
-                    //       },
-                    //       weeklyWorkoutDays: controller.user.weeklyWorkoutDays,
-                    //     );
-                    //   },
-                    // ),
                     const SizedBox(height: Spacing.small),
                     EditCard(
                       text: 'Meta diária',
@@ -180,45 +149,66 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
-                        children: List.generate(
-                          controller.waterData.timesToDrink.length,
-                          (index) {
-                            final TimeOfDay timeToDrink = controller.waterData.timesToDrink[index];
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ...List.generate(
+                            controller.waterData.timesToDrink.length,
+                            (index) {
+                              final TimeOfDay timeToDrink = controller.waterData.timesToDrink[index];
 
-                            return _ReminderCard(
-                              reminder: timeToDrink,
-                              onDelete: () async {
-                                await Dialogs.confirm(
-                                    title: 'Excluir lembrete?',
-                                    text: 'O lembrete não poderá ser recuperado.',
-                                    cancelText: 'Cancelar',
-                                    confirmText: 'Sim, excluir',
-                                    context: context,
-                                    onNo: () {
-                                      Navigator.pop(context);
-                                    },
-                                    onYes: () async {
-                                      await controller.deleteReminder(context: context, reminder: timeToDrink);
-                                      Navigator.pop(context);
-                                    });
-                              },
-                              onEdit: (timeToDrink) {
-                                showEditTime(
-                                  context: context,
-                                  title: 'Alterar lembrete',
-                                  onOk: (newReminder) {
-                                    controller.editReminder(
+                              return _ReminderCard(
+                                reminder: timeToDrink,
+                                onDelete: () async {
+                                  await Dialogs.confirm(
+                                      title: 'Excluir lembrete?',
+                                      text: 'O lembrete não poderá ser recuperado.',
+                                      cancelText: 'Cancelar',
+                                      confirmText: 'Sim, excluir',
                                       context: context,
-                                      oldReminder: timeToDrink,
-                                      newReminder: newReminder,
-                                    );
-                                  },
-                                  timeOfDay: timeToDrink,
-                                );
-                              },
-                            );
-                          },
-                        ),
+                                      onNo: () {
+                                        Navigator.pop(context);
+                                      },
+                                      onYes: () async {
+                                        await controller.deleteReminder(context: context, reminder: timeToDrink);
+                                        Navigator.pop(context);
+                                      });
+                                },
+                                onEdit: (timeToDrink) {
+                                  showEditTime(
+                                    context: context,
+                                    title: 'Alterar lembrete',
+                                    onOk: (newReminder) {
+                                      controller.editReminder(
+                                        context: context,
+                                        oldReminder: timeToDrink,
+                                        newReminder: newReminder,
+                                      );
+                                    },
+                                    timeOfDay: timeToDrink,
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                          InkWell(
+                            onTap: () {
+                              showEditTime(
+                                context: context,
+                                title: 'Adicionar lembrete',
+                                onOk: (reminder) async {
+                                  controller.addReminder(context: context, reminder: reminder);
+
+                                  Navigator.pop(context);
+                                },
+                                timeOfDay: DateTime.now().toTimeOfDay(),
+                              );
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(vertical: Spacing.small2),
+                              child: Icon(Icons.add, color: MyColors.lightGrey),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

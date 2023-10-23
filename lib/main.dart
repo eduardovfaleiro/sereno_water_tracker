@@ -2,13 +2,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import 'core/core.dart';
 import 'core/functions/add_listener_reminders.dart';
 import 'core/functions/validate_session.dart';
-import 'core/init_functions/init_get_it.dart';
-import 'core/init_functions/init_hive.dart';
+import 'core/initializers/get_it_initializer.dart';
+import 'core/initializers/hive_initializer.dart';
+import 'core/initializers/session_valid.dart';
 import 'core/theme/themes.dart';
 import 'water/domain/services/notification_service.dart';
 import 'water/domain/services/reset_data_with_timer_service.dart';
@@ -26,23 +28,28 @@ import 'water/presentation/views/water_settings/water_settings_view.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> initializeApp() async {
+  GetItInitializer(getIt).initialize();
 
-  await initGetIt();
-  await initHive();
+  await getIt<HiveInitializer>().initialize();
+  await getIt<HiveInitializer>().openBoxes();
 
-  bool isSessionValid = await validateSession();
+  if (await SessionValid.check()) {
+    await getIt<HiveInitializer>().registerAdapters();
+    await getIt<HiveInitializer>().startDrinkHistoryReset();
+    await getIt<HiveInitializer>().generateContainersIfEmpty();
 
-  if (isSessionValid) {
     getIt<ResetDataWithTimerService>().startWater();
     await getIt<NotificationService>().initialize();
 
-    addListenerReminders(() async {
-      await getIt<NotificationService>().cancelAllNotifications();
-      await getIt<NotificationService>().scheduleNotifications();
-    });
+    await getIt<HiveInitializer>().setListenersReminders();
   }
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await initializeApp();
 
   runApp(
     MultiProvider(
@@ -67,25 +74,18 @@ Future<void> main() async {
         ),
       ],
       child: Sereno(
-        navigatorKey: navigatorKey,
-        isSessionValid: isSessionValid,
-        notificationService: getIt<NotificationService>(),
+        isSessionValid: await validateSession(),
       ),
     ),
   );
 }
 
 class Sereno extends StatefulWidget {
-  final GlobalKey<NavigatorState> navigatorKey;
-
   final bool isSessionValid;
-  final NotificationService notificationService;
 
   const Sereno({
     Key? key,
-    required this.navigatorKey,
     required this.isSessionValid,
-    required this.notificationService,
   }) : super(key: key);
 
   @override
@@ -97,30 +97,19 @@ class SerenoState extends State<Sereno> {
   void initState() {
     super.initState();
 
-    widget.notificationService.setListeners();
-  }
-
-  String get initialRoute {
-    if (widget.isSessionValid) {
-      return '/home';
-    }
-
-    return '/waterForm';
+    getIt<NotificationService>().setListeners();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: initialRoute,
+      initialRoute: widget.isSessionValid ? '/home' : '/waterForm',
       navigatorKey: navigatorKey,
       routes: {
-        // Water
         '/waterForm': (context) => const WaterFormView(),
         '/finishWaterForm': (context) => const FinishWaterForm(),
         '/waterSettings': (_) => const WaterSettingsView(),
         '/water': (_) => const WaterView(),
-
-        // Home
         '/home': (_) => const HomeView(),
       },
       debugShowCheckedModeBanner: false,

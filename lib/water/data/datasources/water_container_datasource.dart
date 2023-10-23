@@ -28,7 +28,7 @@ class HiveWaterContainerDataSource implements WaterContainerDataSource {
 
   @override
   Future<void> remove(WaterContainerEntity value) async {
-    int containerIndex = _box.values.toList().indexWhere((e) => e == value); // TODO: tá dando bo
+    int containerIndex = _box.values.toList().indexWhere((e) => e == value);
 
     if (containerIndex == -1) {
       throw WaterContainerNotFoundException();

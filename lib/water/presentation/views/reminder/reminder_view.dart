@@ -54,6 +54,7 @@ class _ReminderViewState extends State<ReminderView> {
                 right: Spacing.small2,
               ),
               child: ListView.builder(
+                padding: const EdgeInsets.only(bottom: Spacing.huge5),
                 itemCount: controller.reminders.length,
                 itemBuilder: (context, index) {
                   TimeOfDay reminder = controller.reminders[index];
