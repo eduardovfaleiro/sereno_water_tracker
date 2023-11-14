@@ -1,16 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import 'core/core.dart';
 import 'core/functions/add_listener_reminders.dart';
-import 'core/functions/validate_session.dart';
 import 'core/initializers/get_it_initializer.dart';
 import 'core/initializers/hive_initializer.dart';
-import 'core/initializers/session_valid.dart';
+import 'core/initializers/session_validator.dart';
 import 'core/theme/themes.dart';
 import 'water/domain/services/notification_service.dart';
 import 'water/domain/services/reset_data_with_timer_service.dart';
@@ -28,28 +29,29 @@ import 'water/presentation/views/water_settings/water_settings_view.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-Future<void> initializeApp() async {
-  GetItInitializer(getIt).initialize();
-
-  await getIt<HiveInitializer>().initialize();
-  await getIt<HiveInitializer>().openBoxes();
-
-  if (await SessionValid.check()) {
-    await getIt<HiveInitializer>().registerAdapters();
-    await getIt<HiveInitializer>().startDrinkHistoryReset();
-    await getIt<HiveInitializer>().generateContainersIfEmpty();
-
-    getIt<ResetDataWithTimerService>().startWater();
-    await getIt<NotificationService>().initialize();
-
-    await getIt<HiveInitializer>().setListenersReminders();
-  }
+@pragma("vm:entry-point")
+onStart(ServiceInstance service) {
+  print('');
+  Timer.periodic(const Duration(seconds: 15), (timer) {});
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await initializeApp();
+  FlutterBackgroundService().configure(
+    iosConfiguration: IosConfiguration(),
+    androidConfiguration: AndroidConfiguration(
+      onStart: onStart,
+      isForegroundMode: false,
+      notificationChannelId: '0',
+    ),
+  );
+
+  GetItInitializer(getIt).initialize();
+
+  await getIt<HiveInitializer>().initialize();
+  await getIt<HiveInitializer>().registerAdapters();
+  await getIt<HiveInitializer>().openBoxes();
 
   runApp(
     MultiProvider(
@@ -73,9 +75,7 @@ Future<void> main() async {
           create: (context) => getIt<ReminderController>(),
         ),
       ],
-      child: Sereno(
-        isSessionValid: await validateSession(),
-      ),
+      child: Sereno(await SessionValidator.check()),
     ),
   );
 }
@@ -83,10 +83,7 @@ Future<void> main() async {
 class Sereno extends StatefulWidget {
   final bool isSessionValid;
 
-  const Sereno({
-    Key? key,
-    required this.isSessionValid,
-  }) : super(key: key);
+  const Sereno(this.isSessionValid, {Key? key}) : super(key: key);
 
   @override
   State<Sereno> createState() => SerenoState();
@@ -97,6 +94,7 @@ class SerenoState extends State<Sereno> {
   void initState() {
     super.initState();
 
+    context.read<HomeController>().init();
     getIt<NotificationService>().setListeners();
   }
 

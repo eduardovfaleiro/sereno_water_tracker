@@ -34,6 +34,7 @@ dependencies:
   awesome_notifications: any # <~ this version is managed by awesome_notifications_core package
   flutter_launcher_icons: ^0.13.1
   restart_app: ^1.2.1
+  flutter_background_service: ^5.0.3
 
 dev_dependencies:
   flutter_test:

@@ -6,8 +6,11 @@ import 'package:restart_app/restart_app.dart';
 import '../../../../../core/core.dart';
 import '../../../../../core/functions/datetime_to_timeofday.dart';
 import '../../../../../core/functions/time_of_day_utils.dart';
+import '../../../../../core/initializers/hive_initializer.dart';
 import '../../../../../core/theme/themes.dart';
 import '../../../../../main.dart';
+import '../../../../domain/services/notification_service.dart';
+import '../../../../domain/services/reset_data_with_timer_service.dart';
 import '../../../controllers/water_form_controller.dart';
 import '../../../utils/dialogs.dart';
 import '../../../utils/edit_dialogs/show_edit_daily_goal.dart';
@@ -15,6 +18,7 @@ import '../../../utils/edit_dialogs/show_edit_time.dart';
 import '../../../utils/snackbar_message.dart';
 import '../../../widgets/buttons/button.dart';
 import '../../../widgets/edit_card.dart';
+import '../../home/home_view.dart';
 import '../water_form_view.dart';
 
 class FinishWaterForm extends StatefulWidget {
@@ -54,12 +58,11 @@ class _FinishWaterFormState extends State<FinishWaterForm> {
                         if (saveDataResult is Failure) {
                           SnackBarMessage.error(saveDataResult, context: context);
                         } else {
-                          await initializeApp();
-
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Sereno(isSessionValid: true)),
-                          );
+                          Navigator.pushReplacement(context, MaterialPageRoute(
+                            builder: (context) {
+                              return const HomeView();
+                            },
+                          ));
                         }
                       },
                       text: 'Finalizar',

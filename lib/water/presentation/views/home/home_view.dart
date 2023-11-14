@@ -4,7 +4,10 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/core.dart';
+import '../../../../core/initializers/hive_initializer.dart';
 import '../../../../core/theme/themes.dart';
+import '../../../domain/services/notification_service.dart';
+import '../../../domain/services/reset_data_with_timer_service.dart';
 import '../../controllers/drink_history_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/water_settings_controller.dart';
@@ -19,11 +22,20 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
-    context.read<HomeController>().init();
-    context.read<WaterSettingsController>().init();
-    getIt<DrinkHistoryController>().initialize();
-
     super.initState();
+
+    Future.delayed(Duration.zero, () async {
+      await getIt<HiveInitializer>().startDrinkHistoryReset();
+      await getIt<HiveInitializer>().generateContainersIfEmpty();
+
+      getIt<ResetDataWithTimerService>().startWater();
+      await getIt<NotificationService>().initialize();
+
+      await getIt<HiveInitializer>().setListenersReminders();
+
+      context.read<WaterSettingsController>().init();
+      getIt<DrinkHistoryController>().initialize();
+    });
   }
 
   @override

@@ -30,7 +30,7 @@ class NotificationService {
   static ReceivePort? _receivePort;
 
   Future<void> initialize() async {
-    await _requestPermission();
+    await requestPermission();
 
     await _awesomeNotifications.initialize(
       'resource://drawable/launcher_icon',
@@ -54,7 +54,7 @@ class NotificationService {
     return _awesomeNotifications.listScheduledNotifications();
   }
 
-  Future<void> _requestPermission() async {
+  Future<void> requestPermission() async {
     await _awesomeNotifications.isNotificationAllowed().then((isAllowed) async {
       if (!isAllowed) {
         await _awesomeNotifications.requestPermissionToSendNotifications(

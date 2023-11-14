@@ -241,6 +241,7 @@ class _WaterViewState extends State<WaterView> {
                                 },
                                 onYes: () async {
                                   await controller.addDrankToday(amount: amount, context: context);
+                                  Navigator.pop(context);
                                 });
                           } else {
                             await controller.addDrankToday(amount: amount, context: context);

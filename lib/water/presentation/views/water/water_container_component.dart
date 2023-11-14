@@ -74,18 +74,18 @@ class _WaterContainerComponentState extends State<WaterContainerComponent> {
                             onLongPress: () {
                               BottomSheets.items(
                                 items: [
-                                  BottomSheetItemTileSimple(
-                                    onTap: () async {
-                                      await context.read<WaterController>().removeDrankToday(
-                                            amount: controller.waterContainers[i].amount,
-                                            context: context,
-                                          );
+                                  // BottomSheetItemTileSimple(
+                                  //   onTap: () async {
+                                  //     await context.read<WaterController>().removeDrankToday(
+                                  //           amount: controller.waterContainers[i].amount,
+                                  //           context: context,
+                                  //         );
 
-                                      Navigator.pop(context);
-                                    },
-                                    label: 'Remover água bebida',
-                                    icon: const Icon(CommunityMaterialIcons.water_minus_outline),
-                                  ),
+                                  //     Navigator.pop(context);
+                                  //   },
+                                  //   label: 'Remover água bebida',
+                                  //   icon: const Icon(CommunityMaterialIcons.water_minus_outline),
+                                  // ),
                                   BottomSheetItemTileCustomChild(
                                     child: InkWell(
                                       onTap: () async {

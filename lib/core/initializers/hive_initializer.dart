@@ -45,7 +45,7 @@ class HiveInitializer {
   }
 
   Future<void> generateContainersIfEmpty() async {
-    if (_hiveInterface.box(WATER_CONTAINER).isEmpty) return;
+    if (_hiveInterface.box(WATER_CONTAINER).isNotEmpty) return;
 
     List<WaterContainerEntity> waterContainers = await _waterContainerGeneratorService.generate();
 

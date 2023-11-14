@@ -36,25 +36,19 @@ class GetItInitializer {
   GetItInitializer(this._getIt);
 
   void initialize() {
-    _initializeLibraries();
-    _initializeDataSources();
-    _initializeRepositories();
-    _initializeUseCases();
-    _initializeServices();
-    _initializeControllers();
-  }
-
-  void _initializeLibraries() {
     _getIt.registerLazySingleton<HiveInterface>(() {
       return Hive;
+    });
+
+    _getIt.registerLazySingleton<HiveInitializer>(() {
+      return HiveInitializer(_getIt(), _getIt(), _getIt());
     });
 
     _getIt.registerLazySingleton<AwesomeNotifications>(() {
       return AwesomeNotifications();
     });
-  }
 
-  void _initializeDataSources() {
+    // Datasources
     _getIt.registerLazySingleton<UserDataSource>(() {
       return HiveUserDataSource(_getIt());
     });
@@ -70,9 +64,9 @@ class GetItInitializer {
     _getIt.registerLazySingleton<DrinkHistoryDataSource>(() {
       return HiveDrinkHistoryDataSource(_getIt());
     });
-  }
 
-  void _initializeRepositories() {
+    // Repositories
+
     _getIt.registerLazySingleton<WaterRepository>(() {
       return WaterRepositoryImp(_getIt());
     });
@@ -88,9 +82,9 @@ class GetItInitializer {
     _getIt.registerLazySingleton<DrinkHistoryRepository>(() {
       return DrinkHistoryRepositoryImp(_getIt());
     });
-  }
 
-  void _initializeUseCases() {
+    // Usecases
+
     _getIt.registerLazySingleton<CalculateWaterDataUseCase>(() {
       return CalculateWaterDataUseCaseImp(_getIt(), _getIt());
     });
@@ -107,12 +101,12 @@ class GetItInitializer {
       return HandleResetWaterDataUseCaseImp(_getIt());
     });
 
+    // Services
+
     _getIt.registerLazySingleton<CheckDataForChangesService>(() {
       return CheckDataForChangesServiceImp(_getIt(), _getIt());
     });
-  }
 
-  void _initializeServices() {
     _getIt.registerLazySingleton<TimeToDrinkAgainService>(() {
       return TimeToDrinkAgainServiceImp(_getIt());
     });
@@ -141,12 +135,8 @@ class GetItInitializer {
       return WaterContainerGeneratorServiceImp(_getIt());
     });
 
-    _getIt.registerLazySingleton<HiveInitializer>(() {
-      return HiveInitializer(_getIt(), _getIt(), _getIt());
-    });
-  }
+    // Controllers
 
-  void _initializeControllers() {
     _getIt.registerLazySingleton<WaterFormController>(() {
       return WaterFormController(_getIt(), _getIt(), _getIt());
     });
