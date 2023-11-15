@@ -2,6 +2,9 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:awesome_notifications/android_foreground_service.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:dart_date/dart_date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:hive/hive.dart';
@@ -31,12 +34,28 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 @pragma("vm:entry-point")
 onStart(ServiceInstance service) {
-  print('');
-  Timer.periodic(const Duration(seconds: 15), (timer) {});
+  Timer.periodic(const Duration(seconds: 5), (timer) async {
+    var notifications = await getIt<NotificationService>().getNotifications();
+
+    DateTime? lastScheduledNotification = () {
+      DateTime? lastNotification;
+
+      for (NotificationModel notificaton in notifications) {
+        print(notificaton.content!.payload.toString());
+      }
+
+      return lastNotification;
+    }();
+
+    if (service is AndroidForegroundService) {}
+  });
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  GetItInitializer(getIt).initialize();
+  await getIt.allReady();
 
   FlutterBackgroundService().configure(
     iosConfiguration: IosConfiguration(),
@@ -46,8 +65,6 @@ Future<void> main() async {
       notificationChannelId: '0',
     ),
   );
-
-  GetItInitializer(getIt).initialize();
 
   await getIt<HiveInitializer>().initialize();
   await getIt<HiveInitializer>().registerAdapters();

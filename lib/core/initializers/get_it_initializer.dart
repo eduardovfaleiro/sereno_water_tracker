@@ -40,7 +40,7 @@ class GetItInitializer {
       return Hive;
     });
 
-    _getIt.registerLazySingleton<HiveInitializer>(() {
+    _getIt.registerLazySingletonAsync<HiveInitializer>(() async {
       return HiveInitializer(_getIt(), _getIt(), _getIt());
     });
 
@@ -127,7 +127,7 @@ class GetItInitializer {
       return WaterCalculatorByRepositoryServiceImp(_getIt(), _getIt());
     });
 
-    _getIt.registerLazySingleton<NotificationService>(() {
+    _getIt.registerLazySingletonAsync<NotificationService>(() async {
       return NotificationService(_getIt(), _getIt(), _getIt());
     });
 
