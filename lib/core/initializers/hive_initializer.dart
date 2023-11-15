@@ -35,7 +35,7 @@ class HiveInitializer {
   }
 
   Future<void> startDrinkHistoryReset() async {
-    List<DrinkRecordEntity> drinkHistory = List.from(_hiveInterface.box(DRINK_HISTORY).values);
+    var drinkHistory = List<DrinkRecordEntity>.from(_hiveInterface.box(DRINK_HISTORY).values);
 
     for (int i = 0; i < drinkHistory.length; i++) {
       if (drinkHistory[i].dateTime.differenceInDays(DateTime.now()) >= 1) {

@@ -12,8 +12,8 @@ import 'package:provider/provider.dart';
 
 import 'core/core.dart';
 import 'core/functions/add_listener_reminders.dart';
-import 'core/initializers/get_it_initializer.dart';
 import 'core/initializers/hive_initializer.dart';
+import 'core/initializers/initialize_get_it.dart';
 import 'core/initializers/session_validator.dart';
 import 'core/theme/themes.dart';
 import 'water/domain/services/notification_service.dart';
@@ -54,8 +54,7 @@ onStart(ServiceInstance service) {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  GetItInitializer(getIt).initialize();
-  await getIt.allReady();
+  initializeGetIt();
 
   FlutterBackgroundService().configure(
     iosConfiguration: IosConfiguration(),
